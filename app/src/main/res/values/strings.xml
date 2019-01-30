@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Smart Home</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
 
 
 </resources>
