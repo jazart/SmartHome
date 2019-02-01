@@ -3,6 +3,7 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
+    <string name="smarthome_remote">SmartHome Remote</string>
 
 
 </resources>
