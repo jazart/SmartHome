@@ -4,6 +4,11 @@
     <string name="password">Password</string>
     <string name="username">Username</string>
     <string name="smarthome_remote">SmartHome Remote</string>
+    <string name="home">Home</string>
+    <string name="device">Device</string>
+    <string name="settings">Settings</string>
+    <string name="register">Register</string>
+    <string name="no_account">Don\'t have an account?</string>
 
 
 </resources>

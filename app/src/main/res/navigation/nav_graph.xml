@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.jazart.smarthome.HomeFragment"
-        android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_deviceFragment"
@@ -23,7 +22,7 @@
     <fragment
         android:id="@+id/deviceFragment"
         android:name="com.jazart.smarthome.DeviceFragment"
-        android:label="DeviceFragment" >
+        tools:layout="@layout/fragment_device_detail">
         <action
             android:id="@+id/action_deviceFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
@@ -31,11 +30,10 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.jazart.smarthome.SettingsFragment"
-        android:label="SettingsFragment" />
+        tools:layout="@layout/fragment_settings"/>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.jazart.smarthome.LoginFragment"
-        android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
