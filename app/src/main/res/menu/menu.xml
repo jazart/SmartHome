@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:enabled="true"
+        android:visible="true"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/homeFragment"
+            android:title="@string/home"
+            android:icon="@android:drawable/ic_dialog_alert"/>
+        <item
+            android:id="@+id/deviceFragment"
+            android:title="@string/device" />
+        <item
+            android:id="@+id/settingsFragment"
+            android:title="@string/settings" />
+    </group>
+
+</menu>
