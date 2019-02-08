@@ -4,23 +4,5 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:backgroundTint="@color/colorPrimaryDark"
-        app:navigationIcon="@drawable/ic_menu_black_24dp"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_input_add"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_anchor="@id/bottom_bar"
-        app:layout_anchorGravity="center"
-        app:rippleColor="@color/colorPrimary"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

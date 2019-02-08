@@ -1,15 +1,11 @@
 package com.jazart.smarthome
 
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.Toolbar
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -18,27 +14,34 @@ import kotlinx.android.synthetic.main.activity_main.*
  *
  */
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navController = findNavController(R.id.nav_host)
+        navController = findNavController(R.id.nav_host)
         val config = AppBarConfiguration(navController.graph, drawer_layout)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
-        }
         nav_view.setupWithNavController(navController)
-        toolbar.setupWithNavController(navController, drawer_layout)
-        toolbar.setupWithNavController(navController, config)
-
-        navController.navigate(R.id.loginFragment)
+        bottom_bar.setupWithNavController(navController, config)
+        navController.navigate(R.id.settingsFragment)
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun onFabClick() {
+        bottomFab.setOnClickListener {
+            when (navController.currentDestination?.id) {
+                R.id.homeFragment -> showBottomSheet()
+                R.id.deviceFragment -> showBottomSheet()
+                else -> return@setOnClickListener
+            }
+        }
     }
+
+    private fun showBottomSheet() {
+
+    }
+
+
 }
 
 

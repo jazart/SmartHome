@@ -6,13 +6,15 @@
         <item
             android:id="@+id/homeFragment"
             android:title="@string/home"
-            android:icon="@android:drawable/ic_dialog_alert"/>
+            android:icon="@drawable/ic_home_black_24dp"/>
         <item
             android:id="@+id/deviceFragment"
-            android:title="@string/device" />
+            android:title="@string/device"
+            android:icon="@drawable/ic_device_black_24dp"/>
         <item
             android:id="@+id/settingsFragment"
-            android:title="@string/settings" />
+            android:title="@string/settings"
+            android:icon="@drawable/ic_settings_black_24dp"/>
     </group>
 
 </menu>

@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.jazart.smarthome.models.Device
+import com.jazart.smarthome.models.Status
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.list_item_device.*
 
 /**
  * This page will display the user's favorite device and its status
@@ -16,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class HomeFragment : Fragment() {
-
+    private val adapter = HomeAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -27,8 +31,24 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = (activity as AppCompatActivity).supportActionBar
-        toolbar?.title = resources.getString(R.string.home)
+        adapter.submitList(
+            listOf(
+                Device("Test", Status.Off),
+                Device("Test1", Status.Off),
+                Device("Test2", Status.Off),
+                Device("Test3", Status.Off),
+                Device("Test4", Status.Off),
+                Device("Test5", Status.Off),
+                Device("Test6", Status.Off)
+            )
+        )
+        deviceImage.setImageResource(R.drawable.ic_lock)
+        deviceName.text = "Favorite Device"
+        status.text = getString(R.string.status, "Offline")
+        home_recyclerView.adapter = adapter
+        home_recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        home_recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+
     }
 
     override fun onStop() {
