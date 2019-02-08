@@ -8,11 +8,11 @@
     android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        android:id="@+id/toolbar"/>
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <fragment
         android:id="@+id/nav_host"
@@ -22,14 +22,41 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_bar"
+            style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/colorPrimaryDark"
+            app:navigationIcon="@drawable/ic_menu_black_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/bottomFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:src="@android:drawable/ic_input_add"
+            app:layout_anchor="@id/bottom_bar"
+            app:layout_anchorGravity="center"
+            app:rippleColor="@color/colorPrimary" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         android:backgroundTint="@color/colorPrimaryDark"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/menu"/>
+        app:menu="@menu/menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
