@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.jazart.smarthome">
+    package="com.jazart.smarthome">
 
     <application
-            android:allowBackup="true"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:name=".di.App"
+        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
     </application>

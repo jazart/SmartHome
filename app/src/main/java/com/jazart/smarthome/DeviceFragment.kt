@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.jazart.smarthome.di.Injectable
 
 
 /**
@@ -12,7 +13,7 @@ import androidx.fragment.app.Fragment
  * the user can set it as a favorite, or remove it. This is also where
  * the user will be able to send commands to the device.
  */
-class DeviceFragment : Fragment() {
+class DeviceFragment : Fragment(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

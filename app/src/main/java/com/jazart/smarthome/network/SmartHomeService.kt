@@ -3,26 +3,12 @@ package com.jazart.smarthome.network
 import android.content.Context
 import com.apollographql.apollo.ApolloClient
 import okhttp3.OkHttpClient
+import javax.inject.Inject
 
-class SmartHomeService(
-    private val context: Context,
-    private val okhttp: OkHttpClient,
-    var apolloClient: ApolloClient,
-    private val tokenManager: TokenManager
-) {
-
-    init {
-        okhttp.newBuilder()
-            .addInterceptor(TokenInterceptor(tokenManager.token()))
-            .authenticator(TokenAuthenticator(tokenManager))
-        apolloClient = ApolloClient.builder().apply {
-            serverUrl(BASE_URL)
-            okHttpClient(okhttp)
-        }.build()
-    }
+class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
 
     companion object {
-        const val BASE_URL = ""
+        const val BASE_URL = "http://smarthome-jazart.us-west-2.elasticbeanstalk.com/graphql"
     }
 
 }

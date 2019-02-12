@@ -2,11 +2,16 @@ package com.jazart.smarthome
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 /**
  * Entry point of the application. This class sets up the navigation component and navigates to
@@ -14,17 +19,26 @@ import kotlinx.android.synthetic.main.activity_main.*
  *
  */
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
+
+
     lateinit var navController: NavController
+//    @Inject
+//    lateinit var viewModelFactory: ViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        val loginViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
         navController = findNavController(R.id.nav_host)
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
-        navController.navigate(R.id.settingsFragment)
+        navController.navigate(R.id.loginFragment)
     }
 
     fun onFabClick() {
