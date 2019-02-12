@@ -30,10 +30,11 @@ class MainActivity : AppCompatActivity() {
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
+        onFabClick()
         navController.navigate(R.id.settingsFragment)
     }
 
-    fun onFabClick() {
+    private fun onFabClick() {
         bottomFab.setOnClickListener {
             when (navController.currentDestination?.id) {
                 R.id.homeFragment -> showBottomSheet()
@@ -44,10 +45,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet() {
-        showBottomSheet()
-
+        val bottomSheet = BottomSheet()
+        bottomSheet.show(supportFragmentManager, null)
     }
-
 
 }
 
