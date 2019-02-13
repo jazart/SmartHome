@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_btn2"
+        android:id="@+id/lightonBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="393dp"
         android:layout_height="60dp"
@@ -39,7 +39,7 @@
         app:strokeWidth="2dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_btn4"
+        android:id="@+id/lightoffBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="393dp"
         android:layout_height="60dp"
@@ -59,7 +59,7 @@
         app:strokeWidth="2dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_btn5"
+        android:id="@+id/PulseBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="393dp"
         android:layout_height="60dp"
