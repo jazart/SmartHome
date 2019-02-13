@@ -14,6 +14,7 @@ object FragmentInjector {
     fun init(app: App) {
         DaggerAppComponent.builder().application(app)
             .network(NetworkModule)
+            .sharedPreferences(SharedPrefsModule)
             .build()
             .inject(app)
             app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {

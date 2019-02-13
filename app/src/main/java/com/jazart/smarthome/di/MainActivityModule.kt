@@ -1,9 +1,6 @@
 package com.jazart.smarthome.di
 
-import com.jazart.smarthome.HomeFragment
-import com.jazart.smarthome.LoginFragment
-import com.jazart.smarthome.MainActivity
-import com.jazart.smarthome.SettingsFragment
+import com.jazart.smarthome.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -23,4 +20,7 @@ abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeHomeFragment(): HomeFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeDeviceFragment(): DeviceFragment
 }

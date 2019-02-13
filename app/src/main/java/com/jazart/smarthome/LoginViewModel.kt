@@ -44,4 +44,8 @@ class LoginViewModel @Inject constructor(private val userRepo: UserRepo) : ViewM
 
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        job.cancelChildren()
+    }
 }

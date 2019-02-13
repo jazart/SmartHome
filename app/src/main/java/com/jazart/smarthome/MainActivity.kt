@@ -22,18 +22,11 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
-
-
-    lateinit var navController: NavController
-//    @Inject
-//    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        val loginViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
         navController = findNavController(R.id.nav_host)
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
@@ -50,12 +43,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             }
         }
     }
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun showBottomSheet() {
 
     }
-
-
 }
 
 
