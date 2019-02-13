@@ -11,5 +11,11 @@
     <string name="no_account">Don\'t have an account?</string>
     <string name="status"><b>Status: %s</b></string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="pulse">Pulse</string>
+    <string name="turn_off_light">Turn off light</string>
+    <string name="turn_on_light">Turn on light</string>
+
 
 </resources>

@@ -1,12 +1,18 @@
 package com.jazart.smarthome
 
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
  * Entry point of the application. This class sets up the navigation component and navigates to
@@ -24,10 +30,11 @@ class MainActivity : AppCompatActivity() {
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
+        onFabClick()
         navController.navigate(R.id.settingsFragment)
     }
 
-    fun onFabClick() {
+    private fun onFabClick() {
         bottomFab.setOnClickListener {
             when (navController.currentDestination?.id) {
                 R.id.homeFragment -> showBottomSheet()
@@ -38,9 +45,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet() {
-
+        val bottomSheet = BottomSheet()
+        bottomSheet.show(supportFragmentManager, null)
     }
-
 
 }
 
