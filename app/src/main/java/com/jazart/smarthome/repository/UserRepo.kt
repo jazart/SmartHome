@@ -16,9 +16,7 @@ class UserRepo @Inject constructor(smartHomeService: SmartHomeService) {
     private val client = smartHomeService.apolloClient
     val user = MutableLiveData<String>()
 
-    suspend fun <T> ApolloCall.Callback<T>.await() {
 
-    }
     suspend fun awaitUserCall(): String? {
         return suspendCoroutine { cont ->
             client.query(UserQuery()).enqueue(object : ApolloCall.Callback<UserQuery.Data>() {

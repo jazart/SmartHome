@@ -13,6 +13,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
+
 /**
  * Entry point of the application. This class sets up the navigation component and navigates to
  * either home page if the user is logged in, otherwise the login page
@@ -31,10 +32,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
+        onFabClick()
         navController.navigate(R.id.homeFragment)
     }
 
-    fun onFabClick() {
+    private fun onFabClick() {
         bottomFab.setOnClickListener {
             when (navController.currentDestination?.id) {
                 R.id.homeFragment -> showBottomSheet()
@@ -46,7 +48,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun showBottomSheet() {
-
+        val bottomSheet = BottomSheet()
+        bottomSheet.show(supportFragmentManager, null)
     }
 }
 

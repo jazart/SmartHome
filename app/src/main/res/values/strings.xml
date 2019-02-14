@@ -10,6 +10,11 @@
     <string name="register">Register</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="status"><b>Status: %s</b></string>
+    <string name="pulse">Pulse</string>
+    <string name="turn_off_light">Turn off light</string>
+    <string name="turn_on_light">Turn on light</string>
+    <string name="choose_action">Choose Action…</string>
+    <string name="device_image">Device Image</string>
 
 
 </resources>
