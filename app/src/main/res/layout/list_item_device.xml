@@ -3,11 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.CardView"
-    android:layout_width="match_parent"
+    android:layout_width="185dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_marginTop="24dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="16dp"
     app:cardCornerRadius="4dp"
-    app:cardElevation="2dp"
+    app:cardElevation="4dp"
     app:strokeColor="@color/colorAccent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
