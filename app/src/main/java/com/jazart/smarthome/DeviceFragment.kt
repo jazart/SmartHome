@@ -5,7 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import com.jazart.smarthome.HomeFragment.Companion.ARG_DEVICE_NAME
+import com.jazart.smarthome.HomeFragment.Companion.ARG_DEVICE_STATUS
 import com.jazart.smarthome.di.Injectable
+import com.jazart.smarthome.di.ViewModelFactory
+import kotlinx.android.synthetic.main.fragment_device_detail.*
+import javax.inject.Inject
 
 
 /**
@@ -15,6 +21,9 @@ import com.jazart.smarthome.di.Injectable
  */
 class DeviceFragment : Fragment(), Injectable {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -23,7 +32,16 @@ class DeviceFragment : Fragment(), Injectable {
         return inflater.inflate(R.layout.fragment_device_detail, container, false)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val deviceViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeviceViewModel::class.java)
+        if (arguments != null) {
+            updateUi()
+        }
+    }
+
+    private fun updateUi() {
+        deviceName.text = arguments!![ARG_DEVICE_NAME] as String
+        deviceStatus.text = arguments!![ARG_DEVICE_STATUS] as String
     }
 }

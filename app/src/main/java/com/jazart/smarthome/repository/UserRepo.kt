@@ -15,12 +15,16 @@ import kotlin.coroutines.suspendCoroutine
 class UserRepo @Inject constructor(smartHomeService: SmartHomeService) {
     private val client = smartHomeService.apolloClient
     val user = MutableLiveData<String>()
+    val devices = MutableLiveData<MutableList<UserQuery.Device>>()
 
 
     suspend fun awaitUserCall(): String? {
         return suspendCoroutine { cont ->
             client.query(UserQuery()).enqueue(object : ApolloCall.Callback<UserQuery.Data>() {
                 override fun onResponse(response: Response<UserQuery.Data>) {
+                    response.data()?.user()?.let { userDevices ->
+                        devices.postValue(userDevices.devices())
+                    }
                     cont.resume(response.data()?.user()?.name())
                 }
 
