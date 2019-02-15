@@ -2,24 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constaint"
+    android:id="@+id/bottomSheetRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/colorAccent"
     tools:context=".BottomSheet">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/actionTv"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="463dp"
         android:layout_height="760dp"
-        android:text="Choose Action..."
+        android:text="@string/choose_action"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/lightonBtn"
+        android:id="@+id/lightOnBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="393dp"
         android:layout_height="60dp"
@@ -30,16 +29,15 @@
         android:text="@string/turn_on_light"
         android:textAllCaps="false"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.029"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/actionTv"
         app:strokeColor="@color/colorPrimary"
         app:strokeWidth="2dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/lightoffBtn"
+        android:id="@+id/lightOffBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="393dp"
         android:layout_height="60dp"
@@ -50,11 +48,10 @@
         android:text="@string/turn_off_light"
         android:textAllCaps="false"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/actionTv"
         app:strokeColor="@color/colorPrimary"
         app:strokeWidth="2dp" />
 
@@ -70,10 +67,9 @@
         android:text="@string/pulse"
         android:textAllCaps="false"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/actionTv"
         app:strokeColor="@color/colorPrimary"
         app:strokeWidth="2dp" />
 

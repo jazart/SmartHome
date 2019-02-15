@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.jazart.smarthome.di.Injectable
 
 /**
  * This page displays a list of user options:
  * Logout, delete account, change password
  */
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

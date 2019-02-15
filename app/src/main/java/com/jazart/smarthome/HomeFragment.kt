@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.models.Device
 import com.jazart.smarthome.models.Status
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -19,7 +20,7 @@ import kotlinx.android.synthetic.main.list_item_device.*
  */
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), Injectable {
     private val adapter = HomeAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,10 @@ class HomeFragment : Fragment() {
                 Device("Test3", Status.Off),
                 Device("Test4", Status.Off),
                 Device("Test5", Status.Off),
+                Device("Test6", Status.Off),
+                Device("Test3", Status.Off),
+                Device("Test4", Status.Off),
+                Device("Test5", Status.Off),
                 Device("Test6", Status.Off)
             )
         )
@@ -46,8 +51,7 @@ class HomeFragment : Fragment() {
         deviceName.text = "Favorite Device"
         status.text = getString(R.string.status, "Offline")
         home_recyclerView.adapter = adapter
-        home_recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        home_recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
 
     }
 

@@ -2,5 +2,8 @@ query UserQuery {
     user {
         id
         name
+        devices {
+            name
+        }
     }
 }

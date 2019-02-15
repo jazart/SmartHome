@@ -1,12 +1,4 @@
-package com.jazart.smarthome.TypeAdapters
-
-import android.os.Build
-import com.apollographql.apollo.response.CustomTypeAdapter
-import com.apollographql.apollo.response.CustomTypeValue
-import type.CustomType
-import java.text.DateFormat
-import java.time.LocalDateTime
-import java.util.*
+package com.jazart.smarthome.typeadapters
 
 object Adapters {
 

@@ -1,18 +1,18 @@
 package com.jazart.smarthome
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import javax.inject.Inject
+
 
 /**
  * Entry point of the application. This class sets up the navigation component and navigates to
@@ -20,8 +20,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
  *
  */
 
-class MainActivity : AppCompatActivity() {
-    lateinit var navController: NavController
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
         onFabClick()
-        navController.navigate(R.id.settingsFragment)
+        navController.navigate(R.id.homeFragment)
     }
 
     private fun onFabClick() {
@@ -43,12 +45,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun showBottomSheet() {
         val bottomSheet = BottomSheet()
         bottomSheet.show(supportFragmentManager, null)
     }
-
 }
 
 
