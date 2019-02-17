@@ -33,10 +33,6 @@ class LoginFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val viewModel = ViewModelProviders.of(requireActivity(), viewModelProvider).get(LoginViewModel::class.java)
-        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
-            Toast.makeText(requireContext(), user, Toast.LENGTH_SHORT).show()
-        })
-        viewModel.login()
 
     }
     override fun onStop() {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/colorAccent"
-    tools:context=".BottomSheet">
+    tools:context=".DeviceCommandBottomSheet">
 
     <TextView
         android:id="@+id/actionTv"
@@ -56,7 +56,7 @@
         app:strokeWidth="2dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/PulseBtn"
+        android:id="@+id/lightPulseBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="393dp"
         android:layout_height="60dp"

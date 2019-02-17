@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorAccent"
-            android:src="@android:drawable/ic_input_add"
+            android:src="@drawable/ic_add_black_24dp"
             app:layout_anchor="@id/bottom_bar"
             app:layout_anchorGravity="center"
             app:rippleColor="@color/colorPrimary" />

@@ -23,4 +23,7 @@ abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeDeviceFragment(): DeviceFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeDeviceCommandBottomSheet(): DeviceCommandBottomSheet
 }
