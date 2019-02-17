@@ -11,7 +11,7 @@ import com.graphql.type.Status
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.list_item_device.*
 
-class HomeAdapter(val clickHandler: (UserQuery.Device) -> Unit) :
+class HomeAdapter(val clickHandler: (Int, UserQuery.Device) -> Unit) :
     ListAdapter<UserQuery.Device, HomeAdapter.HomeViewHolder>(DeviceDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
@@ -23,16 +23,16 @@ class HomeAdapter(val clickHandler: (UserQuery.Device) -> Unit) :
     }
 
 
-    inner class HomeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
-        LayoutContainer {
+    inner class HomeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bind(position: Int) {
-            containerView.setOnClickListener { clickHandler(getItem(position)) }
-            deviceName.text = getItem(position).name()
-            status.text = containerView.context.resources.getString(R.string.status, getItem(position).status())
-            deviceImage.setImageResource(R.drawable.ic_lock)
+        internal fun bind(position: Int) {
+            val device = getItem(position)
+            containerView.setOnClickListener { clickHandler(position, device) }
+            deviceName.text = device.name()
+            status.text = containerView.context.resources.getString(R.string.status, device.status())
+            deviceImage.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp)
             statusColor.setImageResource(
-                if (getItem(position).status() == Status.CONNECTED) {
+                if (device.status() == Status.CONNECTED) {
                     android.R.color.holo_green_light
                 } else {
                     android.R.color.holo_red_light

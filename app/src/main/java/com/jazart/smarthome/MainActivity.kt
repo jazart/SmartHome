@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun showBottomSheet() {
-        val bottomSheet = BottomSheet()
+        val bottomSheet = DeviceCommandBottomSheet()
         bottomSheet.show(supportFragmentManager, null)
     }
 }

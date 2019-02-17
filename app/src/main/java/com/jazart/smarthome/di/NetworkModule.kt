@@ -1,6 +1,7 @@
 package com.jazart.smarthome.di
 
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.jazart.smarthome.network.SmartHomeService
 import com.jazart.smarthome.network.TokenInterceptor
 import dagger.Module
@@ -19,9 +20,11 @@ object NetworkModule {
 
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
-        return ApolloClient.builder().apply {
+        return ApolloClient.builder().run {
             serverUrl(SmartHomeService.BASE_URL)
+            defaultHttpCachePolicy(HttpCachePolicy.CACHE_FIRST)
             okHttpClient(okHttpClient)
-        }.build()
+            build()
+        }
     }
 }

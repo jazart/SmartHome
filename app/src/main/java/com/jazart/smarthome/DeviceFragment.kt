@@ -34,7 +34,7 @@ class DeviceFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val deviceViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeviceViewModel::class.java)
+        val deviceViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         if (arguments != null) {
             updateUi()
         }

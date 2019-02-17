@@ -25,10 +25,14 @@ import javax.inject.Inject
 
 class HomeFragment : Fragment(), Injectable {
 
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
-    private val clickHandler: (UserQuery.Device) -> Unit = {
-        findNavController().navigate(R.id.deviceFragment, buildBundle(it))
+    lateinit var viewModel: HomeViewModel
+
+    private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
+        viewModel.updateCurrentDevice(pos)
+        findNavController().navigate(R.id.deviceFragment, buildBundle(device))
     }
 
     private val adapter = HomeAdapter(clickHandler)
@@ -44,7 +48,7 @@ class HomeFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
