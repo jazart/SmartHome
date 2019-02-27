@@ -81,4 +81,3 @@ class HomeFragment : Fragment(), Injectable {
 private fun <E> List<E>.toStringList(): List<String> {
     return this.map { obj -> "$obj" }
 }
-

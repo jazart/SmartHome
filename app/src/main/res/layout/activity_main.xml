@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:backgroundTint="@color/colorPrimaryDark"
+            app:hideOnScroll="true"
             app:layout_dodgeInsetEdges="bottom"
             app:navigationIcon="@drawable/ic_menu_black_24dp" />
 

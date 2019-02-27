@@ -1,6 +1,5 @@
 package com.jazart.smarthome.repository
 
-import com.graphql.UserQuery
 import com.jazart.smarthome.Error
 import com.jazart.smarthome.Result
 import com.jazart.smarthome.network.SmartHomeService

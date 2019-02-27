@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
+        bottom_bar.replaceMenu(R.menu.menu)
         onFabClick()
         navController.navigate(R.id.homeFragment)
     }
