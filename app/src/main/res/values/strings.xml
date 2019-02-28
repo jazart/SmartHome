@@ -15,6 +15,7 @@
     <string name="turn_on_light">Turn on light</string>
     <string name="choose_action">Choose Action…</string>
     <string name="device_image">Device Image</string>
+    <string name="edit">Edit</string>
 
 
 </resources>

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/deviceName"
+            android:id="@+id/editableTV"
             style="@style/TextAppearance.MaterialComponents.Headline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/status"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/deviceName"
+            app:layout_constraintStart_toEndOf="@+id/editableTV"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/colorPrimaryDark" />
 
@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/statusColor"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deviceName"
+            app:layout_constraintTop_toBottomOf="@+id/editableTV"
             app:layout_constraintVertical_bias="0.917" />
 
         <androidx.appcompat.widget.AppCompatImageView

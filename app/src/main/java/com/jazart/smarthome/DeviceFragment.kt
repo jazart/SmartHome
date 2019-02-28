@@ -24,6 +24,8 @@ class DeviceFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
+    private var isShowing = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -36,12 +38,22 @@ class DeviceFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
         val deviceViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         if (arguments != null) {
-            updateUi()
+//            updateUi()
+        }
+        editImageViw.setOnClickListener {
+            if (isShowing) {
+                deviceName.toggleEditableStatus()
+                deviceStatus.toggleEditableStatus()
+            } else {
+                deviceName.toggleEditableStatus(isShowing)
+                deviceStatus.toggleEditableStatus(isShowing)
+            }
+            isShowing = !isShowing
         }
     }
 
-    private fun updateUi() {
-        deviceName.text = arguments!![ARG_DEVICE_NAME] as String
-        deviceStatus.text = arguments!![ARG_DEVICE_STATUS] as String
-    }
+//    private fun updateUi() {
+//        editableTV.text = arguments!![ARG_DEVICE_NAME] as String
+//        deviceStatus.text = arguments!![ARG_DEVICE_STATUS] as String
+//    }
 }

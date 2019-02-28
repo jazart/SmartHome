@@ -54,7 +54,7 @@ class HomeFragment : Fragment(), Injectable {
             adapter.submitList(it)
         })
         deviceImage.setImageResource(R.drawable.ic_lock)
-        deviceName.text = "Favorite Device"
+        editableTV.text = "Favorite Device"
         status.text = getString(R.string.status, "Offline")
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)

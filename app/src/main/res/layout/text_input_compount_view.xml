@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/editableTV"
+        android:layout_width="378dp"
+        android:layout_height="77dp"
+        android:textAppearance="@style/Base.TextAppearance.MaterialComponents.Headline6"
+        android:text="@string/device"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Device Name:" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTIL"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:boxStrokeColor="@color/colorPrimaryDark"
+        app:boxStrokeWidth="2dp"
+        app:hintTextColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@id/editableTV"
+        app:layout_constraintTop_toTopOf="@id/editableTV"
+        app:layout_constraintEnd_toEndOf="@id/editableTV"
+        tools:visibility="visible">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit"
+            android:textColorHint="@color/colorAccent"/>
+    </com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
