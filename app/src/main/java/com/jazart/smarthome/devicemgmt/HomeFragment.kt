@@ -1,4 +1,4 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.devicemgmt
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.graphql.UserQuery
+import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -32,7 +33,10 @@ class HomeFragment : Fragment(), Injectable {
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
         viewModel.updateCurrentDevice(pos)
-        findNavController().navigate(R.id.deviceFragment, buildBundle(device))
+        findNavController().navigate(
+            R.id.deviceFragment,
+            buildBundle(device)
+        )
     }
 
     private val adapter = HomeAdapter(clickHandler)
@@ -49,7 +53,7 @@ class HomeFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
-        viewModel.loadDevices()
+        //viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
@@ -73,7 +77,7 @@ class HomeFragment : Fragment(), Injectable {
         fun buildBundle(device: UserQuery.Device): Bundle = Bundle().apply {
             putString(ARG_DEVICE_NAME, device.name())
             putString(ARG_DEVICE_STATUS, "${device.status()}")
-            putStringArrayList(ARG_DEVICE_COMMANDS, device.info().commands().toStringList().toCollection(ArrayList()))
+            putStringArrayList(ARG_DEVICE_COMMANDS, device.commands().toStringList().toCollection(ArrayList()))
         }
     }
 }

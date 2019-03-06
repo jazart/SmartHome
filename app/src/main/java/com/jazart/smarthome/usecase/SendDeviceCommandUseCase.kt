@@ -1,6 +1,8 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.usecase
 
 import com.graphql.type.Command
+import com.jazart.smarthome.util.Error
+import com.jazart.smarthome.util.Result
 import com.jazart.smarthome.network.SmartHomeService
 import javax.inject.Inject
 

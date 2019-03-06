@@ -1,6 +1,11 @@
 package com.jazart.smarthome.di
 
-import com.jazart.smarthome.*
+import com.jazart.smarthome.common.MainActivity
+import com.jazart.smarthome.common.SettingsFragment
+import com.jazart.smarthome.devicemgmt.DeviceCommandBottomSheet
+import com.jazart.smarthome.devicemgmt.DeviceFragment
+import com.jazart.smarthome.devicemgmt.HomeFragment
+import com.jazart.smarthome.login.LoginFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

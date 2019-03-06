@@ -1,4 +1,4 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.devicemgmt
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.graphql.UserQuery
 import com.graphql.type.Status
+import com.jazart.smarthome.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.list_item_device.*
 

@@ -2,9 +2,9 @@ package com.jazart.smarthome.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.jazart.smarthome.DeviceViewModel
-import com.jazart.smarthome.HomeViewModel
-import com.jazart.smarthome.LoginViewModel
+import com.jazart.smarthome.devicemgmt.DeviceViewModel
+import com.jazart.smarthome.devicemgmt.HomeViewModel
+import com.jazart.smarthome.login.LoginViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module

@@ -1,4 +1,4 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.devicemgmt
 
 
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
 import com.graphql.type.Command
+import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_bottomsheet.*
@@ -43,7 +44,7 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable, View.O
             R.id.lightOffBtn -> viewModel sendCommand Command.TURN_OFF
             R.id.lightOnBtn -> viewModel sendCommand Command.TURN_ON
             R.id.lightPulseBtn -> viewModel sendCommand Command.PULSE
-            else -> Toast.makeText(requireContext(), "Invalid Command Selected", Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(requireContext(), getString(R.string.invalid_command), Toast.LENGTH_SHORT).show()
         }
         dismiss()
     }
@@ -53,7 +54,6 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable, View.O
         lightOnBtn.setOnClickListener(this)
         lightPulseBtn.setOnClickListener(this)
     }
-
 
     private fun updateUi(device: UserQuery.Device) {
 
