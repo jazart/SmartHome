@@ -15,7 +15,6 @@ class App : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
         FragmentInjector.init(this)
-
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = dispatchingAndroidInjector

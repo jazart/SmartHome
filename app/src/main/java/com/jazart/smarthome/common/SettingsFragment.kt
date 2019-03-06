@@ -1,10 +1,11 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
 
 /**

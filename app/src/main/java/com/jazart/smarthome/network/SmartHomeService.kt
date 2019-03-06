@@ -1,12 +1,11 @@
 package com.jazart.smarthome.network
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.graphql.SignupMutation
 import com.graphql.UpdateDeviceMutation
 import com.graphql.UserQuery
 import com.graphql.type.Command
@@ -27,12 +26,20 @@ class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
         ).await()
     }
 
-    suspend fun getUserInfo(): Response<UserQuery.Data>{
-        return apolloClient.query(UserQuery()).await()
+    suspend fun getUserInfo(): Response<UserQuery.Data> {
+        return apolloClient.query(UserQuery("jazart")).await()
+    }
+
+    suspend fun signin(mutation: SignupMutation): Response<SignupMutation.Data> {
+        return apolloClient.mutate(mutation).await()
+    }
+
+    suspend fun updateDevice(mutation: UpdateDeviceMutation): Response<*> {
+        return apolloClient.mutate(mutation).await()
     }
 
     companion object {
-        const val BASE_URL = "http://smarthome-jazart.us-west-2.elasticbeanstalk.com/graphql"
+        const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
     }
 
 }

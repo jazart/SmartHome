@@ -1,10 +1,11 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.devicemgmt
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
+import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,6 +22,7 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     private val _currentDevice = MutableLiveData<UserQuery.Device>()
     val currentDevice: LiveData<UserQuery.Device>
         get() = _currentDevice
+
 
     fun initCurrentDevice(device: UserQuery.Device) {
         _currentDevice.value = device

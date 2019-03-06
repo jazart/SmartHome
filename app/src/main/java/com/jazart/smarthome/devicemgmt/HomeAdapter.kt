@@ -1,4 +1,4 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.devicemgmt
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.graphql.UserQuery
 import com.graphql.type.Status
+import com.jazart.smarthome.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.list_item_device.*
 
@@ -28,7 +29,7 @@ class HomeAdapter(val clickHandler: (Int, UserQuery.Device) -> Unit) :
         internal fun bind(position: Int) {
             val device = getItem(position)
             containerView.setOnClickListener { clickHandler(position, device) }
-            deviceName.text = device.name()
+            editableTV.text = device.name()
             status.text = containerView.context.resources.getString(R.string.status, device.status())
             deviceImage.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp)
             statusColor.setImageResource(

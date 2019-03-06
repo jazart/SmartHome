@@ -1,12 +1,20 @@
-package com.jazart.smarthome
+package com.jazart.smarthome.common
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.graphql.SignupMutation
+import com.jazart.smarthome.R
+import com.jazart.smarthome.devicemgmt.DeviceCommandBottomSheet
+import com.jazart.smarthome.devicemgmt.HomeFragment
+import com.jazart.smarthome.devicemgmt.HomeViewModel
 import com.jazart.smarthome.di.ViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -25,39 +33,35 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var navController: NavController
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        navController = findNavController(R.id.nav_host)
+        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        val navController = findNavController(R.id.nav_host)
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
         bottom_bar.replaceMenu(R.menu.menu)
         onFabClick()
-        navController.navigate(R.id.homeFragment)
+        if(getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getString("USER", null).isNullOrBlank()) {
+            navController.navigate(R.id.action_homeFragment_to_loginFragment)
+        } else {
+            navController.navigate(R.id.homeFragment)
+        }
     }
 
     private fun onFabClick() {
         bottomFab.setOnClickListener {
-            when (navController.currentDestination?.id) {
-                R.id.homeFragment -> showBottomSheet()
-                R.id.deviceFragment -> showBottomSheet()
-                else -> return@setOnClickListener
-            }
+         navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id) }
         }
     }
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
-    private fun showBottomSheet() {
-        val bottomSheet = DeviceCommandBottomSheet()
-        bottomSheet.show(supportFragmentManager, null)
-    }
 }
-
-
-fun String.isValidPass(): Boolean = length > 7 && this != "0".repeat(8)

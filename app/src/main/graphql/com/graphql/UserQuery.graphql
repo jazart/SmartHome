@@ -1,13 +1,11 @@
-query UserQuery {
-    user {
-        id
+query UserQuery($name: String!) {
+    user(name: $name) {
+        username
         name
         devices {
             name
             status
-            info {
-                commands
-            }
+            commands
         }
     }
 }

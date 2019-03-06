@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.jazart.smarthome.HomeFragment"
+        android:name="com.jazart.smarthome.devicemgmt.HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_deviceFragment"
@@ -17,11 +17,15 @@
             app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/nav_graph"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/deviceFragment"
-        android:name="com.jazart.smarthome.DeviceFragment"
+        android:name="com.jazart.smarthome.devicemgmt.DeviceFragment"
         tools:layout="@layout/fragment_device_detail">
         <action
             android:id="@+id/action_deviceFragment_to_settingsFragment"
@@ -29,14 +33,16 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.jazart.smarthome.SettingsFragment"
-        tools:layout="@layout/fragment_settings"/>
+        android:name="com.jazart.smarthome.common.SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.jazart.smarthome.LoginFragment"
+        android:name="com.jazart.smarthome.login.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
