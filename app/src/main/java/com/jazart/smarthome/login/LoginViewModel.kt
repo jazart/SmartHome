@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.jazart.smarthome.usecase.FetchUserUseCase
 import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.Event
-import com.jazart.smarthome.util.Result
+import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -27,9 +27,9 @@ class LoginViewModel @Inject constructor(private val userRepo: FetchUserUseCase)
     fun login(username: String, password: String, name: String) {
         updateLoginStatus {
             val result = userRepo.signup(username, password, name)
-            when (result) {
-                is Result.Success<*> -> _loginEvent.postValue(Event(result.data as String))
-                is Result.Failure -> _loginError.postValue(Event(result.error))
+            when (result.status) {
+                is Status.Success -> _loginEvent.postValue(Event(result.data))
+                is Status.Failure -> _loginError.postValue(Event(result.error))
             }
         }
     }

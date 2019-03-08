@@ -53,7 +53,7 @@ class HomeFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
-        //viewModel.loadDevices()
+        viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })

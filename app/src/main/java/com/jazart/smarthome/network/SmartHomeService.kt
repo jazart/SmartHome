@@ -26,8 +26,8 @@ class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
         ).await()
     }
 
-    suspend fun getUserInfo(): Response<UserQuery.Data> {
-        return apolloClient.query(UserQuery("jazart")).await()
+    suspend fun getUserInfo(username: String): Response<UserQuery.Data> {
+        return apolloClient.query(UserQuery(username)).await()
     }
 
     suspend fun signin(mutation: SignupMutation): Response<SignupMutation.Data> {
@@ -42,16 +42,6 @@ class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
     }
 
-}
-
-class SmarthomeTokenManager : TokenManager {
-    override fun token(): Token = ""
-    override fun newToken(): Token = ""
-}
-
-interface TokenManager {
-    fun token(): Token
-    fun newToken(): Token
 }
 
 suspend fun <T> ApolloCall<T>.await(): Response<T> {

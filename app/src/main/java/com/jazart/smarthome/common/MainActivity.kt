@@ -43,13 +43,14 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
-        val navController = findNavController(R.id.nav_host)
+        navController = findNavController(R.id.nav_host)
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
         bottom_bar.replaceMenu(R.menu.menu)
         onFabClick()
-        if(getSharedPreferences("user_prefs", Context.MODE_PRIVATE).getString("USER", null).isNullOrBlank()) {
+//        getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
+        if(getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
             navController.navigate(R.id.action_homeFragment_to_loginFragment)
         } else {
             navController.navigate(R.id.homeFragment)
