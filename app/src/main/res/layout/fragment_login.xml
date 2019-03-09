@@ -14,11 +14,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/login_logo"
-            android:layout_width="302dp"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="24dp"
             android:contentDescription="@string/login"
             app:layout_constraintBottom_toTopOf="@id/login"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/login"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
@@ -37,6 +37,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
             android:textSize="36sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/input_layout_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.492"

@@ -60,6 +60,8 @@ class LoginFragment : Fragment(), Injectable {
             }
         })
 
+        register_btn.setOnClickListener { findNavController().navigate(R.id.action_loginFragment_to_signupFragment) }
+
     }
 
     override fun onStop() {

@@ -18,6 +18,10 @@
     <string name="edit">Edit</string>
     <string name="invalid_command">Invalid Command Selected</string>
     <string name="welcome">Welcome %s!</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="e_mail">E-mail</string>
+    <string name="re_enter_password">Re-enter Password</string>
 
 
 </resources>

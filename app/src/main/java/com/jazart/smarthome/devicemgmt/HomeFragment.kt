@@ -1,5 +1,6 @@
 package com.jazart.smarthome.devicemgmt
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,12 +33,12 @@ class HomeFragment : Fragment(), Injectable {
     lateinit var viewModel: HomeViewModel
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
-        viewModel.updateCurrentDevice(pos)
         findNavController().navigate(
-            R.id.deviceFragment,
+            R.id.action_homeFragment_to_deviceFragment,
             buildBundle(device)
         )
     }
+
 
     private val adapter = HomeAdapter(clickHandler)
 
@@ -52,6 +53,10 @@ class HomeFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        button.setOnClickListener {
+            requireActivity().getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
+            requireActivity().finishAndRemoveTask()
+        }
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
