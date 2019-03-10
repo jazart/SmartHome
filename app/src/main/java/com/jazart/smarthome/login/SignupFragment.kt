@@ -11,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.jazart.smarthome.R
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_signup.*
 
 class SignupFragment : Fragment() {
@@ -36,7 +35,7 @@ class SignupFragment : Fragment() {
     }
 
 
-    fun receivedInput(): Boolean? {
+    fun receivedInput(): List<String>? {
         val receivedFirstName = firstNameEt.text.toString()
         val receivedLastName = lastNameEt.text.toString()
         val receivedEmail = emailEt.text.toString()
@@ -46,7 +45,12 @@ class SignupFragment : Fragment() {
         if (receivedPassword != receivedVerified) {
             return null
         }
-        return false
+        if(receivedFirstName.isBlank() || receivedLastName.isBlank() ||
+            receivedEmail.isBlank() || receivedPassword.isBlank() ||
+              receivedVerified.isBlank()){
+            return null
+        }
+        return listOf()
     }
 
     private fun setupTextListeners() {
@@ -55,12 +59,12 @@ class SignupFragment : Fragment() {
         passwordEt.validate()
         verifyPasswordEt.validate()
         emailEt.validate()
-        username_et.validate()
+        userNameEt.validate()
     }
 }
 
 fun TextInputEditText.validate() {
-    val textInputLayout = this.parent as TextInputLayout
+    val textInputLayout = this.parent.parent as TextInputLayout
     doOnTextChanged { text, start, count, after ->
         if (text.isNullOrBlank()) {
 
@@ -71,4 +75,7 @@ fun TextInputEditText.validate() {
 
         }
     }
+
 }
+
+fun TextInputEditText.isBlank(): Boolean = text.isNullOrBlank()
