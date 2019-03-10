@@ -10,6 +10,7 @@ import com.jazart.smarthome.usecase.FetchUserUseCase
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Result
+import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -35,14 +36,14 @@ class HomeViewModel @Inject constructor(
 
     private var isShowing = false
 
-//    fun loadDevices() {
-//        getDevicesFromRepo {
-//            val userInfo = fetchUserUseCase.getUserInfo()
-//            when (userInfo) {
-//                is Result.Success<*> -> _devices.postValue((userInfo.data as UserQuery.User).devices())
-//            }
-//        }
-//    }
+    fun loadDevices() {
+        getDevicesFromRepo {
+            val userInfo = fetchUserUseCase.getUserInfo()
+            when (userInfo.status) {
+                is Status.Success -> _devices.postValue((userInfo.data as UserQuery.User).devices())
+            }
+        }
+    }
 
     private val _currentDevice = MutableLiveData<UserQuery.Device>()
     val currentDevice: LiveData<UserQuery.Device>
@@ -59,17 +60,15 @@ class HomeViewModel @Inject constructor(
 
     infix fun sendCommand(command: Command) {
         launch {
-            _currentDevice.value?.let { device ->
-                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
-            }
+//            _currentDevice.value?.let { device ->
+//                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
+//            }
+            sendDeviceCommandUseCase.sendCommand("", "", command)
         }
     }
 
     fun onBottomFabClicked(destination: Int) {
         _bottomFabClicked.value = Event(destination)
-    }
-    fun reloadDevice(offset: Int) {
-
     }
 
     fun addDevice() {

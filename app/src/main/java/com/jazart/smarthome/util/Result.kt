@@ -1,16 +1,23 @@
 package com.jazart.smarthome.util
 
-sealed class Result {
-    class Success<out T>(val data: T) : Result()
-    class Failure(val error: Error, val exception: Exception = Exception()) : Result()
-    object Completed : Result()
-
+data class Result<out T>(val data: T?, val error: Error?, val status: Status)  {
+    companion object {
+        fun <T> success(data: T): Result<T> = Result(data, null, Status.Success)
+        fun <T> failure(error: Error): Result<T> = Result(null, error, Status.Failure)
+        fun <T> completed(): Result<T> = Result(null, null, Status.Completed)
+    }
 }
 
-enum class Error(message: String = "") {
+enum class Error(val message: String = "") {
     NETWORK_TIMEOUT,
     INVALID_REQUEST,
     INVALID_INPUT,
     INVALID_ACCESS,
     NULL_RESPONSE_VALUE
+}
+
+sealed class Status {
+    object Success : Status()
+    object Failure : Status()
+    object Completed : Status()
 }

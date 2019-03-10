@@ -23,6 +23,7 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable, View.O
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var viewModel: HomeViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -1,4 +1,3 @@
 mutation UpdateDeviceMutation($uId: String, $deviceName: String, $command: Command) {
     update(uId: $uId, deviceName: $deviceName, command: $command)
 }
-

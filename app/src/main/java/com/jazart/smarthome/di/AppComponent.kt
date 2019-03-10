@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.apollographql.apollo.ApolloClient
+import com.jazart.smarthome.network.SmartHomeService
+import com.jazart.smarthome.usecase.FetchUserUseCase
 import dagger.*
 import dagger.android.AndroidInjectionModule
 import okhttp3.OkHttpClient
@@ -18,7 +20,7 @@ interface AppComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        fun application(app: Application): Builder
+        fun application(app: App): Builder
         fun network(networkModule: NetworkModule): Builder
         fun sharedPreferences(sharedPreferences: SharedPrefsModule): Builder
         fun build(): AppComponent

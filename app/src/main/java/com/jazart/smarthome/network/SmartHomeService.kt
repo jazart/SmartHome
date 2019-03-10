@@ -5,6 +5,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.graphql.LoginMutation
 import com.graphql.SignupMutation
 import com.graphql.UpdateDeviceMutation
 import com.graphql.UserQuery
@@ -26,32 +27,24 @@ class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
         ).await()
     }
 
-    suspend fun getUserInfo(): Response<UserQuery.Data> {
-        return apolloClient.query(UserQuery("jazart")).await()
+    suspend fun getUserInfo(username: String): Response<UserQuery.Data> {
+        return apolloClient.query(UserQuery(username)).await()
     }
 
-    suspend fun signin(mutation: SignupMutation): Response<SignupMutation.Data> {
+    suspend fun signin(mutation: LoginMutation): Response<LoginMutation.Data> {
         return apolloClient.mutate(mutation).await()
     }
 
+    suspend fun signup(mutation: SignupMutation): Response<SignupMutation.Data> = apolloClient.mutate(mutation).await()
     suspend fun updateDevice(mutation: UpdateDeviceMutation): Response<*> {
         return apolloClient.mutate(mutation).await()
     }
 
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
+        const val BASE_URL_DEV = "http://58e8cb5a.ngrok.io/graphql"
     }
 
-}
-
-class SmarthomeTokenManager : TokenManager {
-    override fun token(): Token = ""
-    override fun newToken(): Token = ""
-}
-
-interface TokenManager {
-    fun token(): Token
-    fun newToken(): Token
 }
 
 suspend fun <T> ApolloCall<T>.await(): Response<T> {

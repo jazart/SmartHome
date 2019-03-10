@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jazart.smarthome.usecase.FetchUserUseCase
+import com.jazart.smarthome.usecase.LoginUseCase
 import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.Event
-import com.jazart.smarthome.util.Result
+import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class LoginViewModel @Inject constructor(private val userRepo: FetchUserUseCase) : ViewModel(), CoroutineScope {
+class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
     private val job = Job()
@@ -24,12 +25,12 @@ class LoginViewModel @Inject constructor(private val userRepo: FetchUserUseCase)
     val loginError: LiveData<Event<Error>>
         get() = _loginError
 
-    fun login(username: String, password: String, name: String) {
+    fun login(username: String, password: String) {
         updateLoginStatus {
-            val result = userRepo.signup(username, password, name)
-            when (result) {
-                is Result.Success<*> -> _loginEvent.postValue(Event(result.data as String))
-                is Result.Failure -> _loginError.postValue(Event(result.error))
+            val result = loginUseCase.signIn(username, password)
+            when (result.status) {
+                is Status.Success -> _loginEvent.postValue(Event(result.data))
+                is Status.Failure -> _loginError.postValue(Event(result.error))
             }
         }
     }

@@ -1,36 +1,26 @@
 package com.jazart.smarthome.network
 
-import okhttp3.*
+import android.content.SharedPreferences
+import okhttp3.Interceptor
+import okhttp3.Response
+import javax.inject.Inject
 
 typealias Token = String
 
-class TokenInterceptor(
-    var token: Token,
-    private var prevToken: Token = ""
+class TokenInterceptor @Inject constructor(
+    private val prefs: SharedPreferences
 ) : Interceptor {
+
+    val token: Token by lazy { prefs.getString("jwt", " ") }
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (token != prevToken) {
-            prevToken = token
-            val req = chain.request()
-            req.newBuilder().apply {
-                addHeader("Authorization", "bearer: $token")
-                build()
-            }
+        if (!token.isBlank()) {
+            val req = chain.request().newBuilder()
+                .addHeader("Authorization", "Bearer ".plus(token))
+                .build()
+
             return chain.proceed(req)
         }
 
         return chain.proceed(chain.request())
-    }
-}
-
-class TokenAuthenticator(val tokenManager: TokenManager) : Authenticator {
-    override fun authenticate(route: Route?, response: Response): Request? {
-        response.header("Authorization: ")?.let { authHeader ->
-            if (authHeader.startsWith("bearer:")) {
-                // request new token then retry request.
-                tokenManager.newToken()
-            }
-        }
-        return null
     }
 }
