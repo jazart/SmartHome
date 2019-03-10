@@ -40,6 +40,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/firstNameEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/first_name" />
@@ -55,6 +56,7 @@
         app:layout_constraintStart_toStartOf="@+id/email">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_lock"
@@ -72,6 +74,7 @@
         app:layout_constraintTop_toTopOf="@+id/firstName">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lastNameEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/last_name" />
@@ -88,6 +91,7 @@
         app:layout_constraintStart_toStartOf="@+id/firstName">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_usn"
@@ -101,11 +105,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialButton"
+        app:layout_constraintBottom_toTopOf="@+id/signUpButton"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/verifyPasswordEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_lock"
@@ -115,7 +120,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/materialButton"
+        android:id="@+id/signUpButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
