@@ -9,6 +9,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.textfield.TextInputEditText
@@ -16,6 +17,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
+import com.jazart.smarthome.util.Event
 import kotlinx.android.synthetic.main.fragment_signup.*
 import javax.inject.Inject
 
@@ -44,37 +46,44 @@ class SignupFragment : Fragment(), Injectable {
             .into(image)
         setupTextListeners()
         signUpButton.setOnClickListener {
-            receivedInput()?.let { signupInfo ->
-                viewModel.signup(signupInfo)
+            val signUpData = receivedInput()
+            when {
+                signUpData != null -> viewModel.signup(signUpData)
+                else -> Toast.makeText(requireContext(), "Both passwords must match", Toast.LENGTH_LONG).show()
             }
-
         }
-        viewModel.invalidLiveData.observe(viewLifecycleOwner, Observer { event ->
-            event.consume()?.let{ returnedError ->
+
+        viewModel.invalidLiveData.observe(viewLifecycleOwner, Observer { event: Event<String> ->
+            event.consume()?.let { returnedError ->
                 Toast.makeText(requireContext(), returnedError, Toast.LENGTH_LONG).show()
+            }
+        })
+        monitorSignup()
+    }
+
+    private fun monitorSignup() {
+        viewModel.signupResult.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let {
+                findNavController().navigate(R.id.homeFragment)
+                Toast.makeText(requireContext(), "Welcome to SmartHome, ${userNameEt.text}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-
-    private fun receivedInput(): List<String>? {
-        val receivedFirstName = firstNameEt.text.toString()
-        val receivedLastName = lastNameEt.text.toString()
-        val receivedEmail = emailEt.text.toString()
-        val receivedPassword = passwordEt.text.toString()
-        val receivedVerified = verifyPasswordEt.text.toString()
-        val receivedUsername = userNameEt.text.toString()
-
-        if (receivedPassword != receivedVerified) {
-            return null
+    private fun receivedInput(): Map<String, String>? {
+        val signupInfo = mapOf(
+            "firstName" to firstNameEt.text.toString(),
+            "lastName" to lastNameEt.text.toString(),
+            "email" to emailEt.text.toString(),
+            "password" to passwordEt.text.toString(),
+            "verified" to verifyPasswordEt.text.toString(),
+            "username" to userNameEt.text.toString()
+        )
+        return if (signupInfo["password"] != signupInfo["verified"]) {
+            null
+        } else {
+            signupInfo
         }
-        if (receivedFirstName.isBlank() || receivedLastName.isBlank() ||
-            receivedEmail.isBlank() || receivedPassword.isBlank() ||
-            receivedVerified.isBlank()
-        ) {
-            return null
-        }
-        return listOf(receivedFirstName, receivedLastName, receivedEmail, receivedUsername, receivedPassword)
     }
 
     private fun setupTextListeners() {
@@ -89,17 +98,14 @@ class SignupFragment : Fragment(), Injectable {
 
 fun TextInputEditText.validate() {
     val textInputLayout = this.parent.parent as TextInputLayout
-    doOnTextChanged { text, start, count, after ->
+    doOnTextChanged { text, _, _, _ ->
         if (text.isNullOrBlank()) {
-
             textInputLayout.isErrorEnabled = false
             textInputLayout.error = "Please Complete this field"
         } else {
             textInputLayout.isErrorEnabled = false
-
         }
     }
-
 }
 
 fun TextInputEditText.isBlank(): Boolean = text.isNullOrBlank()

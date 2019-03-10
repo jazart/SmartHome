@@ -23,7 +23,7 @@ object NetworkModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder().run {
-            serverUrl(SmartHomeService.BASE_URL)
+            serverUrl(SmartHomeService.BASE_URL_DEV)
             normalizedCache(
                 LruNormalizedCacheFactory(
                     EvictionPolicy.builder()

@@ -1,7 +1,8 @@
 query UserQuery($name: String!) {
     user(name: $name) {
         username
-        name
+        firstName
+        lastName
         devices {
             name
             status

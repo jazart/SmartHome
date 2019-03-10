@@ -43,7 +43,7 @@ class LoginFragment : Fragment(), Injectable {
         val viewModel = ViewModelProviders.of(requireActivity(), viewModelProvider).get(LoginViewModel::class.java)
 
         login_btn.setOnClickListener {
-            viewModel.login(username_et.text.toString(), password_et.text.toString(), "Jeremy Payne")
+            viewModel.login(username_et.text.toString(), password_et.text.toString())
         }
         viewModel.loginEvent.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { token ->

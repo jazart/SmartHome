@@ -24,9 +24,9 @@ class LoginViewModel @Inject constructor(private val userRepo: FetchUserUseCase)
     val loginError: LiveData<Event<Error>>
         get() = _loginError
 
-    fun login(username: String, password: String, name: String) {
+    fun login(username: String, password: String) {
         updateLoginStatus {
-            val result = userRepo.signup(username, password, name)
+            val result = userRepo.signIn(username, password)
             when (result.status) {
                 is Status.Success -> _loginEvent.postValue(Event(result.data))
                 is Status.Failure -> _loginError.postValue(Event(result.error))

@@ -2,8 +2,10 @@ package com.jazart.smarthome.usecase
 
 import android.content.SharedPreferences
 import com.apollographql.apollo.api.Input
+import com.graphql.LoginMutation
 import com.graphql.SignupMutation
 import com.graphql.UserQuery
+import com.graphql.type.Credential
 import com.jazart.smarthome.network.SmartHomeService
 import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.ErrorType
@@ -30,19 +32,18 @@ class FetchUserUseCase @Inject constructor(
         return Result.failure(Error.NULL_RESPONSE_VALUE)
     }
 
-    suspend fun signup(username: String, password: String, name: String): Result<String> {
-        val response = service.signin(SignupMutation.builder().run {
-            nameInput(Input.fromNullable(name))
+    suspend fun signIn(username: String, password: String): Result<String> {
+        val response = service.signin(LoginMutation.builder().run {
+            nameInput(Input.fromNullable(username))
             passInput(Input.fromNullable(password))
-            usernameInput(Input.fromNullable(username))
             build()
         })
 
         if (response.hasErrors()) {
             return Result.failure(ErrorType.from(response.errors()))
         }
-        prefs.edit().putString("jwt", response.data()?.signup() ?: "").apply()
+        prefs.edit().putString("jwt", response.data()?.login() ?: "").apply()
         prefs.edit().putString("username", username).apply()
-        return Result.success(response.data()?.signup()!!)
+        return Result.success(response.data()?.login()!!)
     }
 }
