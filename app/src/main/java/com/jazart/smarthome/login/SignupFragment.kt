@@ -7,17 +7,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.jazart.smarthome.R
+import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_signup.*
 import javax.inject.Inject
 
-class SignupFragment : Fragment() {
+class SignupFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -45,8 +47,13 @@ class SignupFragment : Fragment() {
             receivedInput()?.let { signupInfo ->
                 viewModel.signup(signupInfo)
             }
-            Toast.makeText(requireContext(), "Please complete all of the fields.", Toast.LENGTH_LONG).show()
+
         }
+        viewModel.invalidLiveData.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let{ returnedError ->
+                Toast.makeText(requireContext(), returnedError, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
 
