@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.jazart.smarthome.devicemgmt.DeviceViewModel
 import com.jazart.smarthome.devicemgmt.HomeViewModel
 import com.jazart.smarthome.login.LoginViewModel
+import com.jazart.smarthome.login.SignupViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -37,6 +38,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DeviceViewModel::class)
     abstract fun bindDeviceViewModel(deviceViewModel: DeviceViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SignupViewModel::class)
+    abstract fun bindSignupViewModel(signupViewModel: SignupViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
