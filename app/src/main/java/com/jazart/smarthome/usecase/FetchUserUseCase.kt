@@ -31,19 +31,4 @@ class FetchUserUseCase @Inject constructor(
         }
         return Result.failure(Error.NULL_RESPONSE_VALUE)
     }
-
-    suspend fun signIn(username: String, password: String): Result<String> {
-        val response = service.signin(LoginMutation.builder().run {
-            nameInput(Input.fromNullable(username))
-            passInput(Input.fromNullable(password))
-            build()
-        })
-
-        if (response.hasErrors()) {
-            return Result.failure(ErrorType.from(response.errors()))
-        }
-        prefs.edit().putString("jwt", response.data()?.login() ?: "").apply()
-        prefs.edit().putString("username", username).apply()
-        return Result.success(response.data()?.login()!!)
-    }
 }
