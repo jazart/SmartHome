@@ -12,5 +12,6 @@ enum class Error(message: String = "") {
     INVALID_REQUEST,
     INVALID_INPUT,
     INVALID_ACCESS,
-    NULL_RESPONSE_VALUE
+    NULL_RESPONSE_VALUE,
+    UNKNOWN_ERROR
 }
