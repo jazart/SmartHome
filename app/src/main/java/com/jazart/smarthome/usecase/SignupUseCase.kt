@@ -21,7 +21,7 @@ class SignupUseCase @Inject constructor(
                 Input.fromNullable(credential),
                 Input.fromNullable(personal)
             )
-        )
+        ) ?: return Result.failure(Error.NOT_FOUND)
         if (response.hasErrors()) {
             return Result.failure(ErrorType.from(response.errors()))
         }

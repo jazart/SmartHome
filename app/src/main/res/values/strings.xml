@@ -22,6 +22,9 @@
     <string name="last_name">Last Name</string>
     <string name="e_mail">E-mail</string>
     <string name="re_enter_password">Re-enter Password</string>
+    <string name="no_devices_msg">No devices yet. 🙁 Add one now by pressing the icon below!</string>
+    <string name="log_out">Log out</string>
+    <string name="fav_device">Favorite Device</string>
 
 
 </resources>

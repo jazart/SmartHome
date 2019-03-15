@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
 class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
-    private val job = Job()
+    private val job = SupervisorJob()
 
     private val _loginEvent = MutableLiveData<Event<String>>()
     val loginEvent: LiveData<Event<String>>
@@ -27,10 +27,12 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
 
     fun login(username: String, password: String) {
         updateLoginStatus {
-            val result = loginUseCase.signIn(username, password)
-            when (result.status) {
-                is Status.Success -> _loginEvent.postValue(Event(result.data))
-                is Status.Failure -> _loginError.postValue(Event(result.error))
+            withContext(Dispatchers.IO) {
+                val result = loginUseCase.signIn(username, password)
+                when (result.status) {
+                    is Status.Success -> _loginEvent.postValue(Event(result.data))
+                    is Status.Failure -> _loginError.postValue(Event(result.error))
+                }
             }
         }
     }
@@ -43,10 +45,6 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                 _loginError.postValue(Event(Error.INVALID_REQUEST))
             }
         }
-    }
-
-    fun logout() {
-
     }
 
     override fun onCleared() {

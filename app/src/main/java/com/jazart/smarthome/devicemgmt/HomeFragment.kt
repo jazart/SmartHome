@@ -1,5 +1,6 @@
 package com.jazart.smarthome.devicemgmt
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -60,14 +61,24 @@ class HomeFragment : Fragment(), Injectable {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
+            if (it.isEmpty()) {
+                displayAddDeviceUi()
+            } else {
+                adapter.submitList(it)
+            }
         })
+        displayAddDeviceUi()
         deviceImage.setImageResource(R.drawable.ic_lock)
-        editableTV.text = "Favorite Device"
+        editableTV.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
 
+    }
+
+    private fun displayAddDeviceUi() {
+        home_recyclerView.setGone()
+        favDevice.setGone()
     }
 
     override fun onStop() {
@@ -89,4 +100,8 @@ class HomeFragment : Fragment(), Injectable {
 
 private fun <E> List<E>.toStringList(): List<String> {
     return this.map { obj -> "$obj" }
+}
+
+fun View.setGone() {
+    visibility = View.GONE
 }

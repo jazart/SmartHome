@@ -17,15 +17,6 @@
                             <option name="y" value="247" />
                           </Point>
                         </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_deviceFragment_to_settingsFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -95,6 +86,15 @@
                             <option name="y" value="64" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_signUpFragment_to_homeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -103,8 +103,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="233" />
-                            <option name="y" value="-336" />
+                            <option name="x" value="410" />
+                            <option name="y" value="-378" />
                           </Point>
                         </option>
                       </LayoutPositions>

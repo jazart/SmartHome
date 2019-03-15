@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.graphql.type.Credential
 import com.graphql.type.Personal
 import com.jazart.smarthome.usecase.SignupUseCase
+import com.jazart.smarthome.util.Error
+import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
@@ -26,6 +28,10 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
     private val _signupResult = MutableLiveData<Event<String>>()
     val signupResult: LiveData<Event<String>>
         get() = _signupResult
+
+    private val _signUpError = MutableLiveData<Event<String>>()
+    val signUpError: LiveData<Event<String>>
+        get() = _signUpError
 
     fun signup(info: Map<String, String>) {
         info.forEach { key, info ->
@@ -54,6 +60,10 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
                 )
                 when (signupNetworkResult.status) {
                     is Status.Success -> _signupResult.postValue(Event(signupNetworkResult.data))
+                    is Status.Failure -> {
+                        val error = signupNetworkResult.error ?: return@withContext
+                        _signUpError.postValue(Event(ErrorType.from(error)))
+                    }
                 }
             }
         }
@@ -67,5 +77,10 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
                 // Handle err
             }
         }
+    }
+
+    companion object {
+        const val USERNAME = "username"
+        const val FIRST_NAME = "firstname"
     }
 }

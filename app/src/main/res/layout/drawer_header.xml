@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="192dp"
     android:orientation="vertical"
-    android:padding="64dp"
-    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+    android:paddingTop="30dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="@drawable/background"
     android:gravity="bottom">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
         android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:fontFamily="@font/rubik" />
+
+    <TextView
+        android:id="@+id/headerCurrentUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Jeremy"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
 </LinearLayout>

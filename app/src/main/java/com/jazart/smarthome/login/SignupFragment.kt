@@ -46,11 +46,11 @@ class SignupFragment : Fragment(), Injectable {
             .into(image)
         setupTextListeners()
         signUpButton.setOnClickListener {
-            val signUpData = receivedInput()
-            when {
-                signUpData != null -> viewModel.signup(signUpData)
-                else -> Toast.makeText(requireContext(), "Both passwords must match", Toast.LENGTH_LONG).show()
-            }
+//            val signUpData = receivedInput()
+//            when {
+//                signUpData != null -> viewModel.signup(signUpData)
+//                else -> Toast.makeText(requireContext(), "Both passwords must match", Toast.LENGTH_LONG).show()
+//            }
         }
 
         viewModel.invalidLiveData.observe(viewLifecycleOwner, Observer { event: Event<String> ->
@@ -64,8 +64,13 @@ class SignupFragment : Fragment(), Injectable {
     private fun monitorSignup() {
         viewModel.signupResult.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
-                findNavController().navigate(R.id.homeFragment)
+                findNavController().navigate(R.id.action_signUpFragment_to_homeFragment)
                 Toast.makeText(requireContext(), "Welcome to SmartHome, ${userNameEt.text}", Toast.LENGTH_SHORT).show()
+            }
+        })
+        viewModel.signUpError.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { msg ->
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
             }
         })
     }
