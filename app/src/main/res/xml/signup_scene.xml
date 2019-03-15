@@ -1,26 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Transition
-        app:constraintSetStart="@layout/fragment_signup"
-        app:constraintSetEnd="@layout/fragment_signup_end"
-        app:duration="2000">
+        motion:constraintSetStart="@id/start"
+        motion:constraintSetEnd="@id/end"
+        motion:duration="750">
 
-        <OnClick
-            app:touchAnchorId="@+id/signUpButton"
-            app:clickAction="transitionToEnd"/>
+        <!--<OnSwipe-->
+            <!--motion:touchAnchorId="@+id/signUpButton"-->
+            <!--motion:dragDirection="dragUp"-->
+            <!--motion:touchAnchorSide="bottom"/>-->
 
+        <!--<OnClick-->
+            <!--motion:target="@id/signUpButton"-->
+            <!--/>-->
     </Transition>
 
-    <!--<ConstraintSet-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_width="match_parent">-->
+    <ConstraintSet
+        android:id="@+id/start">
+        <Constraint
+            android:id="@+id/verifyPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            motion:layout_constraintBottom_toTopOf="@+id/signUpButton"
+            motion:layout_constraintEnd_toEndOf="@+id/password"
+            motion:layout_constraintStart_toStartOf="@+id/password"/>
+        <Constraint
+            android:id="@+id/password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            motion:layout_constraintBottom_toTopOf="@id/verifyPassword"
+            motion:layout_constraintEnd_toEndOf="@id/lastName"
+            motion:layout_constraintStart_toStartOf="@+id/email"/>
 
-        <!--<Constraint-->
-            <!--a-->
+        <Constraint
+            android:id="@+id/signUpButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Complete Sign-up"
+            android:textColor="@color/colorAccent"
+            motion:backgroundTint="@color/colorPrimaryDark"
+            motion:cornerRadius="10dp"
+            motion:elevation="3dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="@+id/verifyPassword"
+            motion:layout_constraintStart_toStartOf="@+id/verifyPassword" />
+        
+        <Constraint
+            android:id="@+id/signUpProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            motion:layout_constraintStart_toStartOf="@id/signUpButton"
+            motion:layout_constraintEnd_toEndOf="@id/signUpButton"
+            motion:layout_constraintTop_toBottomOf="@id/signUpButton"/>
+    </ConstraintSet>
 
+    <ConstraintSet
+        android:id="@+id/end">
+        <Constraint
+            android:id="@+id/verifyPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintEnd_toEndOf="@+id/password"
+            motion:layout_constraintStart_toStartOf="@+id/password"/>
+        <Constraint
+            android:id="@+id/password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            motion:layout_constraintEnd_toEndOf="@id/lastName"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="@+id/email"/>
+
+        <Constraint
+            android:id="@+id/signUpButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:alpha="0"
+            motion:layout_constraintEnd_toEndOf="@id/lastName"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="@+id/email"/>
+        
+        <Constraint
+            android:id="@+id/signUpProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            motion:layout_constraintStart_toStartOf="@id/signUpButton"
+            motion:layout_constraintEnd_toEndOf="@id/signUpButton"
+            motion:layout_constraintTop_toBottomOf="@id/signUpButton" />
+    </ConstraintSet>
 
 </MotionScene>

@@ -34,13 +34,19 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
         get() = _signUpError
 
     fun signup(info: Map<String, String>) {
-        info.forEach { key, info ->
-            if (info.isBlank()) {
+        if(validate(info)) sendSignup(info)
+    }
+
+    private fun validate(info: Map<String, String>): Boolean {
+        for((key, value) in info) {
+            if (value.isBlank()) {
                 _invalidLiveData.value = Event("Invalid $key")
+                return false
             }
         }
-        sendSignup(info)
+        return true
     }
+
 
     private fun sendSignup(info: Map<String, String>) {
         attemptSignup {

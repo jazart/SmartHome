@@ -46,16 +46,16 @@ class SignupFragment : Fragment(), Injectable {
             .into(image)
         setupTextListeners()
         signUpButton.setOnClickListener {
-//            val signUpData = receivedInput()
-//            when {
-//                signUpData != null -> viewModel.signup(signUpData)
-//                else -> Toast.makeText(requireContext(), "Both passwords must match", Toast.LENGTH_LONG).show()
-//            }
+            val signUpData = receivedInput()
+            when {
+                signUpData != null -> viewModel.signup(signUpData)
+                else -> Toast.makeText(requireContext(), "Both passwords must match", Toast.LENGTH_LONG).show()
+            }
         }
 
         viewModel.invalidLiveData.observe(viewLifecycleOwner, Observer { event: Event<String> ->
             event.consume()?.let { returnedError ->
-                Toast.makeText(requireContext(), returnedError, Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), returnedError.plus(" Please complete all fields."), Toast.LENGTH_LONG).show()
             }
         })
         monitorSignup()
