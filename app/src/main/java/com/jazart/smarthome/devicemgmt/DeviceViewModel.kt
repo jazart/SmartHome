@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
+import com.tinder.scarlet.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,5 +36,20 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
 
             }
         }
+    }
+
+    private val _removeEvent = MutableLiveData<com.jazart.smarthome.util.Event<String>>()
+    val removeEvent: LiveData<com.jazart.smarthome.util.Event<String>>
+        get() = _removeEvent
+
+    private val _removeError = MutableLiveData<com.jazart.smarthome.util.Event<String>>()
+    val removeError: LiveData<com.jazart.smarthome.util.Event<String>>
+        get() = _removeError
+
+
+
+   fun removeDevice(id: Long){
+
+
     }
 }

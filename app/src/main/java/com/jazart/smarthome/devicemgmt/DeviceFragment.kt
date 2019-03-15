@@ -25,6 +25,9 @@ class DeviceFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
+    @Inject
+    lateinit var deviceViewModel: ViewModelFactory
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_device_detail, container, false)
     }
@@ -45,6 +48,7 @@ class DeviceFragment : Fragment(), Injectable {
                 }
             }
         })
+
         updateUi()
         editButton.setOnClickListener {
             deviceViewModel.toggleEdit()
