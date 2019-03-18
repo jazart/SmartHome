@@ -8,70 +8,81 @@
     android:backgroundTint="@color/colorAccent"
     tools:context=".devicemgmt.DeviceCommandBottomSheet">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/actionTv"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="463dp"
         android:layout_height="760dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:text="@string/choose_action"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        app:fontFamily="@font/rubik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/lightOnBtn"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="393dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/turn_on_light"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.029"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/actionTv"
-        app:strokeColor="@color/colorPrimary"
-        app:strokeWidth="2dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/deviceCommandRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/actionTv" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/lightOffBtn"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="393dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="124dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/turn_off_light"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/actionTv"
-        app:strokeColor="@color/colorPrimary"
-        app:strokeWidth="2dp" />
+    <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/lightOnBtn"-->
+        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
+        <!--android:layout_width="393dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="52dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:text="@string/turn_on_light"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textSize="20sp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.029"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/actionTv"-->
+        <!--app:strokeColor="@color/colorPrimary"-->
+        <!--app:strokeWidth="2dp" />-->
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/lightPulseBtn"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="393dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="196dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/pulse"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/actionTv"
-        app:strokeColor="@color/colorPrimary"
-        app:strokeWidth="2dp" />
+    <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/lightOffBtn"-->
+        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
+        <!--android:layout_width="393dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="124dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:text="@string/turn_off_light"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textSize="20sp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/actionTv"-->
+        <!--app:strokeColor="@color/colorPrimary"-->
+        <!--app:strokeWidth="2dp" />-->
+
+    <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/lightPulseBtn"-->
+        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
+        <!--android:layout_width="393dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="196dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:text="@string/pulse"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textSize="20sp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/actionTv"-->
+        <!--app:strokeColor="@color/colorPrimary"-->
+        <!--app:strokeWidth="2dp" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

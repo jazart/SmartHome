@@ -13,7 +13,13 @@ enum class Error(val message: String = "") {
     INVALID_REQUEST,
     INVALID_INPUT,
     INVALID_ACCESS,
-    NULL_RESPONSE_VALUE
+    NULL_RESPONSE_VALUE,
+    INVALID_CREDENTIALS,
+    NOT_FOUND,
+    UNKNOWN_ERROR,
+    DUP_EMAIL,
+    DUP_USERNAME,
+    INVALID_PASSWORD
 }
 
 sealed class Status {

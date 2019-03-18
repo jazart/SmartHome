@@ -9,8 +9,9 @@
     android:layout_marginTop="24dp"
     android:layout_marginEnd="16dp"
     android:orientation="vertical"
+    app:strokeWidth="2dp"
     app:cardCornerRadius="4dp"
-    app:cardElevation="4dp"
+    app:cardElevation="0dp"
     app:strokeColor="@color/colorAccent">
 
     <androidx.constraintlayout.widget.ConstraintLayout

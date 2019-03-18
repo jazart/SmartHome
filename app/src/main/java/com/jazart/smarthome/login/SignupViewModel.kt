@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.graphql.type.Credential
 import com.graphql.type.Personal
 import com.jazart.smarthome.usecase.SignupUseCase
+import com.jazart.smarthome.util.Error
+import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
@@ -19,7 +21,6 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
         get() = Dispatchers.Main + job
 
     private val _invalidLiveData = MutableLiveData<Event<String>>()
-
     val invalidLiveData: LiveData<Event<String>>
         get() = _invalidLiveData
 
@@ -27,33 +28,47 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
     val signupResult: LiveData<Event<String>>
         get() = _signupResult
 
+    private val _signUpError = MutableLiveData<Event<String>>()
+    val signUpError: LiveData<Event<String>>
+        get() = _signUpError
+
     fun signup(info: Map<String, String>) {
-        info.forEach { key, info ->
-            if (info.isBlank()) {
-                _invalidLiveData.value = Event("Invalid $key")
+        if(validate(info)) sendSignup(info)
+    }
+
+    private fun validate(info: Map<String, String>): Boolean {
+        for((key, value) in info) {
+            if (value.isBlank()) {
+                _invalidLiveData.value = Event("Invalid $key.")
+                return false
             }
         }
-        sendSignup(info)
+        return true
     }
+
 
     private fun sendSignup(info: Map<String, String>) {
         attemptSignup {
             withContext(Dispatchers.IO) {
                 val signupNetworkResult = signupUseCase.signupUser(
                     Credential.builder().run {
-                        username(info.getValue("username"))
-                        password(info.getValue("password"))
+                        username(info.getValue(USERNAME))
+                        password(info.getValue(PASSWORD))
                         build()
                     },
                     Personal.builder().run {
-                        firstName(info.getValue("firstName"))
-                        lastName(info.getValue("lastName"))
-                        email(info.getValue("email"))
+                        firstName(info.getValue(FIRST_NAME))
+                        lastName(info.getValue(LAST_NAME))
+                        email(info.getValue(EMAIL))
                         build()
                     }
                 )
                 when (signupNetworkResult.status) {
                     is Status.Success -> _signupResult.postValue(Event(signupNetworkResult.data))
+                    is Status.Failure -> {
+                        val error = signupNetworkResult.error ?: return@withContext
+                        _signUpError.postValue(Event(ErrorType.from(error)))
+                    }
                 }
             }
         }
@@ -67,5 +82,14 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
                 // Handle err
             }
         }
+    }
+
+    companion object {
+        const val USERNAME = "Username"
+        const val FIRST_NAME = "First Name"
+        const val LAST_NAME = "Last Name"
+        const val EMAIL = "Email"
+        const val PASSWORD = "Password"
+        const val VERIFIED_PASSWORD =  "Verified Password"
     }
 }

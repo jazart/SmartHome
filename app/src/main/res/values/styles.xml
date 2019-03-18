@@ -16,13 +16,11 @@
         <item name="counterOverflowTextColor">@android:color/holo_red_light</item>
         <item name="boxStrokeWidth">3dp</item>
         <item name="hintTextColor">@color/colorPrimaryDark</item>
+        <item name="errorTextColor">@color/colorAccent</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
         <item name="boxCornerRadiusTopEnd">10dp</item>
         <item name="boxCornerRadiusTopStart">10dp</item>
         <item name="boxCornerRadiusBottomStart">10dp</item>
-
-
     </style>
-
 
 </resources>

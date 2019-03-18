@@ -1,7 +1,11 @@
 package com.jazart.smarthome.devicemgmt
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +43,6 @@ class HomeFragment : Fragment(), Injectable {
         )
     }
 
-
     private val adapter = HomeAdapter(clickHandler)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,14 +63,35 @@ class HomeFragment : Fragment(), Injectable {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
+            if (it.isEmpty()) {
+//                displayAddDeviceUi()
+            } else {
+                adapter.submitList(it)
+            }
+        })
+        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+            val span = SpannableString(getString(R.string.home_greeting, user))
+            span.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorAccent, null)),
+                5,
+                span.lastIndexOf(user) + user.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            userGreeting.text = span
+
         })
         deviceImage.setImageResource(R.drawable.ic_lock)
-        editableTV.text = "Favorite Device"
+        editableTV.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
 
+    }
+
+    private fun displayAddDeviceUi() {
+        home_recyclerView.setGone()
+        favDevice.setGone()
+        userGreeting.setGone()
+        homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
     }
 
     override fun onStop() {
@@ -89,4 +113,8 @@ class HomeFragment : Fragment(), Injectable {
 
 private fun <E> List<E>.toStringList(): List<String> {
     return this.map { obj -> "$obj" }
+}
+
+fun View.setGone() {
+    visibility = View.GONE
 }

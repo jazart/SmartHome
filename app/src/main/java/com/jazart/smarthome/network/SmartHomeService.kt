@@ -17,32 +17,53 @@ import kotlin.coroutines.suspendCoroutine
 
 class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
 
-    suspend fun sendDeviceCommand(uId: String, deviceName: String, command: Command): Response<*> {
-        return apolloClient.mutate(
-            UpdateDeviceMutation(
-                Input.fromNullable(uId),
-                Input.fromNullable(deviceName),
-                Input.fromNullable(command)
-            )
-        ).await()
+    suspend fun sendDeviceCommand(uId: String, deviceName: String, command: Command): Response<UpdateDeviceMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(
+                UpdateDeviceMutation(
+                    Input.fromNullable(uId),
+                    Input.fromNullable(deviceName),
+                    Input.fromNullable(command)
+                )
+            ).await()
+        }
     }
 
-    suspend fun getUserInfo(username: String): Response<UserQuery.Data> {
-        return apolloClient.query(UserQuery(username)).await()
+    suspend fun getUserInfo(username: String): Response<UserQuery.Data>? {
+        return makeCall {
+            apolloClient.query(UserQuery(username)).await()
+        }
     }
 
-    suspend fun signin(mutation: LoginMutation): Response<LoginMutation.Data> {
-        return apolloClient.mutate(mutation).await()
+    suspend fun signin(mutation: LoginMutation): Response<LoginMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(mutation).await()
+        }
     }
 
-    suspend fun signup(mutation: SignupMutation): Response<SignupMutation.Data> = apolloClient.mutate(mutation).await()
-    suspend fun updateDevice(mutation: UpdateDeviceMutation): Response<*> {
-        return apolloClient.mutate(mutation).await()
+    suspend fun signup(mutation: SignupMutation): Response<SignupMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(mutation).await()
+        }
+    }
+
+    suspend fun updateDevice(mutation: UpdateDeviceMutation): Response<*>? {
+        return makeCall {
+            apolloClient.mutate(mutation).await()
+        }
+    }
+
+    private inline fun <T> makeCall(block: () -> Response<T>): Response<T>? {
+        return try {
+            block()
+        } catch (e: ApolloException) {
+            return null
+        }
     }
 
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
-        const val BASE_URL_DEV = "http://58e8cb5a.ngrok.io/graphql"
+        const val BASE_URL_DEV = "http://48fdb1f0.ngrok.io/graphql"
     }
 
 }

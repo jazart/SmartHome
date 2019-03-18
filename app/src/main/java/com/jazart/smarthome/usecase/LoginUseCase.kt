@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.apollographql.apollo.api.Input
 import com.graphql.LoginMutation
 import com.jazart.smarthome.network.SmartHomeService
+import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Result
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class LoginUseCase @Inject constructor(
             nameInput(Input.fromNullable(username))
             passInput(Input.fromNullable(password))
             build()
-        })
+        }) ?: return Result.failure(Error.NOT_FOUND)
 
         if (response.hasErrors()) {
             return Result.failure(ErrorType.from(response.errors()))

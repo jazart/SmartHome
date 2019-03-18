@@ -36,10 +36,6 @@ class LoginFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (activity as MainActivity).apply {
-            bottomFab.visibility = View.GONE
-            bottom_bar.visibility = View.GONE
-        }
         val viewModel = ViewModelProviders.of(requireActivity(), viewModelProvider).get(LoginViewModel::class.java)
 
         login_btn.setOnClickListener {

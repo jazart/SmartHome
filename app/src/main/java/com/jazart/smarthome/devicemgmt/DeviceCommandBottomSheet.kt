@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
 import com.graphql.type.Command
@@ -23,6 +24,8 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable, View.O
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var viewModel: HomeViewModel
+    private val commandAdapter = DeviceCommandAdapter {}
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,28 +38,30 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable, View.O
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
+        deviceCommandRecycler.adapter = commandAdapter
+        deviceCommandRecycler.layoutManager = LinearLayoutManager(requireContext())
         viewModel.currentDevice.observe(viewLifecycleOwner, Observer { device ->
             updateUi(device)
         })
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
-            R.id.lightOffBtn -> viewModel sendCommand Command.TURN_OFF
-            R.id.lightOnBtn -> viewModel sendCommand Command.TURN_ON
-            R.id.lightPulseBtn -> viewModel sendCommand Command.PULSE
-            else -> Toast.makeText(requireContext(), getString(R.string.invalid_command), Toast.LENGTH_SHORT).show()
-        }
+//        when(v.id) {
+//            R.id.lightOffBtn -> viewModel sendCommand Command.TURN_OFF
+//            R.id.lightOnBtn -> viewModel sendCommand Command.TURN_ON
+//            R.id.lightPulseBtn -> viewModel sendCommand Command.PULSE
+//            else -> Toast.makeText(requireContext(), getString(R.string.invalid_command), Toast.LENGTH_SHORT).show()
+//        }
         dismiss()
     }
 
     private fun setupListeners() {
-        lightOffBtn.setOnClickListener(this)
-        lightOnBtn.setOnClickListener(this)
-        lightPulseBtn.setOnClickListener(this)
+//        lightOffBtn.setOnClickListener(this)
+//        lightOnBtn.setOnClickListener(this)
+//        lightPulseBtn.setOnClickListener(this)
     }
 
     private fun updateUi(device: UserQuery.Device) {
-
+        commandAdapter.submitList(device.commands())
     }
 }
