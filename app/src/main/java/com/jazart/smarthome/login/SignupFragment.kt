@@ -17,6 +17,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
+import com.jazart.smarthome.login.SignupViewModel.Companion.EMAIL
+import com.jazart.smarthome.login.SignupViewModel.Companion.FIRST_NAME
+import com.jazart.smarthome.login.SignupViewModel.Companion.LAST_NAME
+import com.jazart.smarthome.login.SignupViewModel.Companion.PASSWORD
+import com.jazart.smarthome.login.SignupViewModel.Companion.USERNAME
+import com.jazart.smarthome.login.SignupViewModel.Companion.VERIFIED_PASSWORD
 import com.jazart.smarthome.util.Event
 import kotlinx.android.synthetic.main.fragment_signup.*
 import javax.inject.Inject
@@ -77,14 +83,14 @@ class SignupFragment : Fragment(), Injectable {
 
     private fun receivedInput(): Map<String, String>? {
         val signupInfo = mapOf(
-            "firstName" to firstNameEt.text.toString(),
-            "lastName" to lastNameEt.text.toString(),
-            "email" to emailEt.text.toString(),
-            "password" to passwordEt.text.toString(),
-            "verified" to verifyPasswordEt.text.toString(),
-            "username" to userNameEt.text.toString()
+            FIRST_NAME to firstNameEt.text.toString(),
+            LAST_NAME to lastNameEt.text.toString(),
+            EMAIL to emailEt.text.toString(),
+            PASSWORD to passwordEt.text.toString(),
+            VERIFIED_PASSWORD to verifyPasswordEt.text.toString(),
+            USERNAME to userNameEt.text.toString()
         )
-        return if (signupInfo["password"] != signupInfo["verified"]) {
+        return if (signupInfo[PASSWORD] != signupInfo[VERIFIED_PASSWORD]) {
             null
         } else {
             signupInfo
@@ -106,7 +112,7 @@ fun TextInputEditText.validate() {
     doOnTextChanged { text, _, _, _ ->
         if (text.isNullOrBlank()) {
             textInputLayout.isErrorEnabled = false
-            textInputLayout.error = "Please Complete this field"
+            textInputLayout.error = context.getString(R.string.invalid_signup_form)
         } else {
             textInputLayout.isErrorEnabled = false
         }

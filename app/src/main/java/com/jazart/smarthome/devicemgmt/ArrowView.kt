@@ -23,7 +23,7 @@ class ArrowView @JvmOverloads constructor(
     init {
         paint.color = resources.getColor(R.color.colorAccent, Resources.getSystem().newTheme())
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 20f
+        paint.strokeWidth = 50f
         paint.strokeJoin = Paint.Join.ROUND
         cornerRadius = round(64f * resources.displayMetrics.scaledDensity)
     }
@@ -43,11 +43,10 @@ class ArrowView @JvmOverloads constructor(
         val centerY = height * 0.5f
         path.rewind()
         path.moveTo(centerX, centerY)
-        path.lineTo(centerX, centerY + 100f)
-        path.lineTo(centerX * 0.85f, height * 0.75f)
-        path.moveTo(centerX, centerY + 100f)
-        path.lineTo( centerX * 1.15f, height * 0.75f)
-        rect.set(width * .25f, 0f, width * .75f, height.toFloat() * .5f)
+        path.lineTo(centerX, centerY + centerY * 0.70f)
+        path.lineTo(centerX * 0.75f, centerY * 1.45f)
+        path.moveTo(centerX, centerY + centerY * 0.70f)
+        path.lineTo( centerX * 1.25f, centerY * 1.45f)
         canvas.apply {
             drawPath(path, paint)
             save()

@@ -34,13 +34,20 @@ class HomeViewModel @Inject constructor(
     val bottomFabClicked: LiveData<Event<Int>>
         get() = _bottomFabClicked
 
+    private val _user = MutableLiveData<String>()
+    val user: LiveData<String>
+        get() = _user
+
     private var isShowing = false
 
     fun loadDevices() {
         getDevicesFromRepo {
             val userInfo = fetchUserUseCase.getUserInfo()
             when (userInfo.status) {
-                is Status.Success -> _devices.postValue((userInfo.data as UserQuery.User).devices())
+                is Status.Success -> {
+                    _devices.postValue((userInfo.data?.devices()))
+                    _user.postValue(userInfo.data?.username())
+                }
             }
         }
     }

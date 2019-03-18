@@ -3,11 +3,19 @@ package com.jazart.smarthome.devicemgmt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.graphql.type.Command
 
 class DeviceCommandAdapter(clickListener: (Command) -> Unit) :
-    RecyclerView.Adapter<DeviceCommandAdapter.DeviceViewHolder>() {
+    ListAdapter<Command, DeviceCommandAdapter.DeviceViewHolder>(object : DiffUtil.ItemCallback<Command>() {
+        override fun areItemsTheSame(oldItem: Command, newItem: Command): Boolean {
+            return oldItem.name == newItem.name
+        }
+
+        override fun areContentsTheSame(oldItem: Command, newItem: Command): Boolean = oldItem == newItem
+    }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder =
         DeviceViewHolder(

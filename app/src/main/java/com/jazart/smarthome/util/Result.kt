@@ -18,7 +18,8 @@ enum class Error(val message: String = "") {
     NOT_FOUND,
     UNKNOWN_ERROR,
     DUP_EMAIL,
-    DUP_USERNAME
+    DUP_USERNAME,
+    INVALID_PASSWORD
 }
 
 sealed class Status {

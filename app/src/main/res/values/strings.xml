@@ -25,6 +25,6 @@
     <string name="no_devices_msg">No devices yet. 🙁 Add one now by pressing the icon below!</string>
     <string name="log_out">Log out</string>
     <string name="fav_device">Favorite Device</string>
-
-
+    <string name="invalid_signup_form">Please Complete this field</string>
+    <string name="home_greeting">Hello <b>%s</b>, here\'s an overview of your connected devices.</string>
 </resources>

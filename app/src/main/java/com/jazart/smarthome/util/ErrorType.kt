@@ -26,6 +26,8 @@ object ErrorType {
             Error.UNKNOWN_ERROR -> "Oops, something went wrong."
             Error.DUP_EMAIL -> "That email is already taken."
             Error.DUP_USERNAME -> "That username is already taken."
+            Error.INVALID_PASSWORD -> "-Password must be at least 8 characters\n" +
+                    " -Password must contain alphanumeric characters"
         }
     }
 }

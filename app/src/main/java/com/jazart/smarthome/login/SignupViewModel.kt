@@ -21,7 +21,6 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
         get() = Dispatchers.Main + job
 
     private val _invalidLiveData = MutableLiveData<Event<String>>()
-
     val invalidLiveData: LiveData<Event<String>>
         get() = _invalidLiveData
 
@@ -40,7 +39,7 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
     private fun validate(info: Map<String, String>): Boolean {
         for((key, value) in info) {
             if (value.isBlank()) {
-                _invalidLiveData.value = Event("Invalid $key")
+                _invalidLiveData.value = Event("Invalid $key.")
                 return false
             }
         }
@@ -53,14 +52,14 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
             withContext(Dispatchers.IO) {
                 val signupNetworkResult = signupUseCase.signupUser(
                     Credential.builder().run {
-                        username(info.getValue("username"))
-                        password(info.getValue("password"))
+                        username(info.getValue(USERNAME))
+                        password(info.getValue(PASSWORD))
                         build()
                     },
                     Personal.builder().run {
-                        firstName(info.getValue("firstName"))
-                        lastName(info.getValue("lastName"))
-                        email(info.getValue("email"))
+                        firstName(info.getValue(FIRST_NAME))
+                        lastName(info.getValue(LAST_NAME))
+                        email(info.getValue(EMAIL))
                         build()
                     }
                 )
@@ -86,7 +85,11 @@ class SignupViewModel @Inject constructor(private val signupUseCase: SignupUseCa
     }
 
     companion object {
-        const val USERNAME = "username"
-        const val FIRST_NAME = "firstname"
+        const val USERNAME = "Username"
+        const val FIRST_NAME = "First Name"
+        const val LAST_NAME = "Last Name"
+        const val EMAIL = "Email"
+        const val PASSWORD = "Password"
+        const val VERIFIED_PASSWORD =  "Verified Password"
     }
 }

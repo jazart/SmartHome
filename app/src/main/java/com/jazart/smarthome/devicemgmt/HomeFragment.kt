@@ -3,6 +3,9 @@ package com.jazart.smarthome.devicemgmt
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +43,6 @@ class HomeFragment : Fragment(), Injectable {
         )
     }
 
-
     private val adapter = HomeAdapter(clickHandler)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,12 +64,21 @@ class HomeFragment : Fragment(), Injectable {
         viewModel.loadDevices()
         viewModel.devices.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
-                displayAddDeviceUi()
+//                displayAddDeviceUi()
             } else {
                 adapter.submitList(it)
             }
         })
-        displayAddDeviceUi()
+        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+            val span = SpannableString(getString(R.string.home_greeting, user))
+            span.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorAccent, null)),
+                5,
+                span.lastIndexOf(user) + user.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            userGreeting.text = span
+
+        })
         deviceImage.setImageResource(R.drawable.ic_lock)
         editableTV.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")
@@ -79,6 +90,8 @@ class HomeFragment : Fragment(), Injectable {
     private fun displayAddDeviceUi() {
         home_recyclerView.setGone()
         favDevice.setGone()
+        userGreeting.setGone()
+        homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
     }
 
     override fun onStop() {

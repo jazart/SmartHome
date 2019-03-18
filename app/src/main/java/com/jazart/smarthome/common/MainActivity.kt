@@ -2,19 +2,18 @@ package com.jazart.smarthome.common
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.graphql.SignupMutation
 import com.jazart.smarthome.R
-import com.jazart.smarthome.devicemgmt.DeviceCommandBottomSheet
-import com.jazart.smarthome.devicemgmt.HomeFragment
 import com.jazart.smarthome.devicemgmt.HomeViewModel
+import com.jazart.smarthome.devicemgmt.setGone
 import com.jazart.smarthome.di.ViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -48,10 +47,18 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
         bottom_bar.replaceMenu(R.menu.menu)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.loginFragment || destination.id ==  R.id.signupFragment) {
+                bottomFab.setGone()
+                bottom_bar.setGone()
+            } else {
+                bottomFab.visibility = View.VISIBLE
+                bottom_bar.visibility = View.VISIBLE
+            }
+        }
         onFabClick()
-//        getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
-        if(getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
-            navController.navigate(R.id.action_homeFragment_to_loginFragment)
+        if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
+            navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
         } else {
             navController.navigate(R.id.homeFragment)
         }
@@ -59,10 +66,21 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun onFabClick() {
         bottomFab.setOnClickListener {
-         navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id) }
+            navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id) }
         }
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
+    companion object {
+        const val TAG = "MainActivity"
+    }
+}
+
+fun NavController.navigateSafely(id: Int, tag: String) {
+    try {
+        navigate(id)
+    } catch (e: IllegalArgumentException) {
+        Log.e(tag, e.message, e)
+    }
 }
