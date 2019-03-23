@@ -43,24 +43,28 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_main)
         homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
         navController = findNavController(R.id.nav_host)
+        setupNavigation()
+        onFabClick()
+        if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
+            navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
+        } else {
+            navController.navigate(R.id.homeFragment)
+        }
+    }
+
+    private fun setupNavigation() {
         val config = AppBarConfiguration(navController.graph, drawer_layout)
         nav_view.setupWithNavController(navController)
         bottom_bar.setupWithNavController(navController, config)
         bottom_bar.replaceMenu(R.menu.menu)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment || destination.id ==  R.id.signupFragment) {
+            if (destination.id == R.id.loginFragment || destination.id == R.id.signupFragment) {
                 bottomFab.setGone()
                 bottom_bar.setGone()
             } else {
                 bottomFab.visibility = View.VISIBLE
                 bottom_bar.visibility = View.VISIBLE
             }
-        }
-        onFabClick()
-        if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
-            navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
-        } else {
-            navController.navigate(R.id.homeFragment)
         }
     }
 

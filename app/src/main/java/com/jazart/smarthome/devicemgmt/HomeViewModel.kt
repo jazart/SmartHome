@@ -9,7 +9,6 @@ import com.graphql.type.Command
 import com.jazart.smarthome.usecase.FetchUserUseCase
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import com.jazart.smarthome.util.Event
-import com.jazart.smarthome.util.Result
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -49,6 +48,22 @@ class HomeViewModel @Inject constructor(
                     _user.postValue(userInfo.data?.username())
                 }
             }
+            _devices.postValue(
+                listOf(
+                    UserQuery.Device("TV", "Television", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf())
+                )
+            )
         }
     }
 
@@ -67,9 +82,9 @@ class HomeViewModel @Inject constructor(
 
     infix fun sendCommand(command: Command) {
         launch {
-//            _currentDevice.value?.let { device ->
-//                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
-//            }
+            _currentDevice.value?.let { device ->
+                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
+            }
             sendDeviceCommandUseCase.sendCommand("", "", command)
         }
     }

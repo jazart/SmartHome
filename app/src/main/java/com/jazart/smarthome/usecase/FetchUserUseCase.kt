@@ -1,16 +1,11 @@
 package com.jazart.smarthome.usecase
 
 import android.content.SharedPreferences
-import com.apollographql.apollo.api.Input
-import com.graphql.LoginMutation
-import com.graphql.SignupMutation
 import com.graphql.UserQuery
-import com.graphql.type.Credential
 import com.jazart.smarthome.network.SmartHomeService
 import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Result
-import com.jazart.smarthome.util.Status
 import javax.inject.Inject
 
 

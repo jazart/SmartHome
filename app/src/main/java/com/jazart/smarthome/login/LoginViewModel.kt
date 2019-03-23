@@ -3,7 +3,6 @@ package com.jazart.smarthome.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jazart.smarthome.usecase.FetchUserUseCase
 import com.jazart.smarthome.usecase.LoginUseCase
 import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.Event

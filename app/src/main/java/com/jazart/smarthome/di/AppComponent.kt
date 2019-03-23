@@ -1,12 +1,12 @@
 package com.jazart.smarthome.di
 
-import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.apollographql.apollo.ApolloClient
-import com.jazart.smarthome.network.SmartHomeService
-import com.jazart.smarthome.usecase.FetchUserUseCase
-import dagger.*
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
+import dagger.Provides
 import dagger.android.AndroidInjectionModule
 import okhttp3.OkHttpClient
 import javax.inject.Singleton

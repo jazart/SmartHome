@@ -11,7 +11,7 @@ class TokenInterceptor @Inject constructor(
     private val prefs: SharedPreferences
 ) : Interceptor {
 
-    val token: Token by lazy { prefs.getString("jwt", " ") }
+    private val token: Token by lazy { prefs.getString("jwt", " ") }
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!token.isBlank()) {
             val req = chain.request().newBuilder()

@@ -2,7 +2,6 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/signupRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_signup"
@@ -32,6 +31,7 @@
             android:layout_marginBottom="32dp"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
+            android:contentDescription="@string/welcome"
             android:scaleType="fitXY" />
     </androidx.cardview.widget.CardView>
 
@@ -129,7 +129,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Complete Sign-up"
+        android:text="@string/complete_sign_up"
         android:textColor="@color/colorAccent"
         app:backgroundTint="@color/colorPrimaryDark"
         app:cornerRadius="10dp"
@@ -139,13 +139,12 @@
         app:layout_constraintStart_toStartOf="@+id/verifyPassword" />
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
-        android:text="Welcome to SmartHome"
+        android:text="@string/welcome_to_smarthome"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="36sp"
@@ -167,11 +166,10 @@
             android:id="@+id/userNameEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username" />
+            android:hint="@string/username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar
-        android:id="@+id/signUpProgress"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:paddingTop="32dp"

@@ -1,8 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Smart Home</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
-    <string name="username">Username</string>
     <string name="smarthome_remote">SmartHome Remote</string>
     <string name="home">Home</string>
     <string name="device">Device</string>
@@ -10,13 +9,13 @@
     <string name="register">Register</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="status"><b>Status: %s</b></string>
-    <string name="pulse">Pulse</string>
-    <string name="turn_off_light">Turn off light</string>
-    <string name="turn_on_light">Turn on light</string>
+    <string name="pulse" tools:keep="@string/pulse">Pulse</string>
+    <string name="turn_off_light" tools:keep="@string/turn_off_light">Turn off light</string>
+    <string name="turn_on_light" tools:keep="@string/turn_on_light">Turn on light</string>
     <string name="choose_action">Choose Action…</string>
     <string name="device_image">Device Image</string>
     <string name="edit">Edit</string>
-    <string name="invalid_command">Invalid Command Selected</string>
+    <string name="invalid_command" tools:keep="@string/invalid_command">Invalid Command Selected</string>
     <string name="welcome">Welcome %s!</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -27,4 +26,8 @@
     <string name="fav_device">Favorite Device</string>
     <string name="invalid_signup_form">Please Complete this field</string>
     <string name="home_greeting">Hello <b>%s</b>, here\'s an overview of your connected devices.</string>
+    <string name="name">%s</string>
+    <string name="complete_sign_up">Complete Sign-up</string>
+    <string name="welcome_to_smarthome">Welcome to SmartHome</string>
+    <string name="username">Username</string>
 </resources>

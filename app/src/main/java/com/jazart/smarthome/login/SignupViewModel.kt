@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.graphql.type.Credential
 import com.graphql.type.Personal
 import com.jazart.smarthome.usecase.SignupUseCase
-import com.jazart.smarthome.util.Error
 import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status

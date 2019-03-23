@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import com.jazart.smarthome.R
@@ -16,10 +15,9 @@ class ArrowView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    val paint = Paint(R.color.colorAccent)
+    private val paint = Paint(R.color.colorAccent)
     val path = Path()
-    val rect = RectF()
-    var cornerRadius = 0f
+    private var cornerRadius = 0f
     init {
         paint.color = resources.getColor(R.color.colorAccent, Resources.getSystem().newTheme())
         paint.style = Paint.Style.STROKE

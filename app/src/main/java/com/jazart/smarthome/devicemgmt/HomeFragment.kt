@@ -1,6 +1,5 @@
 package com.jazart.smarthome.devicemgmt
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Spannable
@@ -15,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
@@ -34,7 +34,7 @@ class HomeFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    lateinit var viewModel: HomeViewModel
+    private lateinit var viewModel: HomeViewModel
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
         findNavController().navigate(
@@ -44,10 +44,6 @@ class HomeFragment : Fragment(), Injectable {
     }
 
     private val adapter = HomeAdapter(clickHandler)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -62,23 +58,7 @@ class HomeFragment : Fragment(), Injectable {
         }
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
         viewModel.loadDevices()
-        viewModel.devices.observe(viewLifecycleOwner, Observer {
-            if (it.isEmpty()) {
-//                displayAddDeviceUi()
-            } else {
-                adapter.submitList(it)
-            }
-        })
-        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
-            val span = SpannableString(getString(R.string.home_greeting, user))
-            span.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorAccent, null)),
-                5,
-                span.lastIndexOf(user) + user.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
-            )
-            userGreeting.text = span
-
-        })
+        observeLiveData()
         deviceImage.setImageResource(R.drawable.ic_lock)
         editableTV.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")
@@ -94,14 +74,39 @@ class HomeFragment : Fragment(), Injectable {
         homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
     }
 
-    override fun onStop() {
-        super.onStop()
+    private fun observeLiveData() {
+        viewModel.devices.observe(viewLifecycleOwner, Observer {
+            if (it.isEmpty()) {
+//                displayAddDeviceUi()
+            } else {
+                adapter.submitList(it)
+            }
+        })
+        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+            val span = SpannableString(getString(R.string.home_greeting, user))
+            span.setSpan(
+                ForegroundColorSpan(resources.getColor(R.color.colorAccent, null)),
+                5,
+                span.lastIndexOf(user) + user.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            userGreeting.text = span
+
+        })
+        viewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { id ->
+                if (id == findNavController().currentDestination?.id) {
+                    fragmentManager?.let { BottomSheetDialogFragment().show(it, TAG) }
+                }
+            }
+        })
     }
 
     companion object {
+        const val TAG = "HomeFragment"
         const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
         const val ARG_DEVICE_STATUS = "ARG_DEVICE_STATUS"
-        const val ARG_DEVICE_COMMANDS = "ARG_DEVICE_COMMANDS"
+        private const val ARG_DEVICE_COMMANDS = "ARG_DEVICE_COMMANDS"
 
         fun buildBundle(device: UserQuery.Device): Bundle = Bundle().apply {
             putString(ARG_DEVICE_NAME, device.name())

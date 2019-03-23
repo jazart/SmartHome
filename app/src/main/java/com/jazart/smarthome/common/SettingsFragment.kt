@@ -15,15 +15,8 @@ import com.jazart.smarthome.di.Injectable
 
 class SettingsFragment : Fragment(), Injectable {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
 }

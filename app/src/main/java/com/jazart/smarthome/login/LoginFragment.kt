@@ -11,9 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.jazart.smarthome.R
-import com.jazart.smarthome.common.MainActivity
 import com.jazart.smarthome.di.Injectable
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 
@@ -25,10 +23,6 @@ import javax.inject.Inject
 class LoginFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelProvider: ViewModelProvider.Factory
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,7 +54,4 @@ class LoginFragment : Fragment(), Injectable {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
 }

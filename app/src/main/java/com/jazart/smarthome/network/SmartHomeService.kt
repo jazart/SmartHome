@@ -15,7 +15,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class SmartHomeService @Inject constructor(var apolloClient: ApolloClient) {
+class SmartHomeService @Inject constructor(private var apolloClient: ApolloClient) {
 
     suspend fun sendDeviceCommand(uId: String, deviceName: String, command: Command): Response<UpdateDeviceMutation.Data>? {
         return makeCall {

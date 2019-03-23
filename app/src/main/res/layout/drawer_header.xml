@@ -25,11 +25,10 @@
         app:fontFamily="@font/rubik" />
 
     <TextView
-        android:id="@+id/headerCurrentUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Jeremy"
+        android:text="@string/name"
         android:textAlignment="viewStart"
         android:textColor="@android:color/black"
         android:textSize="18sp" />

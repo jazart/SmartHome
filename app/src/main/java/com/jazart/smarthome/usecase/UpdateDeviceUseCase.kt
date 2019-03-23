@@ -1,11 +1,6 @@
 package com.jazart.smarthome.usecase
 
 import com.jazart.smarthome.network.SmartHomeService
-import com.jazart.smarthome.util.Event
-import com.jazart.smarthome.util.Result
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO_PARALLELISM_PROPERTY_NAME
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UpdateDeviceUseCase @Inject constructor(val smartHomeService: SmartHomeService) {
