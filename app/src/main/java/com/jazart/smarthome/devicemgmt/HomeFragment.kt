@@ -35,8 +35,10 @@ class HomeFragment : Fragment(), Injectable {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var deviceViewModel: DeviceViewModel
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
+        deviceViewModel.initCurrentDevice(device)
         findNavController().navigate(
             R.id.action_homeFragment_to_deviceFragment,
             buildBundle(device)
@@ -57,6 +59,7 @@ class HomeFragment : Fragment(), Injectable {
             requireActivity().finishAndRemoveTask()
         }
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
+        deviceViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(DeviceViewModel::class.java)
         viewModel.loadDevices()
         observeLiveData()
         deviceImage.setImageResource(R.drawable.ic_lock)
@@ -65,13 +68,6 @@ class HomeFragment : Fragment(), Injectable {
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
 
-    }
-
-    private fun displayAddDeviceUi() {
-        home_recyclerView.setGone()
-        favDevice.setGone()
-        userGreeting.setGone()
-        homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
     }
 
     private fun observeLiveData() {
@@ -102,16 +98,25 @@ class HomeFragment : Fragment(), Injectable {
         })
     }
 
+    private fun displayAddDeviceUi() {
+        home_recyclerView.setGone()
+        favDevice.setGone()
+        userGreeting.setGone()
+        homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
+    }
+
     companion object {
         const val TAG = "HomeFragment"
         const val ARG_DEVICE_NAME = "ARG_DEVICE_NAME"
         const val ARG_DEVICE_STATUS = "ARG_DEVICE_STATUS"
+        const val ARG_DEVICE_OWNER = "ARG_DEVICE_OWNER"
         private const val ARG_DEVICE_COMMANDS = "ARG_DEVICE_COMMANDS"
 
         fun buildBundle(device: UserQuery.Device): Bundle = Bundle().apply {
             putString(ARG_DEVICE_NAME, device.name())
+            putString(ARG_DEVICE_OWNER, device.owner())
             putString(ARG_DEVICE_STATUS, "${device.status()}")
-            putStringArrayList(ARG_DEVICE_COMMANDS, device.commands().toStringList().toCollection(ArrayList()))
+            putStringArrayList(ARG_DEVICE_COMMANDS, device.commands()?.toStringList()?.toCollection(ArrayList()))
         }
     }
 }

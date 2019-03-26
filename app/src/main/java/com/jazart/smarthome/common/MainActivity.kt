@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.jazart.smarthome.R
+import com.jazart.smarthome.devicemgmt.DeviceViewModel
 import com.jazart.smarthome.devicemgmt.HomeViewModel
 import com.jazart.smarthome.devicemgmt.setGone
 import com.jazart.smarthome.di.ViewModelFactory
@@ -37,11 +38,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private lateinit var navController: NavController
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var deviceViewModel: DeviceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        deviceViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeviceViewModel::class.java)
         navController = findNavController(R.id.nav_host)
         setupNavigation()
         onFabClick()
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun onFabClick() {
         bottomFab.setOnClickListener {
-            navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id) }
+            navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id); deviceViewModel.onBottomFabClicked(dest.id) }
         }
     }
 

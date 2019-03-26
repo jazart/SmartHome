@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.graphql.UserQuery
 import com.jazart.smarthome.R
-import com.jazart.smarthome.devicemgmt.HomeFragment.Companion.ARG_DEVICE_NAME
-import com.jazart.smarthome.devicemgmt.HomeFragment.Companion.ARG_DEVICE_STATUS
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_device_detail.*
@@ -33,7 +32,11 @@ class DeviceFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
         val deviceViewModel = ViewModelProviders.of(
             requireActivity(), viewModelFactory
-        ).get(HomeViewModel::class.java)
+        ).get(DeviceViewModel::class.java)
+        observeData(deviceViewModel)
+    }
+
+    private fun observeData(deviceViewModel: DeviceViewModel) {
         deviceViewModel.showEditMode.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
                 if (it) {
@@ -45,7 +48,6 @@ class DeviceFragment : Fragment(), Injectable {
                 }
             }
         })
-        updateUi()
         editButton.setOnClickListener {
             deviceViewModel.toggleEdit()
         }
@@ -57,18 +59,17 @@ class DeviceFragment : Fragment(), Injectable {
                 }
             }
         })
+
+        deviceViewModel.currentDevice.observe(viewLifecycleOwner, Observer { updateUi(it) })
     }
 
-    private fun updateUi() {
-        arguments?.run {
-            deviceName.setText(this[ARG_DEVICE_NAME] as String)
-            deviceStatus.setText(resources.getString(R.string.status, this[ARG_DEVICE_STATUS] as String))
-        }
+    private fun updateUi(device: UserQuery.Device) {
+            deviceName.setText(device.name())
+            deviceStatus.setText(resources.getString(R.string.status, device.status()))
     }
 
     private fun showBottomSheet() {
-        val bottomSheet = DeviceCommandBottomSheet()
-        bottomSheet.show(childFragmentManager, null)
+        DeviceCommandBottomSheet().show(childFragmentManager, null)
     }
 }
 

@@ -5,10 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
+import com.graphql.type.DeviceInfo
+import com.graphql.type.DeviceType
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
+import com.jazart.smarthome.util.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +20,16 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
 
     override val coroutineContext
         get() = Dispatchers.Main + job
-    private val job = Job()
+    private val job = SupervisorJob()
+
+    private val _showEditMode = MutableLiveData<Event<Boolean>>()
+    val showEditMode: LiveData<Event<Boolean>>
+        get() = _showEditMode
+
+    private val _bottomFabClicked = MutableLiveData<Event<Int>>()
+    val bottomFabClicked: LiveData<Event<Int>>
+        get() = _bottomFabClicked
+    private var isShowing = false
 
     private val _currentDevice = MutableLiveData<UserQuery.Device>()
     val currentDevice: LiveData<UserQuery.Device>
@@ -31,9 +43,20 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     infix fun sendCommand(command: Command) {
         launch {
             _currentDevice.value?.let { device ->
-                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
-
+                val res = sendDeviceCommandUseCase.sendCommand(
+                    DeviceInfo.builder().deviceName(device.name()).username(device.owner()).build(),
+                    DeviceType.CAMERA, Command.TURN_ON
+                )
             }
         }
+    }
+
+    fun toggleEdit() {
+        isShowing = !isShowing
+        _showEditMode.value = Event(isShowing)
+    }
+
+    fun onBottomFabClicked(destination: Int) {
+        _bottomFabClicked.value = Event(destination)
     }
 }

@@ -13,15 +13,13 @@ import javax.inject.Inject
 
 class SignupUseCase @Inject constructor(
     private val service: SmartHomeService,
-    prefs: SharedPreferences) : AuthenticationUseCase(prefs) {
+    prefs: SharedPreferences
+) : AuthenticationUseCase(prefs) {
 
     suspend fun signupUser(credential: Credential, personal: Personal): Result<String> {
-        if(!checkPasswordRules(credential.password())) return Result.failure(Error.INVALID_PASSWORD)
+        if (!checkPasswordRules(credential.password())) return Result.failure(Error.INVALID_PASSWORD)
         val response = service.signup(
-            SignupMutation(
-                Input.fromNullable(credential),
-                Input.fromNullable(personal)
-            )
+            SignupMutation(credential, Input.fromNullable(personal))
         ) ?: return Result.failure(Error.NOT_FOUND)
         if (response.hasErrors()) {
             return Result.failure(ErrorType.from(response.errors()))

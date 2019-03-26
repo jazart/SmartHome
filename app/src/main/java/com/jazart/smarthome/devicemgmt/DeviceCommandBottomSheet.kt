@@ -21,9 +21,13 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var viewModel: HomeViewModel
-    private val commandAdapter = DeviceCommandAdapter { command -> viewModel sendCommand command; dismiss() }
 
+    private lateinit var viewModel: DeviceViewModel
+
+    private val commandAdapter = DeviceCommandAdapter { command ->
+        viewModel sendCommand command
+        dismiss()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,17 +38,12 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(DeviceViewModel::class.java)
         deviceCommandRecycler.adapter = commandAdapter
         deviceCommandRecycler.layoutManager = LinearLayoutManager(requireContext())
         viewModel.currentDevice.observe(viewLifecycleOwner, Observer { device ->
             updateUi(device)
         })
-    }
-
-    private fun setupListeners() {
-
     }
 
     private fun updateUi(device: UserQuery.Device) {

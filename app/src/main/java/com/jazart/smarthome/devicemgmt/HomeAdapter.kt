@@ -24,7 +24,8 @@ class HomeAdapter(val clickHandler: (Int, UserQuery.Device) -> Unit) :
     }
 
 
-    inner class HomeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class HomeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
 
         internal fun bind(position: Int) {
             val device = getItem(position)

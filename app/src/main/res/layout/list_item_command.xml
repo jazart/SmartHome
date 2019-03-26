@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background">
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/commandText"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:textSize="32sp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/rubik_light"
+        app:strokeColor="@color/colorAccent"
+        app:strokeWidth="3dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        tools:text="Test Command"/>
+
+</LinearLayout>

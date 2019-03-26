@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
 import com.jazart.smarthome.usecase.FetchUserUseCase
-import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
@@ -15,8 +14,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel @Inject constructor(
-    private val fetchUserUseCase: FetchUserUseCase,
-    private val sendDeviceCommandUseCase: SendDeviceCommandUseCase
+    private val fetchUserUseCase: FetchUserUseCase
 ) : ViewModel(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
@@ -25,10 +23,6 @@ class HomeViewModel @Inject constructor(
     private val _devices = MutableLiveData<List<UserQuery.Device>>()
     val devices: LiveData<List<UserQuery.Device>> = Transformations.map(_devices) { it.toList() }
     private val job = Job()
-    private val _showEditMode = MutableLiveData<Event<Boolean>>()
-    val showEditMode: LiveData<Event<Boolean>>
-        get() = _showEditMode
-
     private val _bottomFabClicked = MutableLiveData<Event<Int>>()
     val bottomFabClicked: LiveData<Event<Int>>
         get() = _bottomFabClicked
@@ -36,8 +30,6 @@ class HomeViewModel @Inject constructor(
     private val _user = MutableLiveData<String>()
     val user: LiveData<String>
         get() = _user
-
-    private var isShowing = false
 
     fun loadDevices() {
         getDevicesFromRepo {
@@ -50,18 +42,18 @@ class HomeViewModel @Inject constructor(
             }
             _devices.postValue(
                 listOf(
-                    UserQuery.Device("TV", "Television", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf())
+                    UserQuery.Device("TV", "Television", com.graphql.type.Status.CONNECTED, listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy")
                 )
             )
         }
@@ -73,20 +65,6 @@ class HomeViewModel @Inject constructor(
 
     fun updateCurrentDevice(pos: Int) {
         _currentDevice.value = devices.value?.get(pos)
-    }
-
-    fun toggleEdit() {
-        isShowing = !isShowing
-        _showEditMode.value = Event(isShowing)
-    }
-
-    infix fun sendCommand(command: Command) {
-        launch {
-            _currentDevice.value?.let { device ->
-                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
-            }
-            sendDeviceCommandUseCase.sendCommand("", "", command)
-        }
     }
 
     fun onBottomFabClicked(destination: Int) {
@@ -105,5 +83,4 @@ class HomeViewModel @Inject constructor(
         super.onCleared()
         job.cancelChildren()
     }
-
 }
