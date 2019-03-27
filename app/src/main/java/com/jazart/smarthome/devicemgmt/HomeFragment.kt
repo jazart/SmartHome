@@ -8,8 +8,10 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
+import com.jazart.smarthome.common.FabViewModel
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -34,8 +37,9 @@ class HomeFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var deviceViewModel: DeviceViewModel
+    private lateinit var fabViewModel: FabViewModel
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
         deviceViewModel.initCurrentDevice(device)
@@ -58,9 +62,10 @@ class HomeFragment : Fragment(), Injectable {
             requireActivity().getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
             requireActivity().finishAndRemoveTask()
         }
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
-        deviceViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(DeviceViewModel::class.java)
-        viewModel.loadDevices()
+        homeViewModel = getViewModel(viewModelFactory)
+        deviceViewModel = getViewModel(viewModelFactory)
+        fabViewModel = getViewModel(viewModelFactory)
+        homeViewModel.loadDevices()
         observeLiveData()
         deviceImage.setImageResource(R.drawable.ic_lock)
         editableTV.text = getString(R.string.fav_device)
@@ -71,14 +76,14 @@ class HomeFragment : Fragment(), Injectable {
     }
 
     private fun observeLiveData() {
-        viewModel.devices.observe(viewLifecycleOwner, Observer {
+        homeViewModel.devices.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
 //                displayAddDeviceUi()
             } else {
                 adapter.submitList(it)
             }
         })
-        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+        homeViewModel.user.observe(viewLifecycleOwner, Observer { user ->
             val span = SpannableString(getString(R.string.home_greeting, user))
             span.setSpan(
                 ForegroundColorSpan(resources.getColor(R.color.colorAccent, null)),
@@ -87,9 +92,8 @@ class HomeFragment : Fragment(), Injectable {
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
             )
             userGreeting.text = span
-
         })
-        viewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
+        fabViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { id ->
                 if (id == findNavController().currentDestination?.id) {
                     fragmentManager?.let { BottomSheetDialogFragment().show(it, TAG) }
@@ -127,4 +131,11 @@ private fun <E> List<E>.toStringList(): List<String> {
 
 fun View.setGone() {
     visibility = View.GONE
+}
+
+inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(factory: ViewModelFactory): T =
+    ViewModelProviders.of(this, factory)[T::class.java]
+
+inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelFactory): T {
+    return ViewModelProviders.of(requireActivity(), factory)[T::class.java]
 }

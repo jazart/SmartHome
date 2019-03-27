@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
 import com.jazart.smarthome.usecase.FetchUserUseCase
-import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -23,9 +22,6 @@ class HomeViewModel @Inject constructor(
     private val _devices = MutableLiveData<List<UserQuery.Device>>()
     val devices: LiveData<List<UserQuery.Device>> = Transformations.map(_devices) { it.toList() }
     private val job = Job()
-    private val _bottomFabClicked = MutableLiveData<Event<Int>>()
-    val bottomFabClicked: LiveData<Event<Int>>
-        get() = _bottomFabClicked
 
     private val _user = MutableLiveData<String>()
     val user: LiveData<String>
@@ -42,7 +38,13 @@ class HomeViewModel @Inject constructor(
             }
             _devices.postValue(
                 listOf(
-                    UserQuery.Device("TV", "Television", com.graphql.type.Status.CONNECTED, listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE), "jeremy"),
+                    UserQuery.Device(
+                        "TV",
+                        "Television",
+                        com.graphql.type.Status.CONNECTED,
+                        listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
+                        "jeremy"
+                    ),
                     UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
                     UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
                     UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
@@ -67,12 +69,7 @@ class HomeViewModel @Inject constructor(
         _currentDevice.value = devices.value?.get(pos)
     }
 
-    fun onBottomFabClicked(destination: Int) {
-        _bottomFabClicked.value = Event(destination)
-    }
-
     fun addDevice() {
-
     }
 
     private fun getDevicesFromRepo(block: suspend () -> Unit): Job {

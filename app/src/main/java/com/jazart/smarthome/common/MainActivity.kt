@@ -6,14 +6,12 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.jazart.smarthome.R
-import com.jazart.smarthome.devicemgmt.DeviceViewModel
-import com.jazart.smarthome.devicemgmt.HomeViewModel
+import com.jazart.smarthome.devicemgmt.getViewModel
 import com.jazart.smarthome.devicemgmt.setGone
 import com.jazart.smarthome.di.ViewModelFactory
 import dagger.android.AndroidInjector
@@ -37,17 +35,19 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var navController: NavController
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var deviceViewModel: DeviceViewModel
+    private lateinit var fabViewModel: FabViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
-        deviceViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeviceViewModel::class.java)
+        fabViewModel = getViewModel(viewModelFactory)
         navController = findNavController(R.id.nav_host)
         setupNavigation()
         onFabClick()
+        savedInstanceState?.let {
+            navController.navigate(it.getInt(LOCATION))
+            return
+        }
         if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
             navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
         } else {
@@ -73,14 +73,23 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun onFabClick() {
         bottomFab.setOnClickListener {
-            navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id); deviceViewModel.onBottomFabClicked(dest.id) }
+            navController.currentDestination?.let { dest ->
+                fabViewModel.onBottomFabClicked(dest.id)
+            }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState.apply {
+            navController.currentDestination?.id?.let { putInt(LOCATION, it) }
+        })
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     companion object {
         const val TAG = "MainActivity"
+        const val LOCATION = "Current Location"
     }
 }
 

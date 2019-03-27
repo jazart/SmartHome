@@ -64,7 +64,7 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
 
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
-        const val BASE_URL_DEV = "http://7fb6bbbc.ngrok.io/graphql"
+        const val BASE_URL_DEV = "http://e6056d0f.ngrok.io/graphql"
     }
 
 }

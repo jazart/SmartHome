@@ -26,9 +26,6 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     val showEditMode: LiveData<Event<Boolean>>
         get() = _showEditMode
 
-    private val _bottomFabClicked = MutableLiveData<Event<Int>>()
-    val bottomFabClicked: LiveData<Event<Int>>
-        get() = _bottomFabClicked
     private var isShowing = false
 
     private val _currentDevice = MutableLiveData<UserQuery.Device>()
@@ -40,7 +37,7 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
         _currentDevice.value = device
     }
 
-    infix fun sendCommand(command: Command) {
+    infix fun send(command: Command) {
         launch {
             _currentDevice.value?.let { device ->
                 val res = sendDeviceCommandUseCase.sendCommand(
@@ -54,9 +51,5 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     fun toggleEdit() {
         isShowing = !isShowing
         _showEditMode.value = Event(isShowing)
-    }
-
-    fun onBottomFabClicked(destination: Int) {
-        _bottomFabClicked.value = Event(destination)
     }
 }

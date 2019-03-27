@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
@@ -25,7 +24,7 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable {
     private lateinit var viewModel: DeviceViewModel
 
     private val commandAdapter = DeviceCommandAdapter { command ->
-        viewModel sendCommand command
+        viewModel send command
         dismiss()
     }
 
@@ -38,7 +37,7 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(DeviceViewModel::class.java)
+        viewModel = getViewModel(viewModelFactory)
         deviceCommandRecycler.adapter = commandAdapter
         deviceCommandRecycler.layoutManager = LinearLayoutManager(requireContext())
         viewModel.currentDevice.observe(viewLifecycleOwner, Observer { device ->
