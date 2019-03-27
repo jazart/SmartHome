@@ -4,10 +4,7 @@ import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
-import com.graphql.LoginMutation
-import com.graphql.SignupMutation
-import com.graphql.UpdateDeviceMutation
-import com.graphql.UserQuery
+import com.graphql.*
 import com.graphql.type.Command
 import com.graphql.type.DeviceInfo
 import com.graphql.type.DeviceType
@@ -62,9 +59,15 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
         }
     }
 
+    suspend fun addDevice(addDeviceMutation: AddDeviceMutation): Response<AddDeviceMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(addDeviceMutation).await()
+        }
+    }
+
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
-        const val BASE_URL_DEV = "http://e6056d0f.ngrok.io/graphql"
+        const val BASE_URL_DEV = "http://ddf57b23.ngrok.io/graphql"
     }
 
 }

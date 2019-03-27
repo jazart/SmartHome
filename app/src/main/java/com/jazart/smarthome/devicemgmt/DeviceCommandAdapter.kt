@@ -34,7 +34,6 @@ class DeviceCommandAdapter(clickListener: (Command) -> Unit) :
         holder.bind(getItem(position))
     }
 
-
     inner class DeviceViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(command: Command) {
