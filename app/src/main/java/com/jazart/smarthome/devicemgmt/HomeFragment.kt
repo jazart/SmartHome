@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.common.FabViewModel
@@ -32,7 +32,7 @@ import javax.inject.Inject
  * as well as an option to add another favorite or add/remove a device
  */
 
-class HomeFragment : Fragment(), Injectable {
+class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClickedListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -68,11 +68,15 @@ class HomeFragment : Fragment(), Injectable {
         homeViewModel.loadDevices()
         observeLiveData()
         deviceImage.setImageResource(R.drawable.ic_lock)
-        editableTV.text = getString(R.string.fav_device)
+        deviceName.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
 
+    }
+
+    override fun onDeviceClicked(device: UserQuery.Device) {
+        view?.rootView?.let { Snackbar.make(it, device.name(), Snackbar.LENGTH_LONG).show() }
     }
 
     private fun observeLiveData() {
@@ -96,7 +100,7 @@ class HomeFragment : Fragment(), Injectable {
         fabViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { id ->
                 if (id == findNavController().currentDestination?.id) {
-                    fragmentManager?.let { BottomSheetDialogFragment().show(it, TAG) }
+                    showBottomSheet()
                 }
             }
         })
@@ -107,6 +111,10 @@ class HomeFragment : Fragment(), Injectable {
         favDevice.setGone()
         userGreeting.setGone()
         homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
+    }
+
+    private fun showBottomSheet() {
+        AddDeviceBottomSheet().show(childFragmentManager, null)
     }
 
     companion object {

@@ -30,7 +30,7 @@ class HomeAdapter(val clickHandler: (Int, UserQuery.Device) -> Unit) :
         internal fun bind(position: Int) {
             val device = getItem(position)
             containerView.setOnClickListener { clickHandler(position, device) }
-            editableTV.text = device.name()
+            deviceName.text = device.name()
             status.text = containerView.context.resources.getString(R.string.status, device.status())
             deviceImage.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp)
             statusColor.setImageResource(
