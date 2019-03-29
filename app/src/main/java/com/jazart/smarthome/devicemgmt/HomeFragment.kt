@@ -8,7 +8,10 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -67,22 +70,34 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         fabViewModel = getViewModel(viewModelFactory)
         homeViewModel.loadDevices()
         observeLiveData()
+        updateUi()
+    }
+
+    override fun onDeviceClicked(device: UserQuery.Device) {
+        val snackbar = Snackbar.make(homeFragmentRoot, device.name(), Snackbar.LENGTH_LONG)
+        val snackbarView = snackbar.view
+        try {
+            val params = snackbarView.layoutParams as CoordinatorLayout.LayoutParams
+            params.updateMargins(params.leftMargin, params.topMargin, params.rightMargin, params.bottomMargin + 800)
+            snackbarView.layoutParams = params
+            snackbar.show()
+        } catch (e: ClassCastException) {
+            Toast.makeText(requireContext(), "Couldn't raise snackbar", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateUi() {
         deviceImage.setImageResource(R.drawable.ic_lock)
         deviceName.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
-
-    }
-
-    override fun onDeviceClicked(device: UserQuery.Device) {
-        view?.rootView?.let { Snackbar.make(it, device.name(), Snackbar.LENGTH_LONG).show() }
     }
 
     private fun observeLiveData() {
         homeViewModel.devices.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
-//                displayAddDeviceUi()
+                displayAddDeviceUi()
             } else {
                 adapter.submitList(it)
             }

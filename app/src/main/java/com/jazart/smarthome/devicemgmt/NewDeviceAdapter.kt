@@ -3,7 +3,10 @@ package com.jazart.smarthome.devicemgmt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import kotlinx.android.extensions.LayoutContainer
@@ -30,11 +33,23 @@ class NewDeviceAdapter(
 
         fun bind(device: UserQuery.Device) {
             containerView.setOnClickListener { clickListener(device) }
-            status.setGone()
+            status.visibility = View.INVISIBLE
+            statusColor.visibility = View.INVISIBLE
             val deviceCardParams = deviceCard.layoutParams
             deviceCardParams.height = containerView.resources.displayMetrics.heightPixels.times(0.3).toInt()
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(deviceItemConstraint)
+            constraintSet.connect(deviceImage.id, ConstraintSet.START, deviceItemConstraint.id, ConstraintSet.START)
+            constraintSet.connect(deviceImage.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
+            constraintSet.connect(deviceImage.id, ConstraintSet.BOTTOM, deviceItemConstraint.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(deviceImage.id, ConstraintSet.TOP, deviceName.id, ConstraintSet.BOTTOM)
+            constraintSet.applyTo(deviceItemConstraint)
             deviceCard.layoutParams = deviceCardParams
             deviceName.text = device.name()
+            Glide.with(containerView.context).apply {
+                setDefaultRequestOptions(RequestOptions().optionalFitCenter())
+                load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
+            }
             statusColor.setGone()
         }
     }
