@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.jazart.smarthome.R
 import com.jazart.smarthome.devicemgmt.getViewModel
 import com.jazart.smarthome.devicemgmt.setGone
@@ -61,13 +62,29 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         bottom_bar.setupWithNavController(navController, config)
         bottom_bar.replaceMenu(R.menu.menu)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment || destination.id == R.id.signupFragment) {
-                bottomFab.setGone()
-                bottom_bar.setGone()
-            } else {
-                bottomFab.visibility = View.VISIBLE
-                bottom_bar.visibility = View.VISIBLE
+            when {
+                destination.id == R.id.loginFragment || destination.id == R.id.signupFragment -> {
+                    bottomFab.setGone()
+                    bottom_bar.setGone()
+                }
+                destination.id == R.id.deviceFragment -> {
+                    bottom_bar.navigationIcon = null
+                    bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                    bottom_bar.replaceMenu(R.menu.device_menu)
+                    bottomFab.setImageDrawable(getDrawable(R.drawable.ic_device_black_24dp))
+                }
+                destination.id == R.id.homeFragment -> {
+                    bottom_bar.navigationIcon = getDrawable(R.drawable.ic_menu_white_24dp)
+                    bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                    bottom_bar.replaceMenu(R.menu.menu)
+                    bottomFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp))
+                }
+                else -> {
+                    bottomFab.visibility = View.VISIBLE
+                    bottom_bar.visibility = View.VISIBLE
+                }
             }
+
         }
     }
 

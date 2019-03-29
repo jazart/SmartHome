@@ -30,4 +30,6 @@
     <string name="complete_sign_up">Complete Sign-up</string>
     <string name="welcome_to_smarthome">Welcome to SmartHome</string>
     <string name="username">Username</string>
+    <string name="schedule_command">Schedule Command</string>
+    <string name="delete_device">Delete Device</string>
 </resources>

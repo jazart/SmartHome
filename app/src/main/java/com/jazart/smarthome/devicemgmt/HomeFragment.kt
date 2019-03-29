@@ -5,11 +5,16 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
@@ -60,7 +65,6 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         button.setOnClickListener {
             requireActivity().getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
             requireActivity().finishAndRemoveTask()
@@ -87,6 +91,19 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     }
 
     private fun updateUi() {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(deviceItemConstraint)
+        constraintSet.connect(deviceName.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
+        constraintSet.connect(deviceImage.id, ConstraintSet.START, deviceItemConstraint.id, ConstraintSet.START)
+        constraintSet.connect(deviceImage.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
+        constraintSet.connect(deviceImage.id, ConstraintSet.BOTTOM, deviceItemConstraint.id, ConstraintSet.BOTTOM)
+        constraintSet.connect(deviceImage.id, ConstraintSet.TOP, deviceName.id, ConstraintSet.BOTTOM)
+        constraintSet.applyTo(deviceItemConstraint)
+        deviceName.layoutParams = (deviceName.layoutParams as ConstraintLayout.LayoutParams).apply {
+            width = MATCH_CONSTRAINT
+        }
+        deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
+        deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
         deviceImage.setImageResource(R.drawable.ic_lock)
         deviceName.text = getString(R.string.fav_device)
         status.text = getString(R.string.status, "Offline")

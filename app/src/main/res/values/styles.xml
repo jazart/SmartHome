@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/rubik</item>
         <item name="textInputStyle">@style/DefaultTILTheme</item>
+        <item name="bottomAppBarStyle">@style/BottomBarTheme</item>
+        <item name="toolbarStyle">@style/BottomBarTheme</item>
     </style>
 
     <style name="DefaultTILTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
@@ -21,6 +23,13 @@
         <item name="boxCornerRadiusTopEnd">10dp</item>
         <item name="boxCornerRadiusTopStart">10dp</item>
         <item name="boxCornerRadiusBottomStart">10dp</item>
+    </style>
+
+    <style name="BottomBarTheme" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="android:colorControlActivated">@color/colorAccent</item>
+        <item name="android:colorActivatedHighlight">@color/colorAccent</item>
+        <item name="android:colorLongPressedHighlight">@color/colorAccent</item>
+        <item name="android:layout_marginStart">2dp</item>
     </style>
 
 </resources>

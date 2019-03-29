@@ -3,6 +3,7 @@ package com.jazart.smarthome.devicemgmt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -46,6 +47,7 @@ class NewDeviceAdapter(
             constraintSet.applyTo(deviceItemConstraint)
             deviceCard.layoutParams = deviceCardParams
             deviceName.text = device.name()
+            deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
             Glide.with(containerView.context).apply {
                 setDefaultRequestOptions(RequestOptions().optionalFitCenter())
                 load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
