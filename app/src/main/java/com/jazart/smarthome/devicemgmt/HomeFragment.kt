@@ -53,8 +53,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         deviceViewModel.initCurrentDevice(device)
         findNavController().navigate(
             R.id.action_homeFragment_to_deviceFragment,
-            buildBundle(device)
-        )
+            buildBundle(device))
     }
 
     private val adapter = HomeAdapter(clickHandler)

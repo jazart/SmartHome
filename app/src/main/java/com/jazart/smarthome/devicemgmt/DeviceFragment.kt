@@ -32,6 +32,8 @@ class DeviceFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        sharedElementEnterTransition =
+//            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.explode)
         val deviceViewModel = getViewModel<DeviceViewModel>(viewModelFactory)
         fabViewModel = getViewModel(viewModelFactory)
         observeData(deviceViewModel)
@@ -65,8 +67,8 @@ class DeviceFragment : Fragment(), Injectable {
     }
 
     private fun updateUi(device: UserQuery.Device) {
-            deviceName.setText(device.name())
-            deviceStatus.setText(resources.getString(R.string.status, device.status()))
+        deviceName.setText(device.name())
+        deviceStatus.setText(resources.getString(R.string.status, device.status()))
     }
 
     private fun showBottomSheet() {

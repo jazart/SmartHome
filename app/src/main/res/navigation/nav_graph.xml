@@ -11,7 +11,8 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_deviceFragment"
-            app:destination="@id/deviceFragment" />
+            app:destination="@id/deviceFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
@@ -57,5 +58,13 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+
+    <fragment
+        android:id="@+id/addDeviceFragment"
+        android:name="com.jazart.smarthome.devicemgmt.AddDeviceFragment"
+        tools:layout="@layout/fragment_add_device"/>
+    <action
+        android:id="@+id/action_to_addDeviceFragment"
+        app:destination="@id/addDeviceFragment"/>
 
 </navigation>
