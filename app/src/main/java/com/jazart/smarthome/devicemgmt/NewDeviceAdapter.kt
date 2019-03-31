@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -24,7 +25,7 @@ class NewDeviceAdapter(
     }
 
     override fun onBindViewHolder(holder: NewDeviceHolder, position: Int) {
-        holder.bind(devices[position])
+        holder.bind(devices[position], position)
     }
 
     override fun getItemCount(): Int = devices.size
@@ -32,7 +33,7 @@ class NewDeviceAdapter(
     inner class NewDeviceHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(device: UserQuery.Device) {
+        fun bind(device: UserQuery.Device, pos: Int) {
             containerView.setOnClickListener { clickListener(device) }
             status.visibility = View.INVISIBLE
             statusColor.visibility = View.INVISIBLE
@@ -48,8 +49,9 @@ class NewDeviceAdapter(
             deviceCard.layoutParams = deviceCardParams
             deviceName.text = device.name()
             deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+            ViewCompat.setTransitionName(deviceImage, device.name().plus(pos))
             Glide.with(containerView.context).apply {
-                setDefaultRequestOptions(RequestOptions().optionalFitCenter())
+                setDefaultRequestOptions(RequestOptions().dontAnimate())
                 load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
             }
             statusColor.setGone()

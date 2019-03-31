@@ -46,28 +46,7 @@ class HomeViewModel @Inject constructor(
                     _user.postValue(userInfo.data?.username())
                 }
             }
-            _devices.postValue(
-                listOf(
-                    UserQuery.Device(
-                        "TV",
-                        "Television",
-                        com.graphql.type.Status.CONNECTED,
-                        listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
-                        "jeremy"
-                    ),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy")
-                )
-            )
+            _devices.postValue(userInfo.data?.devices())
         }
     }
 
@@ -82,7 +61,7 @@ class HomeViewModel @Inject constructor(
                         DeviceInfo.builder().username(user.value!!).deviceName(deviceName).build(),
                         deviceType
                     )
-                when(result.status) {
+                when (result.status) {
                     is Status.Success -> _addDeviceResult.postValue(Event(result.data))
                     is Status.Failure -> _addDeviceResult.postValue(Event(result.error?.let { ErrorType.from(it) }))
                     else -> return@withContext
@@ -98,8 +77,32 @@ class HomeViewModel @Inject constructor(
     private fun isInfoValid(deviceName: String, deviceType: DeviceType): Boolean {
         return deviceName.isNotBlank() && deviceType in listOf(DeviceType.CAMERA, DeviceType.LIGHT)
     }
+
     override fun onCleared() {
         super.onCleared()
         job.cancelChildren()
+    }
+
+    private fun testDeviceData(): List<UserQuery.Device> {
+        return listOf(
+            UserQuery.Device(
+                "TV",
+                "Television",
+                com.graphql.type.Status.CONNECTED,
+                listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
+                "jeremy"
+            ),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy"),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy")
+        )
     }
 }

@@ -18,16 +18,9 @@ import kotlinx.android.synthetic.main.list_item_device.*
 class AddDeviceBottomSheet : BottomSheetDialogFragment() {
 
     private val clickHandler = { device: UserQuery.Device ->
-       // (parentFragment as OnDeviceClickedListener).onDeviceClicked(device)
-//        fragmentManager?.apply {
-//            beginTransaction()
-//                .add(R.id.nav_host, AddDeviceFragment())
-//                .addSharedElement(deviceImage, deviceImage.transitionName)
-//                .commit()
-//        }
         findNavController().navigate(
             R.id.action_to_addDeviceFragment,
-            null,
+            Bundle().apply { putString("t", deviceImage.transitionName) },
             null,
             FragmentNavigatorExtras(deviceImage to deviceImage.transitionName)
         )
@@ -41,7 +34,6 @@ class AddDeviceBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         addDeviceRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         addDeviceRecyclerView.adapter = adapter
         adapter.devices = listOf(

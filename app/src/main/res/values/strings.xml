@@ -33,4 +33,7 @@
     <string name="schedule_command">Schedule Command</string>
     <string name="delete_device">Delete Device</string>
     <string name="device_transition">device transition</string>
+    <string name="enter_a_unique_device_name">Enter a unique device name</string>
+    <string name="device_name">Device Name:</string>
+    <string name="add_device">Add Device</string>
 </resources>
