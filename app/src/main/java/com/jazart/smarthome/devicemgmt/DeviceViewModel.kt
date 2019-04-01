@@ -9,13 +9,11 @@ import com.graphql.type.DeviceInfo
 import com.graphql.type.DeviceType
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import com.jazart.smarthome.util.Event
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: SendDeviceCommandUseCase) : ViewModel(),
+class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: SendDeviceCommandUseCase,
+                                          private val deleteDeviceUseCase: DeleteDeviceUseCase) : ViewModel(),
     CoroutineScope {
 
     override val coroutineContext
@@ -51,5 +49,13 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     fun toggleEdit() {
         isShowing = !isShowing
         _showEditMode.value = Event(isShowing)
+    }
+
+    fun deleteDevice(device: UserQuery.Device) {
+        launch {
+            withContext(Dispatchers.Default) {
+                val result = deleteDeviceUseCase.delete(device)
+            }
+        }
     }
 }

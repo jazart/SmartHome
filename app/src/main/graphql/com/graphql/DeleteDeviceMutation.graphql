@@ -1,0 +1,3 @@
+mutation DeleteDeviceMutation($deviceInfo: DeviceInfo!) {
+    removeDevice(deviceInfo: $deviceInfo)
+}

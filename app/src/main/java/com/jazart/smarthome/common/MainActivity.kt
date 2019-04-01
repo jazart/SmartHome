@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     bottom_bar.visibility = View.VISIBLE
                 }
             }
-
         }
     }
 

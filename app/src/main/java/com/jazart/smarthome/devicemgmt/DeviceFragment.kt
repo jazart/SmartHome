@@ -11,6 +11,7 @@ import com.jazart.smarthome.R
 import com.jazart.smarthome.common.FabViewModel
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_device_detail.*
 import javax.inject.Inject
 
@@ -24,6 +25,7 @@ class DeviceFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
+    lateinit var deviceViewModel: DeviceViewModel
     lateinit var fabViewModel: FabViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,7 +36,7 @@ class DeviceFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
 //        sharedElementEnterTransition =
 //            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.explode)
-        val deviceViewModel = getViewModel<DeviceViewModel>(viewModelFactory)
+        deviceViewModel = getViewModel(viewModelFactory)
         fabViewModel = getViewModel(viewModelFactory)
         observeData(deviceViewModel)
     }
@@ -67,6 +69,16 @@ class DeviceFragment : Fragment(), Injectable {
     }
 
     private fun updateUi(device: UserQuery.Device) {
+        bottom_bar.setOnMenuItemClickListener { item ->
+            when(item.itemId) {
+                R.id.scheduleCommand -> return@setOnMenuItemClickListener true
+                R.id.removeDevice -> {
+                    deviceViewModel.deleteDevice(device)
+                    true
+                }
+                else -> return@setOnMenuItemClickListener false
+            }
+        }
         deviceName.setText(device.name())
         deviceStatus.setText(resources.getString(R.string.status, device.status()))
     }
