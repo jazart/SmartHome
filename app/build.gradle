@@ -73,6 +73,8 @@ dependencies {
 
     implementation "com.apollographql.apollo:apollo-runtime:1.0.1-SNAPSHOT"
     implementation "com.apollographql.apollo:apollo-android-support:1.0.1-SNAPSHOT"
+    implementation 'com.apollographql.apollo:apollo-http-cache:1.0.0-alpha5'
+
 
 
     compileOnly 'javax.annotation:jsr250-api:1.0'

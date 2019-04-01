@@ -1,14 +1,14 @@
 package com.jazart.smarthome.di
 
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy
-import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy
+import com.apollographql.apollo.cache.http.ApolloHttpCache
+import com.apollographql.apollo.cache.http.DiskLruHttpCacheStore
 import com.jazart.smarthome.network.SmartHomeService
 import com.jazart.smarthome.network.TokenInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 
 @Module
 object NetworkModule {
@@ -21,17 +21,15 @@ object NetworkModule {
 
 
     @Provides
-    fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
+    fun provideApolloClient(okHttpClient: OkHttpClient, app: App): ApolloClient {
         return ApolloClient.builder().run {
             serverUrl(SmartHomeService.BASE_URL_DEV)
-            normalizedCache(
-                LruNormalizedCacheFactory(
-                    EvictionPolicy.builder()
-                        .expireAfterAccess(30, TimeUnit.SECONDS)
-                        .maxSizeBytes(10.times(1024).toLong())
-                        .build()
+            httpCache(
+                ApolloHttpCache(
+                    DiskLruHttpCacheStore(app.applicationContext.cacheDir, Math.pow(1024.0, 4.0).toLong())
                 )
             )
+            defaultHttpCachePolicy(HttpCachePolicy.NETWORK_FIRST)
             okHttpClient(okHttpClient)
             build()
         }

@@ -81,4 +81,24 @@
         app:layout_constraintTop_toBottomOf="@id/enterName"
         app:rippleColor="@color/colorAccent" />
 
+    <ProgressBar
+        android:id="@+id/addDeviceProgress"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="200dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/deviceImage"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/deviceInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="addDeviceBtn, enterName" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

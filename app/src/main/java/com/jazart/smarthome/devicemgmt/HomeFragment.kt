@@ -172,6 +172,10 @@ fun View.setGone() {
     visibility = View.GONE
 }
 
+fun View.show() {
+    visibility = View.VISIBLE
+}
+
 inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(factory: ViewModelFactory): T =
     ViewModelProviders.of(this, factory)[T::class.java]
 

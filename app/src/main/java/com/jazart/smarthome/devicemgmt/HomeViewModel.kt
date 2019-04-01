@@ -46,16 +46,17 @@ class HomeViewModel @Inject constructor(
                     _user.postValue(userInfo.data?.username())
                 }
             }
-            _devices.postValue(userInfo.data?.devices())
+//            _devices.postValue(userInfo.data?.devices())
         }
     }
 
     fun addDevice(deviceName: String, deviceType: DeviceType) {
         launch {
-            if (!isInfoValid(deviceName, deviceType)) {
-                _addDeviceResult.postValue(Event("Error adding device, please validate information."))
-            }
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Default) {
+                if (!isInfoValid(deviceName, deviceType)) {
+                    _addDeviceResult.postValue(Event("Error adding device, please validate information."))
+                    return@withContext
+                }
                 val result =
                     addDeviceUseCase.addDevice(
                         DeviceInfo.builder().username(user.value!!).deviceName(deviceName).build(),
