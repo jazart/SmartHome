@@ -65,6 +65,12 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
         }
     }
 
+    suspend fun deleteDevice(delteDeviceMutation: DeleteDeviceMutation): Response<DeleteDeviceMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(delteDeviceMutation).await()
+        }
+    }
+
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
         const val BASE_URL_DEV = "http://6e43b97d.ngrok.io/graphql"

@@ -85,6 +85,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 }
             }
         }
+        bottom_bar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.scheduleCommand -> return@setOnMenuItemClickListener true
+                R.id.removeDevice -> fabViewModel.onMenuClicked()
+                else -> return@setOnMenuItemClickListener false
+            }
+        }
     }
 
     private fun onFabClick() {

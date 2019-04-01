@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.common.FabViewModel
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_device_detail.*
 import javax.inject.Inject
 
@@ -66,19 +66,16 @@ class DeviceFragment : Fragment(), Injectable {
         })
 
         deviceViewModel.currentDevice.observe(viewLifecycleOwner, Observer { updateUi(it) })
+        deviceViewModel.removeDeviceResult.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { findNavController().navigate(R.id.homeFragment) }
+        })
+
     }
 
     private fun updateUi(device: UserQuery.Device) {
-        bottom_bar.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
-                R.id.scheduleCommand -> return@setOnMenuItemClickListener true
-                R.id.removeDevice -> {
-                    deviceViewModel.deleteDevice(device)
-                    true
-                }
-                else -> return@setOnMenuItemClickListener false
-            }
-        }
+        fabViewModel.deleteIconClicked.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { deviceViewModel.deleteDevice(device) }
+        })
         deviceName.setText(device.name())
         deviceStatus.setText(resources.getString(R.string.status, device.status()))
     }

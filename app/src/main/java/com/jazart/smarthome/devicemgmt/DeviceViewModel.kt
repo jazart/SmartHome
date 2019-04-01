@@ -7,13 +7,17 @@ import com.graphql.UserQuery
 import com.graphql.type.Command
 import com.graphql.type.DeviceInfo
 import com.graphql.type.DeviceType
+import com.jazart.smarthome.usecase.DeleteDeviceUseCase
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import com.jazart.smarthome.util.Event
+import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: SendDeviceCommandUseCase,
-                                          private val deleteDeviceUseCase: DeleteDeviceUseCase) : ViewModel(),
+class DeviceViewModel @Inject constructor(
+    private val sendDeviceCommandUseCase: SendDeviceCommandUseCase,
+    private val deleteDeviceUseCase: DeleteDeviceUseCase
+) : ViewModel(),
     CoroutineScope {
 
     override val coroutineContext
@@ -30,6 +34,9 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     val currentDevice: LiveData<UserQuery.Device>
         get() = _currentDevice
 
+    private val _removeDeviceResult = MutableLiveData<Event<String>>()
+    val removeDeviceResult: LiveData<Event<String>>
+        get() = _removeDeviceResult
 
     fun initCurrentDevice(device: UserQuery.Device) {
         _currentDevice.value = device
@@ -54,7 +61,11 @@ class DeviceViewModel @Inject constructor(private val sendDeviceCommandUseCase: 
     fun deleteDevice(device: UserQuery.Device) {
         launch {
             withContext(Dispatchers.Default) {
-                val result = deleteDeviceUseCase.delete(device)
+                val result = deleteDeviceUseCase.deleteDevice(device)
+                when (result.status) {
+                    is Status.Success -> _removeDeviceResult.postValue(Event(result.data))
+                    is Status.Failure -> return@withContext
+                }
             }
         }
     }
