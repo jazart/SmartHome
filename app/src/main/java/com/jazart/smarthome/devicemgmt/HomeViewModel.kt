@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
     private val _devices = MutableLiveData<List<UserQuery.Device>>()
     val devices: LiveData<List<UserQuery.Device>> =
         Transformations.map(_devices) { devices ->
-            favoriteDevice = getFavoriteIfAvaliable();
+            favoriteDevice.value = getFavoriteIfAvaliable()
             devices.filter { !it.isFavorite }.toList()
         }
     private val job = Job()
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
     val addDeviceResult: LiveData<Event<String>>
         get() = _addDeviceResult
 
-    var favoriteDevice = getFavoriteIfAvaliable()
+    var favoriteDevice = MutableLiveData<UserQuery.Device>()
 
     fun loadDevices() {
         getDevicesFromRepo {

@@ -94,8 +94,6 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
         favDevice.setGone()
-        val favoriteDevice = homeViewModel.favoriteDevice ?: return
-        favDevice.show()
         val constraintSet = ConstraintSet()
         constraintSet.clone(deviceItemConstraint)
         constraintSet.connect(deviceName.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
@@ -110,8 +108,6 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
         deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
         deviceImage.setImageResource(R.drawable.ic_lock)
-        deviceName.text = getString(R.string.fav_device, "\n${favoriteDevice.name()}")
-        status.text = getString(R.string.status, favoriteDevice.status())
 
     }
 
@@ -139,6 +135,12 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
                     showBottomSheet()
                 }
             }
+        })
+
+        homeViewModel.favoriteDevice.observe(viewLifecycleOwner, Observer { device ->
+            deviceName.text = getString(R.string.fav_device, "\n${device.name()}")
+            status.text = getString(R.string.status, device.status())
+            favDevice.show()
         })
     }
 

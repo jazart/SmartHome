@@ -78,6 +78,7 @@ class DeviceViewModel @Inject constructor(
                 val result = favoriteDeviceUseCase.addFavorite(DeviceInfo.builder().run {
                     deviceName(device.name())
                     username(device.owner())
+                    command(emptyList())
                     build()
                 })
 
