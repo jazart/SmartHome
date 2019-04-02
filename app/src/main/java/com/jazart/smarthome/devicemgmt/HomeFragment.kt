@@ -53,7 +53,8 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         deviceViewModel.initCurrentDevice(device)
         findNavController().navigate(
             R.id.action_homeFragment_to_deviceFragment,
-            buildBundle(device))
+            buildBundle(device)
+        )
     }
 
     private val adapter = HomeAdapter(clickHandler)
@@ -90,13 +91,18 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     }
 
     private fun updateUi() {
+        home_recyclerView.adapter = adapter
+        home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+        favDevice.setGone()
+        val favoriteDevice = homeViewModel.favoriteDevice ?: return
+        favDevice.show()
         val constraintSet = ConstraintSet()
         constraintSet.clone(deviceItemConstraint)
         constraintSet.connect(deviceName.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
         constraintSet.connect(deviceImage.id, ConstraintSet.START, deviceItemConstraint.id, ConstraintSet.START)
         constraintSet.connect(deviceImage.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
-        constraintSet.connect(deviceImage.id, ConstraintSet.BOTTOM, deviceItemConstraint.id, ConstraintSet.BOTTOM)
-        constraintSet.connect(deviceImage.id, ConstraintSet.TOP, deviceName.id, ConstraintSet.BOTTOM)
+        constraintSet.connect(deviceImage.id, ConstraintSet.BOTTOM, deviceItemConstraint.id, ConstraintSet.BOTTOM, 16)
+        constraintSet.connect(deviceImage.id, ConstraintSet.TOP, status.id, ConstraintSet.BOTTOM)
         constraintSet.applyTo(deviceItemConstraint)
         deviceName.layoutParams = (deviceName.layoutParams as ConstraintLayout.LayoutParams).apply {
             width = MATCH_CONSTRAINT
@@ -104,10 +110,9 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
         deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
         deviceImage.setImageResource(R.drawable.ic_lock)
-        deviceName.text = getString(R.string.fav_device)
-        status.text = getString(R.string.status, "Offline")
-        home_recyclerView.adapter = adapter
-        home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+        deviceName.text = getString(R.string.fav_device, "\n${favoriteDevice.name()}")
+        status.text = getString(R.string.status, favoriteDevice.status())
+
     }
 
     private fun observeLiveData() {
@@ -164,7 +169,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     }
 }
 
-private fun <E> List<E>.toStringList(): List<String> {
+fun <E> List<E>.toStringList(): List<String> {
     return this.map { obj -> "$obj" }
 }
 

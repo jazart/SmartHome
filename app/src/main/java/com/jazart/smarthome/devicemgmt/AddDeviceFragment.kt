@@ -38,7 +38,7 @@ class AddDeviceFragment : Fragment(), Injectable {
         homeViewModel = getViewModel(viewModelFactory)
         ViewCompat.setTransitionName(deviceImage, arguments?.getString("t"))
         addDeviceBtn.setOnClickListener {
-            homeViewModel.addDevice(enterName.editText?.text.toString(), DeviceType.CAMERA)
+            homeViewModel.addDevice(enterName.editText?.text.toString(), DeviceType.CAMERA, arguments?.getBoolean("fav") ?: false)
             deviceInfo.setGone()
             addDeviceProgress.show()
         }

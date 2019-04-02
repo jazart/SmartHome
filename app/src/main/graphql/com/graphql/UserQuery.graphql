@@ -8,6 +8,7 @@ query UserQuery($name: String!) {
             status
             commands
             owner
+            isFavorite
         }
     }
 }

@@ -23,7 +23,7 @@
     <string name="re_enter_password">Re-enter Password</string>
     <string name="no_devices_msg">No devices yet. 🙁 Add one now by pressing the icon below!</string>
     <string name="log_out">Log out</string>
-    <string name="fav_device">Favorite Device</string>
+    <string name="fav_device">Favorite Device %s</string>
     <string name="invalid_signup_form">Please Complete this field</string>
     <string name="home_greeting">Hello <b>%s</b>, here\'s an overview of your connected devices.</string>
     <string name="name">%s</string>
@@ -36,4 +36,5 @@
     <string name="enter_a_unique_device_name">Enter a unique device name</string>
     <string name="device_name">Device Name:</string>
     <string name="add_device">Add Device</string>
+    <string name="set_as_favorite">Set as favorite</string>
 </resources>

@@ -13,4 +13,10 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_schedule_white_24dp"
         android:title="@string/schedule_command"/>
+    <item
+        android:id="@+id/setFavorite"
+        android:enabled="true"
+        android:icon="@drawable/ic_star_white_24dp"
+        android:title="@string/set_as_favorite"
+        app:showAsAction="ifRoom"/>
 </menu>
