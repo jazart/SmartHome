@@ -73,8 +73,12 @@ class DeviceFragment : Fragment(), Injectable {
     }
 
     private fun updateUi(device: UserQuery.Device) {
-        fabViewModel.deleteIconClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.consume()?.let { deviceViewModel.deleteDevice(device) }
+        fabViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let {
+                when(it) {
+                    R.id.removeDevice -> deviceViewModel.deleteDevice(device)
+                    R.id.setFavorite -> deviceViewModel favorite device
+                } }
         })
         deviceName.setText(device.name())
         deviceStatus.setText(resources.getString(R.string.status, device.status()))

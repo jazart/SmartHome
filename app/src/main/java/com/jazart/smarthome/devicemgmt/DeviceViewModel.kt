@@ -8,6 +8,7 @@ import com.graphql.type.Command
 import com.graphql.type.DeviceInfo
 import com.graphql.type.DeviceType
 import com.jazart.smarthome.usecase.DeleteDeviceUseCase
+import com.jazart.smarthome.usecase.FavoriteDeviceUseCase
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 class DeviceViewModel @Inject constructor(
     private val sendDeviceCommandUseCase: SendDeviceCommandUseCase,
-    private val deleteDeviceUseCase: DeleteDeviceUseCase
+    private val deleteDeviceUseCase: DeleteDeviceUseCase,
+    private val favoriteDeviceUseCase: FavoriteDeviceUseCase
 ) : ViewModel(),
     CoroutineScope {
 
@@ -64,6 +66,23 @@ class DeviceViewModel @Inject constructor(
                 val result = deleteDeviceUseCase.deleteDevice(device)
                 when (result.status) {
                     is Status.Success -> _removeDeviceResult.postValue(Event(result.data))
+                    is Status.Failure -> return@withContext
+                }
+            }
+        }
+    }
+
+    infix fun favorite(device: UserQuery.Device) {
+        launch {
+            withContext(Dispatchers.Default) {
+                val result = favoriteDeviceUseCase.addFavorite(DeviceInfo.builder().run {
+                    deviceName(device.name())
+                    username(device.owner())
+                    build()
+                })
+
+                when (result.status) {
+                    is Status.Success -> return@withContext
                     is Status.Failure -> return@withContext
                 }
             }

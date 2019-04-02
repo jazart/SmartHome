@@ -12,16 +12,16 @@ class FabViewModel @Inject constructor() : ViewModel() {
     val bottomFabClicked: LiveData<Event<Int>>
         get() = _bottomFabClicked
 
-    private val _deleteIconClicked = MutableLiveData<Event<Int>>()
-    val deleteIconClicked: LiveData<Event<Int>>
-        get() = _deleteIconClicked
+    private val _iconClicked = MutableLiveData<Event<Int>>()
+    val iconClicked: LiveData<Event<Int>>
+        get() = _iconClicked
 
     fun onBottomFabClicked(destination: Int) {
         _bottomFabClicked.value = Event(destination)
     }
 
-    fun onMenuClicked(): Boolean {
-        _deleteIconClicked.value = Event(0)
+    fun onMenuClicked(menuId: Int): Boolean {
+        _iconClicked.value = Event(menuId)
         return true
     }
 }
