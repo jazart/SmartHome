@@ -27,7 +27,11 @@
     <fragment
         android:id="@+id/deviceFragment"
         android:name="com.jazart.smarthome.devicemgmt.DeviceFragment"
-        tools:layout="@layout/fragment_device_detail" />
+        tools:layout="@layout/fragment_device_detail">
+        <action
+            android:id="@+id/action_deviceFragment_to_confirmDialog"
+            app:destination="@id/confirmDialog" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.jazart.smarthome.common.SettingsFragment"
@@ -66,5 +70,9 @@
     <action
         android:id="@+id/action_to_addDeviceFragment"
         app:destination="@id/addDeviceFragment"/>
+    <fragment
+        android:id="@+id/confirmDialog"
+        android:name="com.jazart.smarthome.common.ConfirmDialog"
+        android:label="ConfirmDialog" />
 
 </navigation>

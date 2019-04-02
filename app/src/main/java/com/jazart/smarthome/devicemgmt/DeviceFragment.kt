@@ -76,7 +76,10 @@ class DeviceFragment : Fragment(), Injectable {
         fabViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
                 when(it) {
-                    R.id.removeDevice -> deviceViewModel.deleteDevice(device)
+                    R.id.removeDevice -> {
+                        findNavController().navigate(R.id.confirmDialog)
+                        deviceViewModel.deleteDevice(device)
+                    }
                     R.id.setFavorite -> deviceViewModel favorite device
                 } }
         })
