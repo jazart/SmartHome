@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.transition.TransitionInflater
+import androidx.transition.Slide
 import com.graphql.type.DeviceType
 import com.jazart.smarthome.R
 import com.jazart.smarthome.di.Injectable
@@ -26,8 +27,7 @@ class AddDeviceFragment : Fragment(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition =
-            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.slide_top)
+        sharedElementEnterTransition = Slide()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,10 +35,16 @@ class AddDeviceFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
+        (view.parent as ViewGroup).doOnPreDraw { startPostponedEnterTransition() }
         homeViewModel = getViewModel(viewModelFactory)
         ViewCompat.setTransitionName(deviceImage, arguments?.getString("t"))
         addDeviceBtn.setOnClickListener {
-            homeViewModel.addDevice(enterName.editText?.text.toString(), DeviceType.CAMERA, arguments?.getBoolean("fav") ?: false)
+            homeViewModel.addDevice(
+                enterName.editText?.text.toString(),
+                DeviceType.CAMERA,
+                arguments?.getBoolean("fav") ?: false
+            )
             deviceInfo.setGone()
             addDeviceProgress.show()
         }

@@ -15,7 +15,17 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/addDeviceRoot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/select_a_device_to_add"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="28sp"
+            app:fontFamily="@font/rubik" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:background="@android:color/transparent"

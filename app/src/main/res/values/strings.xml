@@ -37,4 +37,5 @@
     <string name="device_name">Device Name:</string>
     <string name="add_device">Add Device</string>
     <string name="set_as_favorite">Set as favorite</string>
+    <string name="select_a_device_to_add">Select a device to add</string>
 </resources>

@@ -12,14 +12,19 @@
         <action
             android:id="@+id/action_homeFragment_to_deviceFragment"
             app:destination="@id/deviceFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:enterAnim="@anim/slide_up"
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -47,7 +52,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
-            app:destination="@id/signupFragment" />
+            app:destination="@id/signupFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -57,7 +64,8 @@
         <action
             android:id="@+id/action_signUpFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -69,6 +77,10 @@
         tools:layout="@layout/fragment_add_device"/>
     <action
         android:id="@+id/action_to_addDeviceFragment"
+        app:enterAnim="@anim/slide_up"
+        app:popEnterAnim="@anim/slide_up"
+        app:exitAnim="@anim/slide_down"
+        app:popExitAnim="@anim/slide_down"
         app:destination="@id/addDeviceFragment"/>
     <fragment
         android:id="@+id/confirmDialog"

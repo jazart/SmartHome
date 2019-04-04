@@ -37,6 +37,17 @@ class NewDeviceAdapter(
             containerView.setOnClickListener { clickListener(device) }
             status.visibility = View.INVISIBLE
             statusColor.visibility = View.INVISIBLE
+            modifyCardProperties()
+            deviceName.text = device.name()
+            ViewCompat.setTransitionName(deviceImage, device.name().plus(pos))
+            Glide.with(containerView.context).apply {
+                setDefaultRequestOptions(RequestOptions().dontAnimate())
+                load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
+            }
+            statusColor.setGone()
+        }
+
+        private fun modifyCardProperties() {
             val deviceCardParams = deviceCard.layoutParams
             deviceCardParams.height = containerView.resources.displayMetrics.heightPixels.times(0.3).toInt()
             val constraintSet = ConstraintSet()
@@ -47,14 +58,7 @@ class NewDeviceAdapter(
             constraintSet.connect(deviceImage.id, ConstraintSet.TOP, deviceName.id, ConstraintSet.BOTTOM)
             constraintSet.applyTo(deviceItemConstraint)
             deviceCard.layoutParams = deviceCardParams
-            deviceName.text = device.name()
             deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-            ViewCompat.setTransitionName(deviceImage, device.name().plus(pos))
-            Glide.with(containerView.context).apply {
-                setDefaultRequestOptions(RequestOptions().dontAnimate())
-                load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
-            }
-            statusColor.setGone()
         }
     }
 }

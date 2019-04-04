@@ -39,19 +39,19 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState != null) {
-            deviceName.setText(savedInstanceState.getString(DEVICE_NAME))
-            deviceStatus.setText(savedInstanceState.getString(DEVICE_STATUS))
+            deviceName.setText(savedInstanceState.getString(DEVICE_NAME) ?: "")
+            deviceStatus.setText(savedInstanceState.getString(DEVICE_STATUS) ?: "")
         }
         deviceViewModel = getViewModel(viewModelFactory)
         fabViewModel = getViewModel(viewModelFactory)
         observeData(deviceViewModel)
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(DEVICE_NAME, deviceName.getText())
-        outState.putString(DEVICE_STATUS, deviceStatus.getText())
-        super.onSaveInstanceState(outState)
-    }
+//
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        outState.putString(DEVICE_NAME, deviceName.getText())
+//        outState.putString(DEVICE_STATUS, deviceStatus.getText())
+//        super.onSaveInstanceState(outState)
+//    }
 
     override fun onOptionClicked(option: Int) {
         deviceViewModel.deleteDevice(device)

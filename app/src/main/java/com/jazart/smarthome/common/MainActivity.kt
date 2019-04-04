@@ -71,6 +71,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     bottom_bar.navigationIcon = null
                     bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
                     bottom_bar.replaceMenu(R.menu.device_menu)
+                    bottom_bar.menu.getItem(2).icon.setTint(getColor(R.color.colorAccent))
+                    bottom_bar.invalidate()
                     bottomFab.setImageDrawable(getDrawable(R.drawable.ic_device_black_24dp))
                 }
                 destination.id == R.id.homeFragment -> {
