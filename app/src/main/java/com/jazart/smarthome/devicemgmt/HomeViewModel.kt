@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
     private val _devices = MutableLiveData<List<UserQuery.Device>>()
     val devices: LiveData<List<UserQuery.Device>> =
         Transformations.map(_devices) { devices ->
-            favoriteDevice.value = getFavoriteIfAvaliable()
+            favoriteDevice.value = getFavoriteDeviceIfAvailable()
             devices.filter { !it.isFavorite }.toList()
         }
     private val job = Job()
@@ -85,7 +85,7 @@ class HomeViewModel @Inject constructor(
         return deviceName.isNotBlank() && deviceType in listOf(DeviceType.CAMERA, DeviceType.LIGHT)
     }
 
-    private fun getFavoriteIfAvaliable(): UserQuery.Device? {
+    private fun getFavoriteDeviceIfAvailable(): UserQuery.Device? {
         return _devices.value?.find { it.isFavorite }
     }
 

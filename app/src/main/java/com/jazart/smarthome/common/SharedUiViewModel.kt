@@ -16,9 +16,7 @@ class SharedUiViewModel @Inject constructor() : ViewModel() {
     val iconClicked: LiveData<Event<Int>>
         get() = _iconClicked
 
-    //    private val _highlightIcon = MutableLiveData<Event<Int>>()
     val highlightIcon = MutableLiveData<Event<Pair<Boolean, Int>>>()
-//        get() = _highlightIcon
 
     fun onBottomFabClicked(destination: Int) {
         _bottomFabClicked.value = Event(destination)
