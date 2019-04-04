@@ -3,29 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.CardView"
+    android:id="@+id/deviceCard"
     android:layout_width="190dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="24dp"
     android:layout_marginEnd="16dp"
     android:orientation="vertical"
-    app:strokeWidth="2dp"
-    app:cardCornerRadius="4dp"
+    app:rippleColor="@color/colorPrimaryDark"
+    app:cardCornerRadius="5dp"
     app:cardElevation="0dp"
-    app:strokeColor="@color/colorAccent">
+    app:strokeColor="@color/colorAccent"
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/deviceItemConstraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/editableTV"
+            android:id="@+id/deviceName"
             style="@style/TextAppearance.MaterialComponents.Headline3"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:breakStrategy="high_quality"
+            android:maxLines="2"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30sp"
+            app:fontFamily="@font/rubik"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/app_name" />
@@ -34,15 +41,10 @@
             android:id="@+id/deviceImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/status"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editableTV"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorPrimaryDark" />
+            app:layout_constraintStart_toEndOf="@id/deviceName"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/status"
@@ -56,12 +58,13 @@
             android:minLines="1"
             android:text="@string/status"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/colorAccent"
             app:autoSizeMaxTextSize="12sp"
             app:autoSizeMinTextSize="8sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/statusColor"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editableTV"
+            app:layout_constraintTop_toBottomOf="@+id/deviceName"
             app:layout_constraintVertical_bias="0.917" />
 
         <androidx.appcompat.widget.AppCompatImageView

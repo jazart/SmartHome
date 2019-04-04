@@ -6,8 +6,11 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
+import com.graphql.type.DeviceInfo
+import com.graphql.type.DeviceType
+import com.jazart.smarthome.usecase.AddDeviceUseCase
 import com.jazart.smarthome.usecase.FetchUserUseCase
-import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
+import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
@@ -16,28 +19,29 @@ import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel @Inject constructor(
     private val fetchUserUseCase: FetchUserUseCase,
-    private val sendDeviceCommandUseCase: SendDeviceCommandUseCase
+    private val addDeviceUseCase: AddDeviceUseCase
 ) : ViewModel(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
     private val _devices = MutableLiveData<List<UserQuery.Device>>()
-    val devices: LiveData<List<UserQuery.Device>> = Transformations.map(_devices) { it.toList() }
+    val devices: LiveData<List<UserQuery.Device>> =
+        Transformations.map(_devices) { devices ->
+            favoriteDevice.value = getFavoriteIfAvaliable()
+            devices.filter { !it.isFavorite }.toList()
+        }
     private val job = Job()
-    private val _showEditMode = MutableLiveData<Event<Boolean>>()
-    val showEditMode: LiveData<Event<Boolean>>
-        get() = _showEditMode
-
-    private val _bottomFabClicked = MutableLiveData<Event<Int>>()
-    val bottomFabClicked: LiveData<Event<Int>>
-        get() = _bottomFabClicked
 
     private val _user = MutableLiveData<String>()
     val user: LiveData<String>
         get() = _user
 
-    private var isShowing = false
+    private val _addDeviceResult = MutableLiveData<Event<String>>()
+    val addDeviceResult: LiveData<Event<String>>
+        get() = _addDeviceResult
+
+    var favoriteDevice = MutableLiveData<UserQuery.Device>()
 
     fun loadDevices() {
         getDevicesFromRepo {
@@ -48,57 +52,41 @@ class HomeViewModel @Inject constructor(
                     _user.postValue(userInfo.data?.username())
                 }
             }
-            _devices.postValue(
-                listOf(
-                    UserQuery.Device("TV", "Television", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf()),
-                    UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf())
-                )
-            )
         }
     }
 
-    private val _currentDevice = MutableLiveData<UserQuery.Device>()
-    val currentDevice: LiveData<UserQuery.Device>
-        get() = _currentDevice
-
-    fun updateCurrentDevice(pos: Int) {
-        _currentDevice.value = devices.value?.get(pos)
-    }
-
-    fun toggleEdit() {
-        isShowing = !isShowing
-        _showEditMode.value = Event(isShowing)
-    }
-
-    infix fun sendCommand(command: Command) {
+    fun addDevice(deviceName: String, deviceType: DeviceType, isFavorite: Boolean) {
         launch {
-            _currentDevice.value?.let { device ->
-                val res = sendDeviceCommandUseCase.sendCommand(device.name(), device.name(), command)
+            withContext(Dispatchers.Default) {
+                if (!isInfoValid(deviceName, deviceType)) {
+                    _addDeviceResult.postValue(Event("Error adding device, please validate information."))
+                    return@withContext
+                }
+                val result =
+                    addDeviceUseCase.addDevice(
+                        DeviceInfo.builder().username(user.value!!).deviceName(deviceName).command(listOf())
+                            .isFavorite(false).build(),
+                        deviceType
+                    )
+                when (result.status) {
+                    is Status.Success -> _addDeviceResult.postValue(Event(result.data))
+                    is Status.Failure -> _addDeviceResult.postValue(Event(result.error?.let { ErrorType.from(it) }))
+                    else -> return@withContext
+                }
             }
-            sendDeviceCommandUseCase.sendCommand("", "", command)
         }
-    }
-
-    fun onBottomFabClicked(destination: Int) {
-        _bottomFabClicked.value = Event(destination)
-    }
-
-    fun addDevice() {
-
     }
 
     private fun getDevicesFromRepo(block: suspend () -> Unit): Job {
         return launch { block() }
+    }
+
+    private fun isInfoValid(deviceName: String, deviceType: DeviceType): Boolean {
+        return deviceName.isNotBlank() && deviceType in listOf(DeviceType.CAMERA, DeviceType.LIGHT)
+    }
+
+    private fun getFavoriteIfAvaliable(): UserQuery.Device? {
+        return _devices.value?.find { it.isFavorite }
     }
 
     override fun onCleared() {
@@ -106,4 +94,27 @@ class HomeViewModel @Inject constructor(
         job.cancelChildren()
     }
 
+    private fun testDeviceData(): List<UserQuery.Device> {
+        return listOf(
+            UserQuery.Device(
+                "TV",
+                "Television",
+                com.graphql.type.Status.CONNECTED,
+                listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
+                "jeremy",
+                false
+            ),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
+            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false)
+        )
+    }
 }

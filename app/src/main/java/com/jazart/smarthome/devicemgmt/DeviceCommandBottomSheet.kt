@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
@@ -21,9 +20,13 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var viewModel: HomeViewModel
-    private val commandAdapter = DeviceCommandAdapter { command -> viewModel sendCommand command; dismiss() }
 
+    private lateinit var viewModel: DeviceViewModel
+
+    private val commandAdapter = DeviceCommandAdapter { command ->
+        viewModel send command
+        dismiss()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,17 +37,12 @@ class DeviceCommandBottomSheet : BottomSheetDialogFragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomeViewModel::class.java)
+        viewModel = getViewModel(viewModelFactory)
         deviceCommandRecycler.adapter = commandAdapter
         deviceCommandRecycler.layoutManager = LinearLayoutManager(requireContext())
         viewModel.currentDevice.observe(viewLifecycleOwner, Observer { device ->
             updateUi(device)
         })
-    }
-
-    private fun setupListeners() {
-
     }
 
     private fun updateUi(device: UserQuery.Device) {

@@ -24,12 +24,13 @@ class HomeAdapter(val clickHandler: (Int, UserQuery.Device) -> Unit) :
     }
 
 
-    inner class HomeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class HomeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
 
         internal fun bind(position: Int) {
             val device = getItem(position)
             containerView.setOnClickListener { clickHandler(position, device) }
-            editableTV.text = device.name()
+            deviceName.text = device.name()
             status.text = containerView.context.resources.getString(R.string.status, device.status())
             deviceImage.setImageResource(R.drawable.ic_lightbulb_outline_black_24dp)
             statusColor.setImageResource(
@@ -41,7 +42,6 @@ class HomeAdapter(val clickHandler: (Int, UserQuery.Device) -> Unit) :
             )
         }
     }
-
 }
 
 class DeviceDiff : DiffUtil.ItemCallback<UserQuery.Device>() {

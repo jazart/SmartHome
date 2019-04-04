@@ -58,4 +58,6 @@ class TextInputTextView : ConstraintLayout {
     fun setText(text: String) {
         if (!text.isBlank()) editableTV.text = text
     }
+
+    fun getText(): String = editableTV.text.toString()
 }

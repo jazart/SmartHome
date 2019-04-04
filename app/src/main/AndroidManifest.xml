@@ -13,7 +13,8 @@
         android:name=".di.App"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".common.MainActivity">
+        <activity android:name=".common.MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

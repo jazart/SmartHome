@@ -1,0 +1,3 @@
+mutation AddDeviceMutation($deviceInfo: DeviceInfo!, $type: DeviceType!) {
+   addDevice(deviceInfo: $deviceInfo, type: $type)
+}

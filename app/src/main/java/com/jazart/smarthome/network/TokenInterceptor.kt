@@ -15,7 +15,7 @@ class TokenInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!token.isBlank()) {
             val req = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer ".plus(token))
+               // .addHeader("Authorization", "Bearer ".plus(token))
                 .build()
 
             return chain.proceed(req)

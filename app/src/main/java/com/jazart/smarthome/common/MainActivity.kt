@@ -6,13 +6,13 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.jazart.smarthome.R
-import com.jazart.smarthome.devicemgmt.HomeViewModel
+import com.jazart.smarthome.devicemgmt.getViewModel
 import com.jazart.smarthome.devicemgmt.setGone
 import com.jazart.smarthome.di.ViewModelFactory
 import dagger.android.AndroidInjector
@@ -36,15 +36,19 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var navController: NavController
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var fabViewModel: FabViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        fabViewModel = getViewModel(viewModelFactory)
         navController = findNavController(R.id.nav_host)
         setupNavigation()
         onFabClick()
+        savedInstanceState?.let {
+            navController.navigate(it.getInt(LOCATION))
+            return
+        }
         if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
             navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
         } else {
@@ -58,26 +62,60 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         bottom_bar.setupWithNavController(navController, config)
         bottom_bar.replaceMenu(R.menu.menu)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment || destination.id == R.id.signupFragment) {
-                bottomFab.setGone()
-                bottom_bar.setGone()
-            } else {
-                bottomFab.visibility = View.VISIBLE
-                bottom_bar.visibility = View.VISIBLE
+            when {
+                destination.id == R.id.loginFragment || destination.id == R.id.signupFragment -> {
+                    bottomFab.setGone()
+                    bottom_bar.setGone()
+                }
+                destination.id == R.id.deviceFragment -> {
+                    bottom_bar.navigationIcon = null
+                    bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                    bottom_bar.replaceMenu(R.menu.device_menu)
+                    bottom_bar.menu.getItem(2).icon.setTint(getColor(R.color.colorAccent))
+                    bottom_bar.invalidate()
+                    bottomFab.setImageDrawable(getDrawable(R.drawable.ic_device_black_24dp))
+                }
+                destination.id == R.id.homeFragment -> {
+                    bottom_bar.navigationIcon = getDrawable(R.drawable.ic_menu_white_24dp)
+                    bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                    bottom_bar.replaceMenu(R.menu.menu)
+                    bottomFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp))
+                }
+                else -> {
+                    bottomFab.visibility = View.VISIBLE
+                    bottom_bar.visibility = View.VISIBLE
+                }
+            }
+        }
+        bottom_bar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.scheduleCommand -> return@setOnMenuItemClickListener true
+                R.id.removeDevice -> fabViewModel.onMenuClicked(item.itemId)
+                R.id.setFavorite -> fabViewModel.onMenuClicked(item.itemId)
+                else -> return@setOnMenuItemClickListener false
             }
         }
     }
 
     private fun onFabClick() {
         bottomFab.setOnClickListener {
-            navController.currentDestination?.let { dest -> homeViewModel.onBottomFabClicked(dest.id) }
+            navController.currentDestination?.let { dest ->
+                fabViewModel.onBottomFabClicked(dest.id)
+            }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState.apply {
+            navController.currentDestination?.id?.let { putInt(LOCATION, it) }
+        })
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     companion object {
         const val TAG = "MainActivity"
+        const val LOCATION = "Current Location"
     }
 }
 

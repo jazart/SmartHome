@@ -2,6 +2,7 @@ package com.jazart.smarthome.di
 
 import com.jazart.smarthome.common.MainActivity
 import com.jazart.smarthome.common.SettingsFragment
+import com.jazart.smarthome.devicemgmt.AddDeviceFragment
 import com.jazart.smarthome.devicemgmt.DeviceCommandBottomSheet
 import com.jazart.smarthome.devicemgmt.DeviceFragment
 import com.jazart.smarthome.devicemgmt.HomeFragment
@@ -35,4 +36,7 @@ abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract fun contributeDeviceCommandBottomSheet(): DeviceCommandBottomSheet
+
+    @ContributesAndroidInjector
+    abstract fun contributeAddDeviceFragment(): AddDeviceFragment
 }

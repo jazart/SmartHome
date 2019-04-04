@@ -2,14 +2,12 @@ package com.jazart.smarthome.network
 
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
-import com.graphql.LoginMutation
-import com.graphql.SignupMutation
-import com.graphql.UpdateDeviceMutation
-import com.graphql.UserQuery
+import com.graphql.*
 import com.graphql.type.Command
+import com.graphql.type.DeviceInfo
+import com.graphql.type.DeviceType
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -17,14 +15,14 @@ import kotlin.coroutines.suspendCoroutine
 
 class SmartHomeService @Inject constructor(private var apolloClient: ApolloClient) {
 
-    suspend fun sendDeviceCommand(uId: String, deviceName: String, command: Command): Response<UpdateDeviceMutation.Data>? {
+    suspend fun sendDeviceCommand(
+        deviceInfo: DeviceInfo,
+        deviceType: DeviceType,
+        command: Command
+    ): Response<UpdateDeviceMutation.Data>? {
         return makeCall {
             apolloClient.mutate(
-                UpdateDeviceMutation(
-                    Input.fromNullable(uId),
-                    Input.fromNullable(deviceName),
-                    Input.fromNullable(command)
-                )
+                UpdateDeviceMutation(deviceInfo, deviceType, command)
             ).await()
         }
     }
@@ -61,9 +59,27 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
         }
     }
 
+    suspend fun addDevice(addDeviceMutation: AddDeviceMutation): Response<AddDeviceMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(addDeviceMutation).await()
+        }
+    }
+
+    suspend fun deleteDevice(delteDeviceMutation: DeleteDeviceMutation): Response<DeleteDeviceMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(delteDeviceMutation).await()
+        }
+    }
+
+    suspend fun addFavorite(addFavoriteMutation: AddFavoriteMutation): Response<AddFavoriteMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(addFavoriteMutation).await()
+        }
+    }
+
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
-        const val BASE_URL_DEV = "http://48fdb1f0.ngrok.io/graphql"
+        const val BASE_URL_DEV = "http://e5f0f86e.ngrok.io/graphql"
     }
 
 }

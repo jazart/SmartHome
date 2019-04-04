@@ -16,13 +16,15 @@ class FetchUserUseCase @Inject constructor(
 
     @Throws(Exception::class)
     suspend fun getUserInfo(): Result<UserQuery.User> {
-        val response = prefs.getString("username", "")?.let {  username ->
+        val response = prefs.getString("username", "")?.let { username ->
             service.getUserInfo(username)
         } ?: return Result.failure(Error.NOT_FOUND)
         if (response.hasErrors()) {
             return Result.failure(ErrorType.from(response.errors()))
         } else if (response.data() != null) {
-            return Result.success(response.data()!!.user())
+            response.data()?.user()?.let {
+                return Result.success(it)
+            }
         }
         return Result.failure(Error.NULL_RESPONSE_VALUE)
     }

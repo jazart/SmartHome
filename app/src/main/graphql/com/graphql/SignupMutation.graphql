@@ -1,3 +1,3 @@
-mutation SignupMutation($creds: Credential, $info: Personal) {
+mutation SignupMutation($creds: Credential!, $info: Personal) {
     signup(creds: $creds, info: $info)
 }
