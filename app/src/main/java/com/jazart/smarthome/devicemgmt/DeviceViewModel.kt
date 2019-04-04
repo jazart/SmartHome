@@ -78,17 +78,21 @@ class DeviceViewModel @Inject constructor(
     infix fun favorite(device: UserQuery.Device) {
         launch {
             withContext(Dispatchers.Default) {
+                _currentDevice.postValue(device.copy(true))
                 if (!device.isFavorite) {
                     val result = favoriteDeviceUseCase.addFavorite(buildDeviceInfo(device))
                     when (result.status) {
                         is Status.Success -> return@withContext
                         is Status.Failure -> return@withContext
+
+                        Status.Completed -> return@withContext
                     }
                 } else {
                     val result = removeFavoriteUseCase.removeFavorite(buildDeviceInfo(device))
                     when (result.status) {
                         is Status.Completed -> _removeDeviceResult.postValue(Event(result.data))
                         is Status.Failure -> _removeDeviceResult.postValue(Event(ErrorType.from(result.error!!)))
+                        Status.Success -> return@withContext
                     }
                 }
             }
@@ -103,4 +107,11 @@ class DeviceViewModel @Inject constructor(
             build()
         }
     }
+}
+
+fun UserQuery.Device.copy(negateFavorite: Boolean = false): UserQuery.Device {
+    return UserQuery.Device(
+        __typename(), name(), status(), commands(),
+        owner(), if (negateFavorite) !isFavorite else isFavorite
+    )
 }

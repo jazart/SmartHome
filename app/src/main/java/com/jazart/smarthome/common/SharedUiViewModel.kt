@@ -16,8 +16,8 @@ class SharedUiViewModel @Inject constructor() : ViewModel() {
     val iconClicked: LiveData<Event<Int>>
         get() = _iconClicked
 
-//    private val _highlightIcon = MutableLiveData<Event<Int>>()
-    val highlightIcon = MutableLiveData<Event<Int>>()
+    //    private val _highlightIcon = MutableLiveData<Event<Int>>()
+    val highlightIcon = MutableLiveData<Event<Pair<Boolean, Int>>>()
 //        get() = _highlightIcon
 
     fun onBottomFabClicked(destination: Int) {
@@ -28,5 +28,4 @@ class SharedUiViewModel @Inject constructor() : ViewModel() {
         _iconClicked.value = Event(menuId)
         return true
     }
-
 }

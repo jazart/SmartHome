@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
     val addDeviceResult: LiveData<Event<String>>
         get() = _addDeviceResult
 
-    var favoriteDevice = MutableLiveData<UserQuery.Device>()
+    var favoriteDevice = MutableLiveData<UserQuery.Device?>()
 
     fun loadDevices() {
         getDevicesFromRepo {

@@ -84,15 +84,16 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
         deviceViewModel.currentDevice.observe(viewLifecycleOwner, Observer {
             device = it
-            updateUi(it)
+            sharedUiViewModel.highlightIcon.value = Event(Pair(device.isFavorite, R.id.setFavorite))
+            updateUi()
         })
+
         deviceViewModel.removeDeviceResult.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { findNavController().navigate(R.id.homeFragment) }
         })
-
     }
 
-    private fun updateUi(device: UserQuery.Device) {
+    private fun updateUi() {
         sharedUiViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
                 when (it) {
@@ -102,7 +103,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
                     }
                     R.id.setFavorite -> {
                         deviceViewModel favorite device
-                        sharedUiViewModel.highlightIcon.value = Event(R.id.setFavorite)
                     }
                     else -> return@let
                 }

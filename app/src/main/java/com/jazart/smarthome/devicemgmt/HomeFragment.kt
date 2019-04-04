@@ -77,6 +77,11 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         updateUi()
     }
 
+    override fun onResume() {
+        if (homeViewModel.favoriteDevice.value == null) favDevice.setGone()
+        super.onResume()
+    }
+
     override fun onDeviceClicked(device: UserQuery.Device) {
         val snackbar = Snackbar.make(homeFragmentRoot, device.name(), Snackbar.LENGTH_LONG)
         val snackbarView = snackbar.view
@@ -138,6 +143,10 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         })
 
         homeViewModel.favoriteDevice.observe(viewLifecycleOwner, Observer { device ->
+            if (device == null) {
+                favDevice.setGone()
+                return@Observer
+            }
             deviceName.text = getString(R.string.fav_device, "\n${device.name()}")
             status.text = getString(R.string.status, device.status())
             favDevice.show()

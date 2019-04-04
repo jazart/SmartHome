@@ -20,7 +20,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 
@@ -39,8 +38,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private lateinit var navController: NavController
     private lateinit var sharedUiViewModel: SharedUiViewModel
-
-    private val isFavorite = AtomicBoolean(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,13 +114,12 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         })
     }
 
-    private fun updateToolbar(menuItemId: Int) {
-        when(menuItemId) {
+    private fun updateToolbar(data: Pair<Boolean, Int>) {
+        when (data.second) {
             R.id.setFavorite -> {
-                if(isFavorite.compareAndSet(false, true)) {
+                if (data.first) {
                     bottom_bar.menu.getItem(2).icon.setTint(getColor(R.color.colorAccent))
                 } else {
-                    isFavorite.set(false)
                     bottom_bar.menu.getItem(2).icon.setTint(getColor(android.R.color.white))
                 }
                 bottom_bar.invalidate()
