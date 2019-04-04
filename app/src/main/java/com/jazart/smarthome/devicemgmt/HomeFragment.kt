@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
-import com.jazart.smarthome.common.FabViewModel
+import com.jazart.smarthome.common.SharedUiViewModel
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -47,7 +47,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var deviceViewModel: DeviceViewModel
-    private lateinit var fabViewModel: FabViewModel
+    private lateinit var sharedUiViewModel: SharedUiViewModel
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
         deviceViewModel.initCurrentDevice(device)
@@ -71,7 +71,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         }
         homeViewModel = getViewModel(viewModelFactory)
         deviceViewModel = getViewModel(viewModelFactory)
-        fabViewModel = getViewModel(viewModelFactory)
+        sharedUiViewModel = getViewModel(viewModelFactory)
         homeViewModel.loadDevices()
         observeLiveData()
         updateUi()
@@ -129,7 +129,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             )
             userGreeting.text = span
         })
-        fabViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
+        sharedUiViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { id ->
                 if (id == findNavController().currentDestination?.id) {
                     showBottomSheet()

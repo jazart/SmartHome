@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.jazart.smarthome.util.Event
 import javax.inject.Inject
 
-class FabViewModel @Inject constructor() : ViewModel() {
+class SharedUiViewModel @Inject constructor() : ViewModel() {
 
     private val _bottomFabClicked = MutableLiveData<Event<Int>>()
     val bottomFabClicked: LiveData<Event<Int>>
@@ -16,6 +16,10 @@ class FabViewModel @Inject constructor() : ViewModel() {
     val iconClicked: LiveData<Event<Int>>
         get() = _iconClicked
 
+//    private val _highlightIcon = MutableLiveData<Event<Int>>()
+    val highlightIcon = MutableLiveData<Event<Int>>()
+//        get() = _highlightIcon
+
     fun onBottomFabClicked(destination: Int) {
         _bottomFabClicked.value = Event(destination)
     }
@@ -24,4 +28,5 @@ class FabViewModel @Inject constructor() : ViewModel() {
         _iconClicked.value = Event(menuId)
         return true
     }
+
 }

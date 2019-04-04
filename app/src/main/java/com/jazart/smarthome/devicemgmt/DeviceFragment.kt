@@ -10,9 +10,10 @@ import androidx.navigation.fragment.findNavController
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.common.ConfirmDialog
-import com.jazart.smarthome.common.FabViewModel
+import com.jazart.smarthome.common.SharedUiViewModel
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
+import com.jazart.smarthome.util.Event
 import kotlinx.android.synthetic.main.fragment_device_detail.*
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
     lateinit var viewModelFactory: ViewModelFactory
 
     lateinit var deviceViewModel: DeviceViewModel
-    lateinit var fabViewModel: FabViewModel
+    lateinit var sharedUiViewModel: SharedUiViewModel
 
     lateinit var device: UserQuery.Device
 
@@ -43,7 +44,7 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
             deviceStatus.setText(savedInstanceState.getString(DEVICE_STATUS) ?: "")
         }
         deviceViewModel = getViewModel(viewModelFactory)
-        fabViewModel = getViewModel(viewModelFactory)
+        sharedUiViewModel = getViewModel(viewModelFactory)
         observeData(deviceViewModel)
     }
 //
@@ -73,7 +74,7 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
             deviceViewModel.toggleEdit()
         }
 
-        fabViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
+        sharedUiViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { location ->
                 if (location == R.id.deviceFragment) {
                     showBottomSheet()
@@ -92,14 +93,17 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
     }
 
     private fun updateUi(device: UserQuery.Device) {
-        fabViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
+        sharedUiViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
                 when (it) {
                     R.id.removeDevice -> {
                         val dialog = ConfirmDialog.newInstance("Are you sure you want to delete ${device.name()}?")
                         dialog.show(childFragmentManager, null)
                     }
-                    R.id.setFavorite -> deviceViewModel favorite device
+                    R.id.setFavorite -> {
+                        deviceViewModel favorite device
+                        sharedUiViewModel.highlightIcon.value = Event(R.id.setFavorite)
+                    }
                     else -> return@let
                 }
             }

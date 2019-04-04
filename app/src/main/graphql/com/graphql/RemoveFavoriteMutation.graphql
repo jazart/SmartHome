@@ -1,0 +1,3 @@
+mutation RemoveFavorite($deviceInfo: DeviceInfo!) {
+    removeFavorite(deviceInfo: $deviceInfo)
+}

@@ -9,7 +9,9 @@ import com.graphql.type.DeviceInfo
 import com.graphql.type.DeviceType
 import com.jazart.smarthome.usecase.DeleteDeviceUseCase
 import com.jazart.smarthome.usecase.FavoriteDeviceUseCase
+import com.jazart.smarthome.usecase.RemoveFavoriteUseCase
 import com.jazart.smarthome.usecase.SendDeviceCommandUseCase
+import com.jazart.smarthome.util.ErrorType
 import com.jazart.smarthome.util.Event
 import com.jazart.smarthome.util.Status
 import kotlinx.coroutines.*
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class DeviceViewModel @Inject constructor(
     private val sendDeviceCommandUseCase: SendDeviceCommandUseCase,
     private val deleteDeviceUseCase: DeleteDeviceUseCase,
-    private val favoriteDeviceUseCase: FavoriteDeviceUseCase
+    private val favoriteDeviceUseCase: FavoriteDeviceUseCase,
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase
 ) : ViewModel(),
     CoroutineScope {
 
@@ -75,18 +78,29 @@ class DeviceViewModel @Inject constructor(
     infix fun favorite(device: UserQuery.Device) {
         launch {
             withContext(Dispatchers.Default) {
-                val result = favoriteDeviceUseCase.addFavorite(DeviceInfo.builder().run {
-                    deviceName(device.name())
-                    username(device.owner())
-                    command(emptyList())
-                    build()
-                })
-
-                when (result.status) {
-                    is Status.Success -> return@withContext
-                    is Status.Failure -> return@withContext
+                if (!device.isFavorite) {
+                    val result = favoriteDeviceUseCase.addFavorite(buildDeviceInfo(device))
+                    when (result.status) {
+                        is Status.Success -> return@withContext
+                        is Status.Failure -> return@withContext
+                    }
+                } else {
+                    val result = removeFavoriteUseCase.removeFavorite(buildDeviceInfo(device))
+                    when (result.status) {
+                        is Status.Completed -> _removeDeviceResult.postValue(Event(result.data))
+                        is Status.Failure -> _removeDeviceResult.postValue(Event(ErrorType.from(result.error!!)))
+                    }
                 }
             }
+        }
+    }
+
+    private fun buildDeviceInfo(device: UserQuery.Device): DeviceInfo {
+        return DeviceInfo.builder().run {
+            deviceName(device.name())
+            username(device.owner())
+            command(emptyList())
+            build()
         }
     }
 }
