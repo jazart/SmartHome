@@ -65,9 +65,9 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
         }
     }
 
-    suspend fun deleteDevice(delteDeviceMutation: DeleteDeviceMutation): Response<DeleteDeviceMutation.Data>? {
+    suspend fun deleteDevice(deleteDeviceMutation: DeleteDeviceMutation): Response<DeleteDeviceMutation.Data>? {
         return makeCall {
-            apolloClient.mutate(delteDeviceMutation).await()
+            apolloClient.mutate(deleteDeviceMutation).await()
         }
     }
 
@@ -77,9 +77,15 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
         }
     }
 
+    suspend fun removeFavorite(removeFavoriteMutation: RemoveFavoriteMutation): Response<RemoveFavoriteMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(removeFavoriteMutation).await()
+        }
+    }
+
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
-        const val BASE_URL_DEV = "http://e5f0f86e.ngrok.io/graphql"
+        const val BASE_URL_DEV = "http://cb4bf4a9.ngrok.io/graphql"
     }
 
 }

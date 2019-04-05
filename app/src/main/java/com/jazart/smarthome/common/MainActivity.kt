@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -36,12 +37,12 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var navController: NavController
-    private lateinit var fabViewModel: FabViewModel
+    private lateinit var sharedUiViewModel: SharedUiViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fabViewModel = getViewModel(viewModelFactory)
+        sharedUiViewModel = getViewModel(viewModelFactory)
         navController = findNavController(R.id.nav_host)
         setupNavigation()
         onFabClick()
@@ -54,6 +55,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         } else {
             navController.navigate(R.id.homeFragment)
         }
+        sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
+            event.consume()?.let { updateToolbar(it) }
+        })
     }
 
     private fun setupNavigation() {
@@ -71,7 +75,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     bottom_bar.navigationIcon = null
                     bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
                     bottom_bar.replaceMenu(R.menu.device_menu)
-                    bottom_bar.menu.getItem(2).icon.setTint(getColor(R.color.colorAccent))
                     bottom_bar.invalidate()
                     bottomFab.setImageDrawable(getDrawable(R.drawable.ic_device_black_24dp))
                 }
@@ -90,8 +93,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         bottom_bar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.scheduleCommand -> return@setOnMenuItemClickListener true
-                R.id.removeDevice -> fabViewModel.onMenuClicked(item.itemId)
-                R.id.setFavorite -> fabViewModel.onMenuClicked(item.itemId)
+                R.id.removeDevice -> sharedUiViewModel.onMenuClicked(item.itemId)
+                R.id.setFavorite -> sharedUiViewModel.onMenuClicked(item.itemId)
                 else -> return@setOnMenuItemClickListener false
             }
         }
@@ -100,7 +103,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun onFabClick() {
         bottomFab.setOnClickListener {
             navController.currentDestination?.let { dest ->
-                fabViewModel.onBottomFabClicked(dest.id)
+                sharedUiViewModel.onBottomFabClicked(dest.id)
             }
         }
     }
@@ -109,6 +112,19 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onSaveInstanceState(outState.apply {
             navController.currentDestination?.id?.let { putInt(LOCATION, it) }
         })
+    }
+
+    private fun updateToolbar(data: Pair<Boolean, Int>) {
+        when (data.second) {
+            R.id.setFavorite -> {
+                if (data.first) {
+                    bottom_bar.menu.getItem(2).icon.setTint(getColor(R.color.colorAccent))
+                } else {
+                    bottom_bar.menu.getItem(2).icon.setTint(getColor(android.R.color.white))
+                }
+                bottom_bar.invalidate()
+            }
+        }
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
