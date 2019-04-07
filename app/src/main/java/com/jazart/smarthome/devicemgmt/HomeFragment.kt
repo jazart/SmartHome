@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -96,24 +97,32 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     }
 
     private fun updateUi() {
+        home_recyclerView.itemAnimator = DefaultItemAnimator()
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
         favDevice.setGone()
         val constraintSet = ConstraintSet()
         constraintSet.clone(deviceItemConstraint)
+        constraintSet.clear(deviceImage.id, ConstraintSet.TOP)
+        constraintSet.clear(deviceImage.id, ConstraintSet.START)
+        constraintSet.clear(deviceName.id, ConstraintSet.END)
+        constraintSet.clear(status.id, ConstraintSet.BOTTOM)
         constraintSet.connect(deviceName.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
-        constraintSet.connect(deviceImage.id, ConstraintSet.START, deviceItemConstraint.id, ConstraintSet.START)
-        constraintSet.connect(deviceImage.id, ConstraintSet.END, deviceItemConstraint.id, ConstraintSet.END)
-        constraintSet.connect(deviceImage.id, ConstraintSet.BOTTOM, deviceItemConstraint.id, ConstraintSet.BOTTOM, 16)
         constraintSet.connect(deviceImage.id, ConstraintSet.TOP, status.id, ConstraintSet.BOTTOM)
+        constraintSet.connect(deviceImage.id, ConstraintSet.START, deviceItemConstraint.id, ConstraintSet.START)
         constraintSet.applyTo(deviceItemConstraint)
         deviceName.layoutParams = (deviceName.layoutParams as ConstraintLayout.LayoutParams).apply {
             width = MATCH_CONSTRAINT
         }
+        deviceImage.layoutParams = (deviceImage.layoutParams as ConstraintLayout.LayoutParams).apply {
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            updateMargins(0, 0, 0 , 0)
+        }
         deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
+        deviceName.maxLines = 2
         deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
         deviceImage.setImageResource(R.drawable.ic_lock)
-
     }
 
     private fun observeLiveData() {
@@ -145,10 +154,12 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         homeViewModel.favoriteDevice.observe(viewLifecycleOwner, Observer { device ->
             if (device == null) {
                 favDevice.setGone()
+                favDevice.setOnClickListener(null)
                 return@Observer
             }
             deviceName.text = getString(R.string.fav_device, "\n${device.name()}")
             status.text = getString(R.string.status, device.status())
+            favDevice.setOnClickListener { clickHandler(0, device) }
             favDevice.show()
         })
     }

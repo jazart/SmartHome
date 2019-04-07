@@ -1,12 +1,14 @@
 package com.jazart.smarthome.devicemgmt
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Slide
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.common.ConfirmDialog
@@ -32,6 +34,11 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
     lateinit var device: UserQuery.Device
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = Slide(Gravity.END)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_device_detail, container, false)
     }
@@ -45,6 +52,13 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
         }
         deviceViewModel = getViewModel(viewModelFactory)
         sharedUiViewModel = getViewModel(viewModelFactory)
+        deviceToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        deviceToolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+        deviceToolbar.inflateMenu(R.menu.device_menu_top)
+        deviceToolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.editDevice) deviceViewModel.toggleEdit()
+            true
+        }
         observeData(deviceViewModel)
     }
 //
@@ -70,9 +84,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
                 }
             }
         })
-        editButton.setOnClickListener {
-            deviceViewModel.toggleEdit()
-        }
 
         sharedUiViewModel.bottomFabClicked.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { location ->
@@ -84,6 +95,7 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
         deviceViewModel.currentDevice.observe(viewLifecycleOwner, Observer {
             device = it
+            deviceImage.deviceImage(device.type())
             sharedUiViewModel.highlightIcon.value = Event(Pair(device.isFavorite, R.id.setFavorite))
             updateUi()
         })

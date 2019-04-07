@@ -20,6 +20,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.drawer_header.*
 import javax.inject.Inject
 
 
@@ -52,12 +53,14 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
         if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
             navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
+            usernameHeader.text = getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("username", "")
         } else {
             navController.navigate(R.id.homeFragment)
         }
         sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
             event.consume()?.let { updateToolbar(it) }
         })
+
     }
 
     private fun setupNavigation() {

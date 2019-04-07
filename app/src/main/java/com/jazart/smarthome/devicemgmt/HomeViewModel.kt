@@ -55,7 +55,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun addDevice(deviceName: String, deviceType: DeviceType, isFavorite: Boolean) {
+    fun addDevice(deviceName: String, deviceType: DeviceType) {
         launch {
             withContext(Dispatchers.Default) {
                 if (!isInfoValid(deviceName, deviceType)) {
@@ -65,7 +65,7 @@ class HomeViewModel @Inject constructor(
                 val result =
                     addDeviceUseCase.addDevice(
                         DeviceInfo.builder().username(user.value!!).deviceName(deviceName).command(listOf())
-                            .isFavorite(false).build(),
+                            .isFavorite(false).type(deviceType).build(),
                         deviceType
                     )
                 when (result.status) {
@@ -82,7 +82,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun isInfoValid(deviceName: String, deviceType: DeviceType): Boolean {
-        return deviceName.isNotBlank() && deviceType in listOf(DeviceType.CAMERA, DeviceType.LIGHT)
+        return deviceName.isNotBlank() && deviceType in listOf(
+            DeviceType.CAMERA,
+            DeviceType.LIGHT,
+            DeviceType.MOTION,
+            DeviceType.HOME_TEMPERATURE,
+            DeviceType.LIGHT
+        )
     }
 
     private fun getFavoriteDeviceIfAvailable(): UserQuery.Device? {
@@ -94,27 +100,64 @@ class HomeViewModel @Inject constructor(
         job.cancelChildren()
     }
 
-    private fun testDeviceData(): List<UserQuery.Device> {
-        return listOf(
-            UserQuery.Device(
-                "TV",
-                "Television",
-                com.graphql.type.Status.CONNECTED,
-                listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
-                "jeremy",
-                false
-            ),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false)
-        )
+    companion object {
+        fun testDeviceData(): List<UserQuery.Device> {
+            return listOf(
+                UserQuery.Device(
+                    "TV",
+                    "Television",
+                    com.graphql.type.Status.CONNECTED,
+                    listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
+                    "jeremy",
+                    false,
+                    DeviceType.TV
+                ),
+                UserQuery.Device(
+                    "Camera",
+                    "Motion Sensor",
+                    com.graphql.type.Status.CONNECTED,
+                    listOf(),
+                    "jeremy",
+                    false,
+                    DeviceType.MOTION
+                ),
+                UserQuery.Device(
+                    "Camera",
+                    "Light",
+                    com.graphql.type.Status.CONNECTED,
+                    listOf(),
+                    "jeremy",
+                    false,
+                    DeviceType.LIGHT
+                ),
+                UserQuery.Device(
+                    "Camera",
+                    "Bluetooth Device",
+                    com.graphql.type.Status.CONNECTED,
+                    listOf(),
+                    "jeremy",
+                    false,
+                    DeviceType.BLUETOOTH_DEVICE
+                ),
+                UserQuery.Device(
+                    "Camera",
+                    "Camera",
+                    com.graphql.type.Status.CONNECTED,
+                    listOf(),
+                    "jeremy",
+                    false,
+                    DeviceType.CAMERA
+                ),
+                UserQuery.Device(
+                    "Camera",
+                    "Temperature",
+                    com.graphql.type.Status.CONNECTED,
+                    listOf(),
+                    "jeremy",
+                    false,
+                    DeviceType.HOME_TEMPERATURE
+                )
+            )
+        }
     }
 }

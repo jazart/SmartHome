@@ -104,6 +104,7 @@ class DeviceViewModel @Inject constructor(
             deviceName(device.name())
             username(device.owner())
             command(emptyList())
+            type(device.type())
             build()
         }
     }
@@ -112,6 +113,6 @@ class DeviceViewModel @Inject constructor(
 fun UserQuery.Device.copy(negateFavorite: Boolean = false): UserQuery.Device {
     return UserQuery.Device(
         __typename(), name(), status(), commands(),
-        owner(), if (negateFavorite) !isFavorite else isFavorite
+        owner(), if (negateFavorite) !isFavorite else isFavorite, type()
     )
 }
