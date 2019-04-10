@@ -66,7 +66,7 @@ class DeviceViewModel @Inject constructor(
     fun deleteDevice(device: UserQuery.Device) {
         launch {
             withContext(Dispatchers.Default) {
-                val result = deleteDeviceUseCase.deleteDevice(device)
+                val result = deleteDeviceUseCase.deleteDevice(buildDeviceInfo(device))
                 when (result.status) {
                     is Status.Success -> _removeDeviceResult.postValue(Event(result.data))
                     is Status.Failure -> return@withContext

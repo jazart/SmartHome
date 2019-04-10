@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
         if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
             navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
-            usernameHeader.text = getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("username", "")
+            usernameHeader?.text = getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("username", "")
         } else {
             navController.navigate(R.id.homeFragment)
         }

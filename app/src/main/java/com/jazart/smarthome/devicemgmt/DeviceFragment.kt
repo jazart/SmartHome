@@ -31,7 +31,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
     lateinit var deviceViewModel: DeviceViewModel
     lateinit var sharedUiViewModel: SharedUiViewModel
-
     lateinit var device: UserQuery.Device
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +60,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
         }
         observeData(deviceViewModel)
     }
-//
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        outState.putString(DEVICE_NAME, deviceName.getText())
-//        outState.putString(DEVICE_STATUS, deviceStatus.getText())
-//        super.onSaveInstanceState(outState)
-//    }
 
     override fun onOptionClicked(option: Int) {
         deviceViewModel.deleteDevice(device)
