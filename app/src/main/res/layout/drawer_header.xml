@@ -24,11 +24,11 @@
         android:typeface="normal"
         app:fontFamily="@font/rubik" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/usernameHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/name"
         android:textAlignment="viewStart"
         android:textColor="@android:color/black"
         android:textSize="18sp" />

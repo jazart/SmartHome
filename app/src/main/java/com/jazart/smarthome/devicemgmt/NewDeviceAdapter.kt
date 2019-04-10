@@ -7,8 +7,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import kotlinx.android.extensions.LayoutContainer
@@ -40,10 +38,11 @@ class NewDeviceAdapter(
             modifyCardProperties()
             deviceName.text = device.name()
             ViewCompat.setTransitionName(deviceImage, device.name().plus(pos))
-            Glide.with(containerView.context).apply {
-                setDefaultRequestOptions(RequestOptions().dontAnimate())
-                load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
-            }
+            deviceImage.deviceImage(device.type())
+//            Glide.with(containerView.context).apply {
+//                setDefaultRequestOptions(RequestOptions().dontAnimate())
+//                load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
+//            }
             statusColor.setGone()
         }
 

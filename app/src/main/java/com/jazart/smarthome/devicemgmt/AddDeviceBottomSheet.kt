@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
-import com.graphql.type.Command
 import com.jazart.smarthome.R
 import kotlinx.android.synthetic.main.fragment_bottomsheet_add_device.*
 import kotlinx.android.synthetic.main.list_item_device.*
@@ -23,6 +22,7 @@ class AddDeviceBottomSheet : BottomSheetDialogFragment() {
             Bundle().apply {
                 putString("t", deviceImage.transitionName)
                 putBoolean("fav", device.isFavorite)
+                putSerializable("type", device.type())
             },
             null,
             FragmentNavigatorExtras(deviceImage to deviceImage.transitionName)
@@ -39,27 +39,7 @@ class AddDeviceBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         addDeviceRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         addDeviceRecyclerView.adapter = adapter
-        adapter.devices = listOf(
-            UserQuery.Device(
-                "TV",
-                "Television",
-                com.graphql.type.Status.CONNECTED,
-                listOf(Command.TURN_ON, Command.TURN_ON, Command.TURN_OFF, Command.PULSE),
-                "jeremy",
-                true
-            ),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", true),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", true),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false),
-            UserQuery.Device("Camera", "Test Device", com.graphql.type.Status.CONNECTED, listOf(), "jeremy", false)
-        )
+        adapter.devices = HomeViewModel.testDeviceData()
     }
 
     interface OnDeviceClickedListener {

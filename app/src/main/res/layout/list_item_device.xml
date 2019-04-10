@@ -24,15 +24,19 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/deviceName"
             style="@style/TextAppearance.MaterialComponents.Headline3"
-            android:layout_width="180dp"
+            android:layout_width="155dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:breakStrategy="high_quality"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="30sp"
+            android:textSize="28sp"
+            app:autoSizeMaxTextSize="40sp"
+            app:autoSizeMinTextSize="18sp"
+            app:autoSizeTextType="uniform"
             app:fontFamily="@font/rubik"
+            app:layout_constraintBottom_toTopOf="@+id/status"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/app_name" />
@@ -40,17 +44,19 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/deviceImage"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/deviceName"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.39" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
@@ -63,9 +69,9 @@
             app:autoSizeMinTextSize="8sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/statusColor"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deviceName"
-            app:layout_constraintVertical_bias="0.917" />
+            app:layout_constraintTop_toBottomOf="@+id/deviceName" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/statusColor"
