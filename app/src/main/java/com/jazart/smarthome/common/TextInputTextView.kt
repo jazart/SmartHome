@@ -1,6 +1,7 @@
 package com.jazart.smarthome.common
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,7 @@ class TextInputTextView : ConstraintLayout {
 
     fun toggleEditableStatus(shouldShowEdit: Boolean = true) {
         if (shouldShowEdit) {
+            editTIL.editText?.text = SpannableStringBuilder.valueOf(editableTV.text)
             editTIL.apply {
                 alpha = 0f
                 visibility = View.VISIBLE
@@ -56,7 +58,9 @@ class TextInputTextView : ConstraintLayout {
     }
 
     fun setText(text: String) {
-        if (!text.isBlank()) editableTV.text = text
+        if (!text.isBlank()) {
+            editableTV.text = text
+        }
     }
 
     fun getText(): String = editableTV.text.toString()

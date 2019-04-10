@@ -43,6 +43,8 @@ class DeviceViewModel @Inject constructor(
     val removeDeviceResult: LiveData<Event<String>>
         get() = _removeDeviceResult
 
+    val _favorite = MutableLiveData<String>()
+
     fun initCurrentDevice(device: UserQuery.Device) {
         _currentDevice.value = device
     }
@@ -82,7 +84,7 @@ class DeviceViewModel @Inject constructor(
                 if (!device.isFavorite) {
                     val result = favoriteDeviceUseCase.addFavorite(buildDeviceInfo(device))
                     when (result.status) {
-                        is Status.Success -> return@withContext
+                        is Status.Success -> _favorite.postValue(result.data)
                         is Status.Failure -> return@withContext
 
                         Status.Completed -> return@withContext
