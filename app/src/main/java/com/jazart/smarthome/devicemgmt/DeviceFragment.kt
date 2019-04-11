@@ -5,12 +5,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Slide
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.common.ConfirmDialog
@@ -99,9 +101,17 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
             event.consume()?.let { findNavController().navigate(R.id.homeFragment) }
         })
 
-        deviceViewModel._favorite.observe(viewLifecycleOwner, Observer { Glide.with(this).applyDefaultRequestOptions(
-            RequestOptions().fitCenter()
-        ).load(it).into(cameraImage) })
+        deviceViewModel._favorite.observe(viewLifecycleOwner, Observer {
+            val snackbar = Snackbar.make(devicePageRoot, "${device.name()} added as favorite!", Snackbar.LENGTH_SHORT)
+
+            snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                anchorId = R.id.snackbarAnchor
+            }
+            snackbar.show()
+            Glide.with(this).applyDefaultRequestOptions(
+                RequestOptions().fitCenter()
+            ).load(it).into(cameraImage)
+        })
     }
 
     private fun updateUi() {
