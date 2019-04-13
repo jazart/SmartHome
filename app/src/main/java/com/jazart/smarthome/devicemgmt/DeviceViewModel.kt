@@ -43,7 +43,13 @@ class DeviceViewModel @Inject constructor(
     val removeDeviceResult: LiveData<Event<String>>
         get() = _removeDeviceResult
 
-    val _favorite = MutableLiveData<String>()
+    private val _favorite = MutableLiveData<Event<String>>()
+    val favorite: LiveData<Event<String>>
+        get() = _favorite
+
+    private val _commandValue = MutableLiveData<Event<String>>()
+    val commandValue: LiveData<Event<String>>
+        get() = _commandValue
 
     fun initCurrentDevice(device: UserQuery.Device) {
         _currentDevice.value = device
@@ -51,11 +57,18 @@ class DeviceViewModel @Inject constructor(
 
     infix fun send(command: Command) {
         launch {
-            _currentDevice.value?.let { device ->
-                val res = sendDeviceCommandUseCase.sendCommand(
-                    DeviceInfo.builder().deviceName(device.name()).username(device.owner()).build(),
-                    DeviceType.CAMERA, Command.TURN_ON
-                )
+            withContext(Dispatchers.Default) {
+                _currentDevice.value?.let { device ->
+                    val res = sendDeviceCommandUseCase.sendCommand(
+                        DeviceInfo.builder().deviceName(device.name()).username(device.owner()).type(device.type()).command(
+                            device.commands()
+                        ).build(),
+                        DeviceType.CAMERA, Command.TURN_ON
+                    )
+                    if (res.data != null) {
+                        _commandValue.postValue(Event(res.data))
+                    }
+                }
             }
         }
     }
@@ -84,7 +97,7 @@ class DeviceViewModel @Inject constructor(
                 if (!device.isFavorite) {
                     val result = favoriteDeviceUseCase.addFavorite(buildDeviceInfo(device))
                     when (result.status) {
-                        is Status.Success -> _favorite.postValue(result.data)
+                        is Status.Success -> _favorite.postValue(Event(result.data))
                         is Status.Failure -> return@withContext
 
                         Status.Completed -> return@withContext

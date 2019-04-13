@@ -101,16 +101,31 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
             event.consume()?.let { findNavController().navigate(R.id.homeFragment) }
         })
 
-        deviceViewModel._favorite.observe(viewLifecycleOwner, Observer {
-            val snackbar = Snackbar.make(devicePageRoot, "${device.name()} added as favorite!", Snackbar.LENGTH_SHORT)
+        deviceViewModel.favorite.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let {
+                val snackbar =
+                    Snackbar.make(devicePageRoot, "${device.name()} added as favorite!", Snackbar.LENGTH_LONG)
 
-            snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
-                anchorId = R.id.snackbarAnchor
+                snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                    anchorId = R.id.snackbarAnchor
+                }
+                snackbar.show()
             }
-            snackbar.show()
-            Glide.with(this).applyDefaultRequestOptions(
-                RequestOptions().fitCenter()
-            ).load(it).into(cameraImage)
+        })
+
+        deviceViewModel.commandValue.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { imageUri ->
+                val snackbar =
+                    Snackbar.make(devicePageRoot, "Command Processed!", Snackbar.LENGTH_LONG)
+
+                snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                    anchorId = R.id.snackbarAnchor
+                }
+                snackbar.show()
+                Glide.with(this).applyDefaultRequestOptions(
+                    RequestOptions().fitCenter()
+                ).load(imageUri).into(cameraImage)
+            }
         })
     }
 

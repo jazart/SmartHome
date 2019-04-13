@@ -11,7 +11,7 @@ import com.jazart.smarthome.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.list_item_command.*
 
-class DeviceCommandAdapter(clickListener: (Command) -> Unit) :
+class DeviceCommandAdapter(val clickListener: (Command) -> Unit) :
     ListAdapter<Command, DeviceCommandAdapter.DeviceViewHolder>(object : DiffUtil.ItemCallback<Command>() {
         override fun areItemsTheSame(oldItem: Command, newItem: Command): Boolean {
             return oldItem.name == newItem.name
@@ -37,6 +37,7 @@ class DeviceCommandAdapter(clickListener: (Command) -> Unit) :
     inner class DeviceViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(command: Command) {
+            commandText.setOnClickListener { clickListener(command) }
             commandText.text = command.toString()
         }
     }
