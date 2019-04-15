@@ -72,4 +72,5 @@
         android:name="com.jazart.smarthome.common.ConfirmDialog"
         android:label="ConfirmDialog" />
 
+
 </navigation>

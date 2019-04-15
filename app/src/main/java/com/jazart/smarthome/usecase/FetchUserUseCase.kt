@@ -9,23 +9,16 @@ import com.jazart.smarthome.util.Result
 import javax.inject.Inject
 
 
-class FetchUserUseCase @Inject constructor(
-    private val service: SmartHomeService,
-    private val prefs: SharedPreferences
-) {
+class FetchUserUseCase @Inject constructor(private val service: SmartHomeService, private val prefs: SharedPreferences) {
 
-    @Throws(Exception::class)
     suspend fun getUserInfo(): Result<UserQuery.User> {
         val response = prefs.getString("username", "")?.let { username ->
             service.getUserInfo(username)
         } ?: return Result.failure(Error.NOT_FOUND)
-        if (response.hasErrors()) {
-            return Result.failure(ErrorType.from(response.errors()))
-        } else if (response.data() != null) {
-            response.data()?.user()?.let {
-                return Result.success(it)
-            }
+        return when {
+            response.hasErrors() -> Result.failure(ErrorType.from(response.errors()))
+            response.data() != null -> Result.success(response.data()?.user()!!)
+            else -> Result.failure(Error.NULL_RESPONSE_VALUE)
         }
-        return Result.failure(Error.NULL_RESPONSE_VALUE)
     }
 }

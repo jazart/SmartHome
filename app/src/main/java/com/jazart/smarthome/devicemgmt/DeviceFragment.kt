@@ -5,10 +5,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Slide
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
 import com.jazart.smarthome.common.ConfirmDialog
@@ -31,7 +35,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
     lateinit var deviceViewModel: DeviceViewModel
     lateinit var sharedUiViewModel: SharedUiViewModel
-
     lateinit var device: UserQuery.Device
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +64,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
         }
         observeData(deviceViewModel)
     }
-//
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        outState.putString(DEVICE_NAME, deviceName.getText())
-//        outState.putString(DEVICE_STATUS, deviceStatus.getText())
-//        super.onSaveInstanceState(outState)
-//    }
 
     override fun onOptionClicked(option: Int) {
         deviceViewModel.deleteDevice(device)
@@ -102,6 +99,33 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
         deviceViewModel.removeDeviceResult.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { findNavController().navigate(R.id.homeFragment) }
+        })
+
+        deviceViewModel.favorite.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let {
+                val snackbar =
+                    Snackbar.make(devicePageRoot, "${device.name()} added as favorite!", Snackbar.LENGTH_LONG)
+
+                snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                    anchorId = R.id.snackbarAnchor
+                }
+                snackbar.show()
+            }
+        })
+
+        deviceViewModel.commandValue.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { imageUri ->
+                val snackbar =
+                    Snackbar.make(devicePageRoot, "Command Processed!", Snackbar.LENGTH_LONG)
+
+                snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                    anchorId = R.id.snackbarAnchor
+                }
+                snackbar.show()
+                Glide.with(this).applyDefaultRequestOptions(
+                    RequestOptions().fitCenter()
+                ).load(imageUri).into(cameraImage)
+            }
         })
     }
 

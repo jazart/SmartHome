@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
             favoriteDevice.value = getFavoriteDeviceIfAvailable()
             devices.filter { !it.isFavorite }.toList()
         }
-    private val job = Job()
+    private val job = SupervisorJob()
 
     private val _user = MutableLiveData<String>()
     val user: LiveData<String>
@@ -45,11 +45,13 @@ class HomeViewModel @Inject constructor(
 
     fun loadDevices() {
         getDevicesFromRepo {
-            val userInfo = fetchUserUseCase.getUserInfo()
-            when (userInfo.status) {
-                is Status.Success -> {
-                    _devices.postValue((userInfo.data?.devices()))
-                    _user.postValue(userInfo.data?.username())
+            withContext(Dispatchers.Default) {
+                val userInfo = fetchUserUseCase.getUserInfo()
+                when (userInfo.status) {
+                    is Status.Success -> {
+                        _devices.postValue((userInfo.data?.devices()))
+                        _user.postValue(userInfo.data?.username())
+                    }
                 }
             }
         }
@@ -64,8 +66,7 @@ class HomeViewModel @Inject constructor(
                 }
                 val result =
                     addDeviceUseCase.addDevice(
-                        DeviceInfo.builder().username(user.value!!).deviceName(deviceName).command(listOf())
-                            .isFavorite(false).type(deviceType).build(),
+                        createDevice(deviceName, deviceType),
                         deviceType
                     )
                 when (result.status) {
@@ -75,6 +76,17 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun createDevice(deviceName: String, deviceType: DeviceType): DeviceInfo {
+        val commands = when (deviceType) {
+            DeviceType.LIGHT -> mutableListOf(Command.PULSE)
+            DeviceType.CAMERA -> mutableListOf(Command.STREAM, Command.SNAP)
+            else -> mutableListOf()
+        }
+        commands.addAll(listOf(Command.TURN_ON, Command.TURN_OFF))
+        return DeviceInfo.builder().username(user.value!!).deviceName(deviceName).command(commands)
+            .isFavorite(false).type(deviceType).build()
     }
 
     private fun getDevicesFromRepo(block: suspend () -> Unit): Job {
