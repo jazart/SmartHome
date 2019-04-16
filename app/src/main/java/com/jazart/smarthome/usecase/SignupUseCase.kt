@@ -21,13 +21,13 @@ class SignupUseCase @Inject constructor(
         val response = service.signup(
             SignupMutation(credential, Input.fromNullable(personal))
         ) ?: return Result.failure(Error.NOT_FOUND)
-        if (response.hasErrors()) {
-            return Result.failure(ErrorType.from(response.errors()))
+        return when {
+            response.hasErrors() || response.data() == null -> Result.failure(ErrorType.from(response.errors()))
+            else -> {
+                addToPrefs(response.data()!!.signup()!!, credential.username())
+                Result.success(response.data()!!.signup()!!)
+            }
         }
-        addToPrefs(response.data()!!.signup()!!, credential.username())
-        return if (response.data() == null) Result.failure(Error.NULL_RESPONSE_VALUE) else Result.success(
-            response.data()!!.signup()!!
-        )
     }
 
     private fun checkPasswordRules(password: String): Boolean {

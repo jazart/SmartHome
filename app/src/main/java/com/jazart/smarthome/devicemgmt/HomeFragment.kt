@@ -1,6 +1,6 @@
 package com.jazart.smarthome.devicemgmt
 
-import android.content.Context
+import android.app.Activity
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -66,10 +67,6 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        button.setOnClickListener {
-            requireActivity().getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
-            requireActivity().finishAndRemoveTask()
-        }
         homeViewModel = getViewModel(viewModelFactory)
         deviceViewModel = getViewModel(viewModelFactory)
         sharedUiViewModel = getViewModel(viewModelFactory)
@@ -208,4 +205,9 @@ inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(factory: ViewM
 
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelFactory): T {
     return ViewModelProviders.of(requireActivity(), factory)[T::class.java]
+}
+
+fun Fragment.hideKeyboard() {
+    val imm = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(view?.windowToken, 0)
 }

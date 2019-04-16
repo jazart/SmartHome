@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -43,6 +44,19 @@ class AddDeviceFragment : Fragment(), Injectable {
         (view.parent as ViewGroup).doOnPreDraw { startPostponedEnterTransition() }
         homeViewModel = getViewModel(viewModelFactory)
         ViewCompat.setTransitionName(deviceImage, arguments?.getString("t"))
+        addDeviceBtn.alpha = 0.5f
+        addDeviceBtn.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+        enterName.editText?.doOnTextChanged { text, _, _, _ ->
+            if (!text.isNullOrBlank()) {
+                addDeviceBtn.isEnabled = true
+                addDeviceBtn.alpha = 1f
+                addDeviceBtn.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark, null))
+            } else {
+                addDeviceBtn.alpha = 0.5f
+                addDeviceBtn.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+                addDeviceBtn.isEnabled = false
+            }
+        }
         addDeviceBtn.setOnClickListener {
             homeViewModel.addDevice(
                 enterName.editText?.text.toString(),
@@ -50,6 +64,7 @@ class AddDeviceFragment : Fragment(), Injectable {
             )
             deviceInfo.setGone()
             addDeviceProgress.show()
+            hideKeyboard()
         }
         homeViewModel.addDeviceResult.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {

@@ -74,6 +74,7 @@
         android:text="@string/add_device"
         android:textColor="@color/colorAccent"
         android:textSize="24sp"
+        android:enabled="false"
         app:backgroundTint="@color/colorPrimaryDark"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -2,7 +2,6 @@ package com.jazart.smarthome.common
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -31,6 +30,7 @@ import javax.inject.Inject
  */
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -51,16 +51,23 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             navController.navigate(it.getInt(LOCATION))
             return
         }
-        if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
-            navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
-            usernameHeader?.text = getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("username", "")
+        if (getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).getString(JWT, null).isNullOrBlank()) {
+            navController.navigate(R.id.action_homeFragment_to_loginFragment)
+            usernameHeader?.text = getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).getString(USERNAME, "")
         } else {
             navController.navigate(R.id.homeFragment)
         }
         sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
             event.consume()?.let { updateToolbar(it) }
         })
+        setupBaseUi()
+    }
 
+    private fun setupBaseUi() {
+        logoutBtn.setOnClickListener {
+            getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).edit().clear().apply()
+            finishAndRemoveTask()
+        }
     }
 
     private fun setupNavigation() {
@@ -135,13 +142,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     companion object {
         const val TAG = "MainActivity"
         const val LOCATION = "Current Location"
-    }
-}
-
-fun NavController.navigateSafely(id: Int, tag: String) {
-    try {
-        navigate(id)
-    } catch (e: IllegalArgumentException) {
-        Log.e(tag, e.message, e)
+        const val USER_JWT = "user_jwt"
+        const val USERNAME = "username"
+        const val JWT = "jwt"
     }
 }
