@@ -7,10 +7,10 @@ import javax.inject.Inject
 
 class ImageService @Inject constructor(private val okhttp: OkHttpClient) {
 
-    suspend fun getImage(user: String): String? {
+    fun getImage(user: String): String? {
         val httpUrl = HttpUrl.Builder().run {
             scheme("http")
-            host("1cf02040.ngrok.io")
+            host("c433fb97.ngrok.io")
             addPathSegment("images")
             build()
         }
@@ -21,7 +21,7 @@ class ImageService @Inject constructor(private val okhttp: OkHttpClient) {
             build()
         }).execute()
         return when {
-            !response.isSuccessful || response.body().toString().isBlank() -> null
+            !response.isSuccessful -> null
             else -> response.body()?.string()
         }
     }

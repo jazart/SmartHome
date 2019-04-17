@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setupNavigation()
         onFabClick()
         savedInstanceState?.let { bundle ->
-            val destination = bundle.getInt(LOCATION)
-            if(destination != 0) navController.navigate(destination)
+            navController.restoreState(bundle.getBundle(NAV_STACK))
+            setupBaseUi()
             return
         }
         if (getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).getString(JWT, null).isNullOrBlank()) {
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
-            navController.currentDestination?.id?.let { putInt(LOCATION, it) }
+            putBundle(NAV_STACK, navController.saveState())
         })
     }
 
@@ -153,5 +153,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         const val USER_JWT = "user_jwt"
         const val USERNAME = "username"
         const val JWT = "jwt"
+        const val NAV_STACK = "navigation stack"
     }
 }
