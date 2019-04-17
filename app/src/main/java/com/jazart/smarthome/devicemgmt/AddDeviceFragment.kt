@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Explode
 import com.graphql.type.DeviceType
 import com.jazart.smarthome.R
+import com.jazart.smarthome.devicemgmt.AddDeviceBottomSheet.Companion.TRANSITION
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_add_device.*
@@ -25,11 +26,11 @@ class AddDeviceFragment : Fragment(), Injectable {
     lateinit var viewModelFactory: ViewModelFactory
 
     lateinit var homeViewModel: HomeViewModel
-    lateinit var deviceType: DeviceType
+    private var deviceType = DeviceType.`$UNKNOWN`
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        sharedElementEnterTransition = Slide()
+        sharedElementEnterTransition = Explode()
         enterTransition = Explode()
     }
 
@@ -39,11 +40,13 @@ class AddDeviceFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        deviceType = arguments?.getSerializable("type") as DeviceType
+        if(arguments != null) {
+            deviceType = arguments?.getSerializable(DEVICE_TYPE) as DeviceType
+            ViewCompat.setTransitionName(deviceImage, arguments?.getString(TRANSITION))
+        }
         deviceImage.deviceImage(deviceType)
         (view.parent as ViewGroup).doOnPreDraw { startPostponedEnterTransition() }
         homeViewModel = getViewModel(viewModelFactory)
-        ViewCompat.setTransitionName(deviceImage, arguments?.getString("t"))
         addDeviceBtn.alpha = 0.5f
         addDeviceBtn.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
         enterName.editText?.doOnTextChanged { text, _, _, _ ->
@@ -63,7 +66,7 @@ class AddDeviceFragment : Fragment(), Injectable {
                 deviceType
             )
             deviceInfo.setGone()
-            addDeviceProgress.show()
+            addDeviceProgress.setVisible()
             hideKeyboard()
         }
         homeViewModel.addDeviceResult.observe(viewLifecycleOwner, Observer { event ->
@@ -72,5 +75,14 @@ class AddDeviceFragment : Fragment(), Injectable {
                 findNavController().navigate(R.id.homeFragment)
             }
         })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(DEVICE_TYPE, deviceType)
+        super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        const val DEVICE_TYPE = "device_type"
     }
 }

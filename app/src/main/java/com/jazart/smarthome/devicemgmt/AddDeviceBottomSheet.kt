@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
+import com.jazart.smarthome.devicemgmt.AddDeviceFragment.Companion.DEVICE_TYPE
 import kotlinx.android.synthetic.main.fragment_bottomsheet_add_device.*
 import kotlinx.android.synthetic.main.list_item_device.*
 
@@ -20,9 +21,9 @@ class AddDeviceBottomSheet : BottomSheetDialogFragment() {
         findNavController().navigate(
             R.id.action_to_addDeviceFragment,
             Bundle().apply {
-                putString("t", deviceImage.transitionName)
-                putBoolean("fav", device.isFavorite)
-                putSerializable("type", device.type())
+                putString(TRANSITION, deviceImage.transitionName)
+                putBoolean(FAVORITE, device.isFavorite)
+                putSerializable(DEVICE_TYPE, device.type())
             },
             null,
             FragmentNavigatorExtras(deviceImage to deviceImage.transitionName)
@@ -44,5 +45,10 @@ class AddDeviceBottomSheet : BottomSheetDialogFragment() {
 
     interface OnDeviceClickedListener {
         fun onDeviceClicked(device: UserQuery.Device)
+    }
+
+    companion object {
+        const val TRANSITION = "transition"
+        const val FAVORITE = "favorite"
     }
 }

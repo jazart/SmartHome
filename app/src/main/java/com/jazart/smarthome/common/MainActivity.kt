@@ -2,7 +2,6 @@ package com.jazart.smarthome.common
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,6 +13,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.jazart.smarthome.R
 import com.jazart.smarthome.devicemgmt.getViewModel
 import com.jazart.smarthome.devicemgmt.setGone
+import com.jazart.smarthome.devicemgmt.setVisible
 import com.jazart.smarthome.di.ViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -47,8 +47,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         navController = findNavController(R.id.nav_host)
         setupNavigation()
         onFabClick()
-        savedInstanceState?.let {
-            navController.navigate(it.getInt(LOCATION))
+        savedInstanceState?.let { bundle ->
+            val destination = bundle.getInt(LOCATION)
+            if(destination != 0) navController.navigate(destination)
             return
         }
         if (getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).getString(JWT, null).isNullOrBlank()) {
@@ -57,13 +58,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         } else {
             navController.navigate(R.id.homeFragment)
         }
-        sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
-            event.consume()?.let { updateToolbar(it) }
-        })
         setupBaseUi()
     }
 
     private fun setupBaseUi() {
+        sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
+            event.consume()?.let { updateToolbar(it) }
+        })
         logoutBtn.setOnClickListener {
             getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).edit().clear().apply()
             finishAndRemoveTask()
@@ -78,10 +79,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when {
                 destination.id == R.id.loginFragment || destination.id == R.id.signupFragment -> {
-                    bottomFab.setGone()
-                    bottom_bar.setGone()
+                    updateBottomBarVisibility(true)
                 }
                 destination.id == R.id.deviceFragment -> {
+                    updateBottomBarVisibility()
                     bottom_bar.navigationIcon = null
                     bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
                     bottom_bar.replaceMenu(R.menu.device_menu)
@@ -89,14 +90,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     bottomFab.setImageDrawable(getDrawable(R.drawable.ic_device_black_24dp))
                 }
                 destination.id == R.id.homeFragment -> {
+                    updateBottomBarVisibility()
                     bottom_bar.navigationIcon = getDrawable(R.drawable.ic_menu_white_24dp)
                     bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
                     bottom_bar.replaceMenu(R.menu.menu)
                     bottomFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp))
-                }
-                else -> {
-                    bottomFab.visibility = View.VISIBLE
-                    bottom_bar.visibility = View.VISIBLE
                 }
             }
         }
@@ -107,6 +105,16 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 R.id.setFavorite -> sharedUiViewModel.onMenuClicked(item.itemId)
                 else -> return@setOnMenuItemClickListener false
             }
+        }
+    }
+
+    private fun updateBottomBarVisibility(shouldHide: Boolean = false) {
+        if(shouldHide) {
+            bottom_bar.setGone()
+            bottomFab.setGone()
+        } else {
+            bottomFab.setVisible()
+            bottom_bar.setVisible()
         }
     }
 

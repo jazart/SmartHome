@@ -157,7 +157,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             deviceName.text = getString(R.string.fav_device, "\n${device.name()}")
             status.text = getString(R.string.status, device.status())
             favDevice.setOnClickListener { clickHandler(0, device) }
-            favDevice.show()
+            favDevice.setVisible()
         })
     }
 
@@ -196,7 +196,7 @@ fun View.setGone() {
     visibility = View.GONE
 }
 
-fun View.show() {
+fun View.setVisible() {
     visibility = View.VISIBLE
 }
 
