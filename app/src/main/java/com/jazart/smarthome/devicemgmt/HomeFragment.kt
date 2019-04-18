@@ -1,14 +1,15 @@
 package com.jazart.smarthome.devicemgmt
 
 import android.app.Activity
+import android.content.Context.WINDOW_SERVICE
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -96,7 +97,26 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     private fun updateUi() {
         home_recyclerView.itemAnimator = DefaultItemAnimator()
         home_recyclerView.adapter = adapter
-        home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+        home_recyclerView.layoutManager = when {
+            isViewInLandscape() ->  {
+                GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+            }
+            else -> GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+        }
+        if(isViewInLandscape()) {
+            val constraintSet = ConstraintSet().apply { clone(homeFragmentConstraint) }
+            constraintSet.clear(favDevice.id, ConstraintSet.END)
+            constraintSet.applyTo(homeFragmentConstraint)
+            favDevice.layoutParams = (favDevice.layoutParams as ConstraintLayout.LayoutParams).apply {
+                width = WRAP_CONTENT
+                height = 100
+            }
+            favDevice.animate().apply {
+                interpolator = AccelerateDecelerateInterpolator()
+                translationX(0f)
+                startDelay = 500L
+            }.start()
+        }
         favDevice.setGone()
         val constraintSet = ConstraintSet()
         constraintSet.clone(deviceItemConstraint)
@@ -119,13 +139,17 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
         deviceName.maxLines = 2
         deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-        deviceImage.setImageResource(R.drawable.ic_lock)
+    }
+
+    private fun isViewInLandscape(): Boolean {
+        val windowManager = requireContext().getSystemService(WINDOW_SERVICE) as WindowManager
+        return windowManager.defaultDisplay.rotation in listOf(Surface.ROTATION_270, Surface.ROTATION_90)
     }
 
     private fun observeLiveData() {
         homeViewModel.devices.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
-                displayAddDeviceUi()
+//                displayAddDeviceUi()
             } else {
                 adapter.submitList(it)
             }
@@ -156,16 +180,10 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             }
             deviceName.text = getString(R.string.fav_device, "\n${device.name()}")
             status.text = getString(R.string.status, device.status())
+            deviceImage.deviceImage(device.type())
             favDevice.setOnClickListener { clickHandler(0, device) }
             favDevice.setVisible()
         })
-    }
-
-    private fun displayAddDeviceUi() {
-        home_recyclerView.setGone()
-        favDevice.setGone()
-        userGreeting.setGone()
-        homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
     }
 
     private fun showBottomSheet() {

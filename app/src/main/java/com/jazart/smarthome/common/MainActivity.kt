@@ -149,7 +149,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     companion object {
         const val TAG = "MainActivity"
-        const val LOCATION = "Current Location"
         const val USER_JWT = "user_jwt"
         const val USERNAME = "username"
         const val JWT = "jwt"
