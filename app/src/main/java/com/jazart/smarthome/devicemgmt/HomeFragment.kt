@@ -113,8 +113,8 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             }
             favDevice.animate().apply {
                 interpolator = AccelerateDecelerateInterpolator()
-                translationX(650f)
-                startDelay = 1000L
+                translationX(675f)
+                startDelay = 800L
             }.start()
         }
         favDevice.setGone()
