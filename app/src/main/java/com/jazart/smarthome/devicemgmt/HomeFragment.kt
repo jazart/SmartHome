@@ -108,13 +108,13 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             constraintSet.clear(favDevice.id, ConstraintSet.END)
             constraintSet.applyTo(homeFragmentConstraint)
             favDevice.layoutParams = (favDevice.layoutParams as ConstraintLayout.LayoutParams).apply {
-                width = WRAP_CONTENT
-                height = 100
+                width = 1200
+                height = 300
             }
             favDevice.animate().apply {
                 interpolator = AccelerateDecelerateInterpolator()
-                translationX(0f)
-                startDelay = 500L
+                translationX(650f)
+                startDelay = 1000L
             }.start()
         }
         favDevice.setGone()

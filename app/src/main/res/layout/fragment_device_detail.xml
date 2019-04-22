@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/devicePageRoot"
@@ -40,7 +44,9 @@
             app:cardCornerRadius="4dp"
             app:cardElevation="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/deviceStatus"
             app:rippleColor="@color/colorPrimaryDark"
             app:strokeColor="@color/colorAccent"
             app:strokeWidth="3dp">
@@ -49,7 +55,7 @@
                 android:id="@+id/cameraImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/background_signup"/>
+                app:srcCompat="@drawable/background_signup" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -82,3 +88,4 @@
         android:layout_gravity="bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.core.widget.NestedScrollView>
