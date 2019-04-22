@@ -63,7 +63,7 @@ class DeviceViewModel @Inject constructor(
                         DeviceInfo.builder().deviceName(device.name()).username(device.owner()).type(device.type()).command(
                             device.commands()
                         ).build(),
-                        DeviceType.CAMERA, Command.TURN_ON
+                        DeviceType.CAMERA, command
                     )
                     if (res.data != null) {
                         _commandValue.postValue(Event(res.data))

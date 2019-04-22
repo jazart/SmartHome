@@ -2,8 +2,6 @@ package com.jazart.smarthome.common
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,6 +13,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.jazart.smarthome.R
 import com.jazart.smarthome.devicemgmt.getViewModel
 import com.jazart.smarthome.devicemgmt.setGone
+import com.jazart.smarthome.devicemgmt.setVisible
 import com.jazart.smarthome.di.ViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -30,7 +29,8 @@ import javax.inject.Inject
  *
  */
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDialog.OnDialogClicked {
+
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -47,20 +47,35 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         navController = findNavController(R.id.nav_host)
         setupNavigation()
         onFabClick()
-        savedInstanceState?.let {
-            navController.navigate(it.getInt(LOCATION))
+        savedInstanceState?.let { bundle ->
+            navController.restoreState(bundle.getBundle(NAV_STACK))
+            setupBaseUi()
             return
         }
-        if (getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("jwt", null).isNullOrBlank()) {
-            navController.navigateSafely(R.id.action_homeFragment_to_loginFragment, TAG)
-            usernameHeader?.text = getSharedPreferences("user_jwt", Context.MODE_PRIVATE).getString("username", "")
+        if (getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).getString(JWT, null).isNullOrBlank()) {
+            navController.navigate(R.id.action_homeFragment_to_loginFragment)
+            usernameHeader?.text = getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).getString(USERNAME, "")
         } else {
             navController.navigate(R.id.homeFragment)
         }
+        setupBaseUi()
+    }
+
+    override fun onOptionClicked(option: Int) {
+        getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).edit().clear().apply()
+        finishAndRemoveTask()
+    }
+
+    private fun setupBaseUi() {
         sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
             event.consume()?.let { updateToolbar(it) }
         })
-
+        logoutBtn.setOnClickListener {
+            ConfirmDialog.newInstance("Are you sure you want to logout?").apply {
+                targetFrag = this@MainActivity
+                show(supportFragmentManager, null)
+            }
+        }
     }
 
     private fun setupNavigation() {
@@ -71,10 +86,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when {
                 destination.id == R.id.loginFragment || destination.id == R.id.signupFragment -> {
-                    bottomFab.setGone()
-                    bottom_bar.setGone()
+                    updateBottomBarVisibility(true)
                 }
                 destination.id == R.id.deviceFragment -> {
+                    updateBottomBarVisibility()
                     bottom_bar.navigationIcon = null
                     bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
                     bottom_bar.replaceMenu(R.menu.device_menu)
@@ -82,14 +97,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     bottomFab.setImageDrawable(getDrawable(R.drawable.ic_device_black_24dp))
                 }
                 destination.id == R.id.homeFragment -> {
+                    updateBottomBarVisibility()
                     bottom_bar.navigationIcon = getDrawable(R.drawable.ic_menu_white_24dp)
                     bottom_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
                     bottom_bar.replaceMenu(R.menu.menu)
                     bottomFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp))
-                }
-                else -> {
-                    bottomFab.visibility = View.VISIBLE
-                    bottom_bar.visibility = View.VISIBLE
                 }
             }
         }
@@ -103,6 +115,16 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
+    private fun updateBottomBarVisibility(shouldHide: Boolean = false) {
+        if(shouldHide) {
+            bottom_bar.setGone()
+            bottomFab.setGone()
+        } else {
+            bottomFab.setVisible()
+            bottom_bar.setVisible()
+        }
+    }
+
     private fun onFabClick() {
         bottomFab.setOnClickListener {
             navController.currentDestination?.let { dest ->
@@ -113,7 +135,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
-            navController.currentDestination?.id?.let { putInt(LOCATION, it) }
+            putBundle(NAV_STACK, navController.saveState())
         })
     }
 
@@ -134,14 +156,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     companion object {
         const val TAG = "MainActivity"
-        const val LOCATION = "Current Location"
-    }
-}
-
-fun NavController.navigateSafely(id: Int, tag: String) {
-    try {
-        navigate(id)
-    } catch (e: IllegalArgumentException) {
-        Log.e(tag, e.message, e)
+        const val USER_JWT = "user_jwt"
+        const val USERNAME = "username"
+        const val JWT = "jwt"
+        const val NAV_STACK = "navigation stack"
     }
 }

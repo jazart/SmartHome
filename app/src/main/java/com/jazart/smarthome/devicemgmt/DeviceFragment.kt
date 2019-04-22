@@ -70,6 +70,21 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
     }
 
     private fun observeData(deviceViewModel: DeviceViewModel) {
+        sharedUiViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let {
+                when (it) {
+                    R.id.removeDevice -> {
+                        val dialog = ConfirmDialog.newInstance("Are you sure you want to delete ${device.name()}?")
+                        dialog.show(childFragmentManager, null)
+                    }
+                    R.id.setFavorite -> {
+                        deviceViewModel favorite device
+                    }
+                    else -> return@let
+                }
+            }
+        })
+
         deviceViewModel.showEditMode.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
                 if (it) {
@@ -130,20 +145,6 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
     }
 
     private fun updateUi() {
-        sharedUiViewModel.iconClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.consume()?.let {
-                when (it) {
-                    R.id.removeDevice -> {
-                        val dialog = ConfirmDialog.newInstance("Are you sure you want to delete ${device.name()}?")
-                        dialog.show(childFragmentManager, null)
-                    }
-                    R.id.setFavorite -> {
-                        deviceViewModel favorite device
-                    }
-                    else -> return@let
-                }
-            }
-        })
         deviceName.setText(device.name())
         deviceStatus.setText(resources.getString(R.string.status, device.status()))
     }

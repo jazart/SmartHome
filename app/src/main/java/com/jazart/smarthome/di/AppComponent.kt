@@ -3,6 +3,7 @@ package com.jazart.smarthome.di
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.apollographql.apollo.ApolloClient
+import com.jazart.smarthome.common.MainActivity.Companion.USER_JWT
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -31,6 +32,6 @@ interface AppComponent {
 @Module
 object SharedPrefsModule {
     @Provides
-    fun provideSharedPreferences(app: App): SharedPreferences = app.getSharedPreferences("user_jwt", MODE_PRIVATE)
+    fun provideSharedPreferences(app: App): SharedPreferences = app.getSharedPreferences(USER_JWT, MODE_PRIVATE)
 }
 

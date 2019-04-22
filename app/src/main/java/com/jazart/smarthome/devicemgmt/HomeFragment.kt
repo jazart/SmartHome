@@ -1,14 +1,16 @@
 package com.jazart.smarthome.devicemgmt
 
-import android.content.Context
+import android.app.Activity
+import android.content.Context.WINDOW_SERVICE
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -50,7 +52,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     private lateinit var deviceViewModel: DeviceViewModel
     private lateinit var sharedUiViewModel: SharedUiViewModel
 
-    private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
+    private val clickHandler: (Int, UserQuery.Device) -> Unit = { _, device ->
         deviceViewModel.initCurrentDevice(device)
         findNavController().navigate(
             R.id.action_homeFragment_to_deviceFragment,
@@ -66,10 +68,6 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        button.setOnClickListener {
-            requireActivity().getSharedPreferences("user_jwt", Context.MODE_PRIVATE).edit().clear().apply()
-            requireActivity().finishAndRemoveTask()
-        }
         homeViewModel = getViewModel(viewModelFactory)
         deviceViewModel = getViewModel(viewModelFactory)
         sharedUiViewModel = getViewModel(viewModelFactory)
@@ -99,7 +97,26 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     private fun updateUi() {
         home_recyclerView.itemAnimator = DefaultItemAnimator()
         home_recyclerView.adapter = adapter
-        home_recyclerView.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+        home_recyclerView.layoutManager = when {
+            isViewInLandscape() ->  {
+                GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+            }
+            else -> GridLayoutManager(requireContext(), 2, RecyclerView.VERTICAL, false)
+        }
+        if(isViewInLandscape()) {
+            val constraintSet = ConstraintSet().apply { clone(homeFragmentConstraint) }
+            constraintSet.clear(favDevice.id, ConstraintSet.END)
+            constraintSet.applyTo(homeFragmentConstraint)
+            favDevice.layoutParams = (favDevice.layoutParams as ConstraintLayout.LayoutParams).apply {
+                width = 1200
+                height = 300
+            }
+            favDevice.animate().apply {
+                interpolator = AccelerateDecelerateInterpolator()
+                translationX(675f)
+                startDelay = 800L
+            }.start()
+        }
         favDevice.setGone()
         val constraintSet = ConstraintSet()
         constraintSet.clone(deviceItemConstraint)
@@ -115,20 +132,24 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             width = MATCH_CONSTRAINT
         }
         deviceImage.layoutParams = (deviceImage.layoutParams as ConstraintLayout.LayoutParams).apply {
-            width = ViewGroup.LayoutParams.WRAP_CONTENT
-            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
             updateMargins(0, 0, 0 , 0)
         }
         deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
         deviceName.maxLines = 2
         deviceName.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-        deviceImage.setImageResource(R.drawable.ic_lock)
+    }
+
+    private fun isViewInLandscape(): Boolean {
+        val windowManager = requireContext().getSystemService(WINDOW_SERVICE) as WindowManager
+        return windowManager.defaultDisplay.rotation in listOf(Surface.ROTATION_270, Surface.ROTATION_90)
     }
 
     private fun observeLiveData() {
         homeViewModel.devices.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
-                displayAddDeviceUi()
+//                displayAddDeviceUi()
             } else {
                 adapter.submitList(it)
             }
@@ -159,16 +180,10 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             }
             deviceName.text = getString(R.string.fav_device, "\n${device.name()}")
             status.text = getString(R.string.status, device.status())
+            deviceImage.deviceImage(device.type())
             favDevice.setOnClickListener { clickHandler(0, device) }
-            favDevice.show()
+            favDevice.setVisible()
         })
-    }
-
-    private fun displayAddDeviceUi() {
-        home_recyclerView.setGone()
-        favDevice.setGone()
-        userGreeting.setGone()
-        homeFragmentRoot.background = resources.getDrawable(R.drawable.background, null)
     }
 
     private fun showBottomSheet() {
@@ -199,7 +214,7 @@ fun View.setGone() {
     visibility = View.GONE
 }
 
-fun View.show() {
+fun View.setVisible() {
     visibility = View.VISIBLE
 }
 
@@ -208,4 +223,9 @@ inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(factory: ViewM
 
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelFactory): T {
     return ViewModelProviders.of(requireActivity(), factory)[T::class.java]
+}
+
+fun Fragment.hideKeyboard() {
+    val imm = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(view?.windowToken, 0)
 }

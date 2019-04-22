@@ -5,8 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.ViewCompat
-import androidx.core.view.doOnPreDraw
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -24,11 +23,10 @@ class AddDeviceFragment : Fragment(), Injectable {
     lateinit var viewModelFactory: ViewModelFactory
 
     lateinit var homeViewModel: HomeViewModel
-    lateinit var deviceType: DeviceType
+    private var deviceType = DeviceType.`$UNKNOWN`
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        sharedElementEnterTransition = Slide()
         enterTransition = Explode()
     }
 
@@ -37,19 +35,32 @@ class AddDeviceFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        deviceType = arguments?.getSerializable("type") as DeviceType
+        if(arguments != null) {
+            deviceType = arguments?.getSerializable(DEVICE_TYPE) as DeviceType
+        }
         deviceImage.deviceImage(deviceType)
-        (view.parent as ViewGroup).doOnPreDraw { startPostponedEnterTransition() }
         homeViewModel = getViewModel(viewModelFactory)
-        ViewCompat.setTransitionName(deviceImage, arguments?.getString("t"))
+        addDeviceBtn.alpha = 0.5f
+        addDeviceBtn.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+        enterName.editText?.doOnTextChanged { text, _, _, _ ->
+            if (!text.isNullOrBlank()) {
+                addDeviceBtn.isEnabled = true
+                addDeviceBtn.alpha = 1f
+                addDeviceBtn.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark, null))
+            } else {
+                addDeviceBtn.alpha = 0.5f
+                addDeviceBtn.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))
+                addDeviceBtn.isEnabled = false
+            }
+        }
         addDeviceBtn.setOnClickListener {
             homeViewModel.addDevice(
                 enterName.editText?.text.toString(),
                 deviceType
             )
             deviceInfo.setGone()
-            addDeviceProgress.show()
+            addDeviceProgress.setVisible()
+            hideKeyboard()
         }
         homeViewModel.addDeviceResult.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let {
@@ -57,5 +68,14 @@ class AddDeviceFragment : Fragment(), Injectable {
                 findNavController().navigate(R.id.homeFragment)
             }
         })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(DEVICE_TYPE, deviceType)
+        super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        const val DEVICE_TYPE = "device_type"
     }
 }

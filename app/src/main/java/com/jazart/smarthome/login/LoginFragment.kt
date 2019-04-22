@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.jazart.smarthome.R
+import com.jazart.smarthome.devicemgmt.hideKeyboard
 import com.jazart.smarthome.di.Injectable
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
@@ -34,6 +35,7 @@ class LoginFragment : Fragment(), Injectable {
 
         login_btn.setOnClickListener {
             viewModel.login(username_et.text.toString(), password_et.text.toString())
+            hideKeyboard()
         }
         viewModel.loginEvent.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { token ->

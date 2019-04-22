@@ -13,9 +13,9 @@ class DeleteDeviceUseCase @Inject constructor(private val smartHomeService: Smar
         val response = smartHomeService.deleteDevice(
             DeleteDeviceMutation.builder().deviceInfo(deviceInfo).build()
         ) ?: return Result.failure(Error.NETWORK_TIMEOUT)
-        if (response.data()?.removeDevice() == deviceInfo.deviceName()) {
-            return Result.success(deviceInfo.deviceName())
+        return when {
+            response.data()?.removeDevice() == deviceInfo.deviceName() -> Result.success(deviceInfo.deviceName())
+            else -> Result.failure(Error.NOT_FOUND)
         }
-        return Result.failure(Error.NOT_FOUND)
     }
 }

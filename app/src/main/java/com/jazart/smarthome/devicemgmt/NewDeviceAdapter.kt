@@ -39,10 +39,6 @@ class NewDeviceAdapter(
             deviceName.text = device.name()
             ViewCompat.setTransitionName(deviceImage, device.name().plus(pos))
             deviceImage.deviceImage(device.type())
-//            Glide.with(containerView.context).apply {
-//                setDefaultRequestOptions(RequestOptions().dontAnimate())
-//                load(containerView.resources.getDrawable(R.drawable.ic_tv, null)).into(deviceImage)
-//            }
             statusColor.setGone()
         }
 

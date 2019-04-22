@@ -20,10 +20,12 @@ class LoginUseCase @Inject constructor(
             build()
         }) ?: return Result.failure(Error.NOT_FOUND)
 
-        if (response.hasErrors()) {
-            return Result.failure(ErrorType.from(response.errors()))
+        return when {
+            response.hasErrors() -> Result.failure(ErrorType.from(response.errors()))
+            else -> {
+                addToPrefs(response.data()!!.login()!!, username)
+                Result.success(response.data()?.login()!!)
+            }
         }
-        addToPrefs(response.data()!!.login()!!, username)
-        return Result.success(response.data()?.login()!!)
     }
 }
