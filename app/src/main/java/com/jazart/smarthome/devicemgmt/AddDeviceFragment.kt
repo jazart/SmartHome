@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.ViewCompat
-import androidx.core.view.doOnPreDraw
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Explode
 import com.graphql.type.DeviceType
 import com.jazart.smarthome.R
-import com.jazart.smarthome.devicemgmt.AddDeviceBottomSheet.Companion.TRANSITION
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_add_device.*
@@ -30,7 +27,6 @@ class AddDeviceFragment : Fragment(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = Explode()
         enterTransition = Explode()
     }
 
@@ -39,13 +35,10 @@ class AddDeviceFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         if(arguments != null) {
             deviceType = arguments?.getSerializable(DEVICE_TYPE) as DeviceType
-            ViewCompat.setTransitionName(deviceImage, arguments?.getString(TRANSITION))
         }
         deviceImage.deviceImage(deviceType)
-        (view.parent as ViewGroup).doOnPreDraw { startPostponedEnterTransition() }
         homeViewModel = getViewModel(viewModelFactory)
         addDeviceBtn.alpha = 0.5f
         addDeviceBtn.setBackgroundColor(resources.getColor(android.R.color.darker_gray, null))

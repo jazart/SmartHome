@@ -13,7 +13,7 @@ class ConfirmDialog : BottomSheetDialogFragment(), DialogInterface.OnClickListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            targetFrag = parentFragment as OnDialogClicked
+            targetFrag = parentFragment as OnDialogClicked? ?: targetFrag
         } catch (e: ClassCastException) {
             dismiss()
         }

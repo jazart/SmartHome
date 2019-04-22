@@ -52,7 +52,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     private lateinit var deviceViewModel: DeviceViewModel
     private lateinit var sharedUiViewModel: SharedUiViewModel
 
-    private val clickHandler: (Int, UserQuery.Device) -> Unit = { pos, device ->
+    private val clickHandler: (Int, UserQuery.Device) -> Unit = { _, device ->
         deviceViewModel.initCurrentDevice(device)
         findNavController().navigate(
             R.id.action_homeFragment_to_deviceFragment,
@@ -132,8 +132,8 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
             width = MATCH_CONSTRAINT
         }
         deviceImage.layoutParams = (deviceImage.layoutParams as ConstraintLayout.LayoutParams).apply {
-            width = ViewGroup.LayoutParams.WRAP_CONTENT
-            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
             updateMargins(0, 0, 0 , 0)
         }
         deviceName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)

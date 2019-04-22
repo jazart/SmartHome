@@ -29,7 +29,7 @@ import javax.inject.Inject
  *
  */
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDialog.OnDialogClicked {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -61,13 +61,20 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setupBaseUi()
     }
 
+    override fun onOptionClicked(option: Int) {
+        getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).edit().clear().apply()
+        finishAndRemoveTask()
+    }
+
     private fun setupBaseUi() {
         sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
             event.consume()?.let { updateToolbar(it) }
         })
         logoutBtn.setOnClickListener {
-            getSharedPreferences(USER_JWT, Context.MODE_PRIVATE).edit().clear().apply()
-            finishAndRemoveTask()
+            ConfirmDialog.newInstance("Are you sure you want to logout?").apply {
+                targetFrag = this@MainActivity
+                show(supportFragmentManager, null)
+            }
         }
     }
 
