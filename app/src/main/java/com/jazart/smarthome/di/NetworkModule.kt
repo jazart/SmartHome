@@ -23,7 +23,7 @@ object NetworkModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient, app: App): ApolloClient {
         return ApolloClient.builder().run {
-            serverUrl(SmartHomeService.BASE_URL_DEV)
+            serverUrl(SmartHomeService.BASE_URL)
             httpCache(
                 ApolloHttpCache(
                     DiskLruHttpCacheStore(app.applicationContext.cacheDir, Math.pow(1024.0, 4.0).toLong())
