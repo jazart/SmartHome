@@ -1,5 +1,6 @@
 package com.jazart.smarthome.di
 
+import com.jazart.smarthome.common.BaseFragment
 import com.jazart.smarthome.common.MainActivity
 import com.jazart.smarthome.common.SettingsFragment
 import com.jazart.smarthome.devicemgmt.AddDeviceFragment
@@ -19,6 +20,10 @@ abstract class MainActivityModule {
 
 @Module
 abstract class FragmentModule {
+
+    @ContributesAndroidInjector
+    abstract fun contributeBaseFragment(): BaseFragment
+
     @ContributesAndroidInjector
     abstract fun contributeLoginFragment(): LoginFragment
 

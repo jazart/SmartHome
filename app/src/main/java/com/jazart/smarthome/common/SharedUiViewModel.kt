@@ -18,6 +18,10 @@ class SharedUiViewModel @Inject constructor() : ViewModel() {
 
     val highlightIcon = MutableLiveData<Event<Pair<Boolean, Int>>>()
 
+    private val _poorConnectionView = MutableLiveData<Event<String>>()
+    val poorConnectionView: LiveData<Event<String>>
+        get() = _poorConnectionView
+
     fun onBottomFabClicked(destination: Int) {
         _bottomFabClicked.value = Event(destination)
     }
@@ -25,5 +29,9 @@ class SharedUiViewModel @Inject constructor() : ViewModel() {
     fun onMenuClicked(menuId: Int): Boolean {
         _iconClicked.value = Event(menuId)
         return true
+    }
+
+    fun showErrorBanner(message: String) {
+        _poorConnectionView.value = Event(message)
     }
 }

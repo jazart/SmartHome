@@ -19,6 +19,18 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/poorConnectionTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_dark"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:layout_gravity="top"
+            android:visibility="invisible"/>
+
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_bar"
             style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
