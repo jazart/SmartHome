@@ -32,6 +32,7 @@ class SharedUiViewModel @Inject constructor() : ViewModel() {
     }
 
     fun showErrorBanner(message: String) {
+//        if(_poorConnectionView.value)
         _poorConnectionView.value = Event(message)
     }
 }

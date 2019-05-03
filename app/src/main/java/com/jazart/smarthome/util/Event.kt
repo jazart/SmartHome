@@ -12,4 +12,6 @@ class Event<out T>(private val consumable: T? = null) {
             null
         }
     }
+
+    fun peek(): T? = consumable
 }

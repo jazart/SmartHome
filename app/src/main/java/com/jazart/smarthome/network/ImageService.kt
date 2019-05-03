@@ -10,7 +10,7 @@ class ImageService @Inject constructor(private val okhttp: OkHttpClient) {
     fun getImage(user: String): String? {
         val httpUrl = HttpUrl.Builder().run {
             scheme("http")
-//            host("c6a1db5e.ngrok.io")
+//            host("6bf29ae7.ngrok.io")
             host("smarthomeserver.us-west-2.elasticbeanstalk.com")
             addPathSegment("images")
             build()

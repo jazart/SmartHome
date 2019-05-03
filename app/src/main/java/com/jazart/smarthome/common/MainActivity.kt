@@ -3,6 +3,7 @@ package com.jazart.smarthome.common
 import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.animation.OvershootInterpolator
@@ -77,7 +78,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDia
             event.consume()?.let { updateToolbar(it) }
         })
         sharedUiViewModel.poorConnectionView.observe(this, Observer { event ->
-            val message = event.consume() ?: return@Observer
+            val message = event.consume()
+            if (message == null) {
+                poorConnectionTv.visibility = View.INVISIBLE
+                return@Observer
+            }
             poorConnectionTv.text = message
             if (!poorConnectionTv.isVisible) {
                 animateBanner()
@@ -100,7 +105,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDia
             poorConnectionTv.requestLayout()
         }
         poorConnectionTv.setVisible()
-        ValueAnimator.ofInt(0, originalHeight * poorConnectionTv.lineCount).apply {
+//        poorConnectionTv.animate().scaleY(200f).setDuration(1000L).start()
+        ValueAnimator.ofInt(0, originalHeight * 2).apply {
             duration = 400L
             interpolator = OvershootInterpolator()
             addUpdateListener { anim ->

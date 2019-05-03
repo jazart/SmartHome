@@ -53,6 +53,7 @@
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/background_signup" />
 
+
         </com.google.android.material.card.MaterialCardView>
 
         <com.jazart.smarthome.common.TextInputTextView
