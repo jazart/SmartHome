@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -130,18 +131,34 @@ class DeviceFragment : Fragment(), Injectable, ConfirmDialog.OnDialogClicked {
 
         deviceViewModel.commandValue.observe(viewLifecycleOwner, Observer { event ->
             event.consume()?.let { imageUri ->
-                val snackbar =
-                    Snackbar.make(devicePageRoot, "Command Processed!", Snackbar.LENGTH_LONG)
-
-                snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
-                    anchorId = R.id.snackbarAnchor
-                }
-                snackbar.show()
+                showSnackbar()
+                streamView.visibility = View.INVISIBLE
                 Glide.with(this).applyDefaultRequestOptions(
                     RequestOptions().fitCenter()
                 ).load(imageUri).into(cameraImage)
             }
         })
+        deviceViewModel.streamValue.observe(viewLifecycleOwner, Observer { event ->
+            event.consume()?.let { url ->
+                showSnackbar()
+                if (streamView != null) {
+                    streamView.webViewClient = WebViewClient()
+                    streamView.visibility = View.VISIBLE
+                    streamView.loadUrl(url)
+                    streamView.settings.javaScriptEnabled = true
+                }
+            }
+        })
+    }
+
+    private fun showSnackbar() {
+        val snackbar =
+            Snackbar.make(devicePageRoot, "Command Processed!", Snackbar.LENGTH_LONG)
+
+        snackbar.view.layoutParams = (snackbar.view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+            anchorId = R.id.snackbarAnchor
+        }
+        snackbar.show()
     }
 
     private fun updateUi() {
