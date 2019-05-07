@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.graphql.UserQuery
 import com.graphql.type.Command
 import com.graphql.type.DeviceInfo
-import com.graphql.type.DeviceType
 import com.jazart.smarthome.usecase.DeleteDeviceUseCase
 import com.jazart.smarthome.usecase.FavoriteDeviceUseCase
 import com.jazart.smarthome.usecase.RemoveFavoriteUseCase
@@ -51,6 +50,9 @@ class DeviceViewModel @Inject constructor(
     val commandValue: LiveData<Event<String>>
         get() = _commandValue
 
+    private val _streamValue = MutableLiveData<Event<String>>()
+    val streamValue: LiveData<Event<String>>
+        get() = _streamValue
     fun initCurrentDevice(device: UserQuery.Device) {
         _currentDevice.value = device
     }
@@ -63,9 +65,12 @@ class DeviceViewModel @Inject constructor(
                         DeviceInfo.builder().deviceName(device.name()).username(device.owner()).type(device.type()).command(
                             device.commands()
                         ).build(),
-                        DeviceType.CAMERA, command
+                        _currentDevice.value!!.type(), command
                     )
-                    if (res.data != null) {
+                    if (res.data != null && command == Command.STREAM) {
+                        _streamValue.postValue(Event(res.data))
+                    }
+                    if(res.data != null && command == Command.SNAP) {
                         _commandValue.postValue(Event(res.data))
                     }
                 }

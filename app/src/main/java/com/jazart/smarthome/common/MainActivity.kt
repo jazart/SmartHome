@@ -1,8 +1,15 @@
 package com.jazart.smarthome.common
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.animation.OvershootInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -70,11 +77,46 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDia
         sharedUiViewModel.highlightIcon.observe(this, Observer { event ->
             event.consume()?.let { updateToolbar(it) }
         })
+        sharedUiViewModel.poorConnectionView.observe(this, Observer { event ->
+            val message = event.consume()
+            if (message == null) {
+                poorConnectionTv.visibility = View.INVISIBLE
+                return@Observer
+            }
+            poorConnectionTv.text = message
+            if (!poorConnectionTv.isVisible) {
+                animateBanner()
+            }
+        })
+
         logoutBtn.setOnClickListener {
             ConfirmDialog.newInstance("Are you sure you want to logout?").apply {
                 targetFrag = this@MainActivity
                 show(supportFragmentManager, null)
             }
+        }
+    }
+
+    private fun animateBanner() {
+        poorConnectionTv.measure(MATCH_PARENT, WRAP_CONTENT)
+        val originalHeight = poorConnectionTv.height + poorConnectionTv.paddingTop + poorConnectionTv.paddingBottom
+        (poorConnectionTv.layoutParams as CoordinatorLayout.LayoutParams).apply {
+            height = 0
+            poorConnectionTv.requestLayout()
+        }
+        poorConnectionTv.setVisible()
+//        poorConnectionTv.animate().scaleY(200f).setDuration(1000L).start()
+        ValueAnimator.ofInt(0, originalHeight * 2).apply {
+            duration = 400L
+            interpolator = OvershootInterpolator()
+            addUpdateListener { anim ->
+                poorConnectionTv.layoutParams =
+                    (poorConnectionTv.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                        height = anim.animatedValue as Int
+                        poorConnectionTv.requestLayout()
+                    }
+            }
+            start()
         }
     }
 

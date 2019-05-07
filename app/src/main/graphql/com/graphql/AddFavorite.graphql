@@ -1,4 +1,3 @@
 mutation AddFavorite ($deviceInfo: DeviceInfo!) {
-
     addFavorite(deviceInfo: $deviceInfo)
 }

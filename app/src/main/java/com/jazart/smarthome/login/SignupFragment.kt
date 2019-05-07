@@ -39,7 +39,6 @@ class SignupFragment : Fragment(), Injectable {
         return inflater.inflate(R.layout.fragment_signup, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(SignupViewModel::class.java)

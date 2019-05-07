@@ -1,0 +1,3 @@
+mutation StreamCommand($deviceInfo: DeviceInfo!, $command: Command!) {
+    startStreamCommand(deviceInfo: $deviceInfo, command: $command)
+}

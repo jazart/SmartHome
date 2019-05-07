@@ -30,12 +30,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.graphql.UserQuery
 import com.jazart.smarthome.R
-import com.jazart.smarthome.common.SharedUiViewModel
+import com.jazart.smarthome.common.BaseFragment
 import com.jazart.smarthome.di.Injectable
 import com.jazart.smarthome.di.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.list_item_device.*
-import javax.inject.Inject
 
 /**
  * This page will display the user's favorite device and its status
@@ -43,14 +42,10 @@ import javax.inject.Inject
  * as well as an option to add another favorite or add/remove a device
  */
 
-class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClickedListener {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+class HomeFragment : BaseFragment(), Injectable, AddDeviceBottomSheet.OnDeviceClickedListener {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var deviceViewModel: DeviceViewModel
-    private lateinit var sharedUiViewModel: SharedUiViewModel
 
     private val clickHandler: (Int, UserQuery.Device) -> Unit = { _, device ->
         deviceViewModel.initCurrentDevice(device)
@@ -67,12 +62,11 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         homeViewModel = getViewModel(viewModelFactory)
         deviceViewModel = getViewModel(viewModelFactory)
-        sharedUiViewModel = getViewModel(viewModelFactory)
+//        sharedUiViewModel = getViewModel(viewModelFactory)
         homeViewModel.loadDevices()
-        observeLiveData()
+        super.onViewCreated(view, savedInstanceState)
         updateUi()
     }
 
@@ -94,7 +88,7 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         }
     }
 
-    private fun updateUi() {
+    override fun updateUi() {
         home_recyclerView.itemAnimator = DefaultItemAnimator()
         home_recyclerView.adapter = adapter
         home_recyclerView.layoutManager = when {
@@ -146,9 +140,10 @@ class HomeFragment : Fragment(), Injectable, AddDeviceBottomSheet.OnDeviceClicke
         return windowManager.defaultDisplay.rotation in listOf(Surface.ROTATION_270, Surface.ROTATION_90)
     }
 
-    private fun observeLiveData() {
+    override fun observeLiveData() {
         homeViewModel.devices.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
+                showErrorBanner(R.string.poor_network_msg)
 //                displayAddDeviceUi()
             } else {
                 adapter.submitList(it)

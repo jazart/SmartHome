@@ -4,6 +4,7 @@ import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo.exception.ApolloNetworkException
 import com.graphql.*
 import com.graphql.type.Command
 import com.graphql.type.DeviceInfo
@@ -83,9 +84,14 @@ class SmartHomeService @Inject constructor(private var apolloClient: ApolloClien
         }
     }
 
+    suspend fun startStream(streamCommandMutation: StreamCommandMutation): Response<StreamCommandMutation.Data>? {
+        return makeCall {
+            apolloClient.mutate(streamCommandMutation).await()
+        }
+    }
     companion object {
         const val BASE_URL = "http://smarthomeserver.us-west-2.elasticbeanstalk.com/graphql"
-        const val BASE_URL_DEV = "http://e540a170.ngrok.io/graphql"
+        const val BASE_URL_DEV = "http://1bf130dd.ngrok.io/graphql"
     }
 
 }
@@ -99,6 +105,10 @@ suspend fun <T> ApolloCall<T>.await(): Response<T> {
 
             override fun onFailure(e: ApolloException) {
                 cont.resumeWithException(e)
+            }
+
+            override fun onNetworkError(e: ApolloNetworkException) {
+                e.printStackTrace()
             }
         })
     }
