@@ -27,6 +27,9 @@ import com.jazart.smarthome.util.Event
 import kotlinx.android.synthetic.main.fragment_signup.*
 import javax.inject.Inject
 
+/**
+ * Displays the Signup UI for user and takes data and passes it to the VM. Also subscribes to live events to respond accordingly to each event. Eg. signup error displays an error toast.
+ */
 class SignupFragment : Fragment(), Injectable {
 
     @Inject

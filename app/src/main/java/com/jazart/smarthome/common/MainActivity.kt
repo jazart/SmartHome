@@ -32,8 +32,9 @@ import javax.inject.Inject
 
 /**
  * Entry point of the application. This class sets up the navigation component and navigates to
- * either home page if the user is logged in, otherwise the login page
- *
+ * either home page if the user is logged in, otherwise the login page. This class represents the main container for the UI
+ * of the application. All shared page elements such as the  bottom toolbar live here. This way we can dispatch events to the
+ * appropriate fragment page when a shared UI component is triggered.
  */
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDialog.OnDialogClicked {
@@ -105,7 +106,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, ConfirmDia
             poorConnectionTv.requestLayout()
         }
         poorConnectionTv.setVisible()
-//        poorConnectionTv.animate().scaleY(200f).setDuration(1000L).start()
         ValueAnimator.ofInt(0, originalHeight * 2).apply {
             duration = 400L
             interpolator = OvershootInterpolator()
